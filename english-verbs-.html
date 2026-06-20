@@ -1,0 +1,2569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VerbMaster — Aprende Inglés</title>
+<style>
+/* ===== DESIGN TOKENS ===== */
+:root {
+  --blue:        #4A90D9;
+  --blue-light:  #EBF4FF;
+  --blue-dark:   #2563A8;
+  --green:       #3DBE7C;
+  --green-light: #E8FAF1;
+  --green-dark:  #1D8C52;
+  --purple:      #7C5CBF;
+  --purple-light:#F3EEFF;
+  --purple-dark: #4F3A8A;
+  --orange:      #F07D2A;
+  --orange-light:#FEF3E8;
+  --orange-dark: #B85A0E;
+  --red:         #E84848;
+  --bg:          #F6F8FB;
+  --bg2:         #EDEEF2;
+  --surface:     #FFFFFF;
+  --surface2:    #F0F2F8;
+  --text:        #1A1D2E;
+  --text2:       #4A5068;
+  --text3:       #8890A8;
+  --border:      #DDE1EA;
+  --shadow:      0 2px 12px rgba(26,29,46,0.08);
+  --shadow-lg:   0 8px 32px rgba(26,29,46,0.13);
+  --radius:      14px;
+  --radius-sm:   8px;
+  --radius-lg:   22px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --transition: 0.22s cubic-bezier(.4,0,.2,1);
+}
+
+/* ===== RESET ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+button{cursor:pointer;border:none;outline:none;font-family:inherit}
+input,select,textarea{font-family:inherit;outline:none}
+ul{list-style:none}
+a{text-decoration:none;color:inherit}
+
+/* ===== WATERMARK ===== */
+.watermark{
+  position:fixed;bottom:12px;right:16px;
+  font-size:11px;color:var(--text3);
+  background:rgba(255,255,255,0.7);
+  backdrop-filter:blur(4px);
+  padding:4px 10px;border-radius:20px;
+  z-index:9999;pointer-events:none;
+  border:1px solid var(--border);
+  font-style:italic;letter-spacing:.3px;
+}
+
+/* ===== SIDEBAR NAV ===== */
+.app-layout{display:flex;min-height:100vh}
+
+.sidebar{
+  width:240px;min-height:100vh;
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;left:0;top:0;z-index:100;
+  transition:transform var(--transition);
+}
+.sidebar-logo{
+  padding:24px 20px 16px;
+  border-bottom:1px solid var(--border);
+}
+.sidebar-logo .logo-title{
+  font-size:20px;font-weight:800;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.sidebar-logo .logo-sub{font-size:11px;color:var(--text3);margin-top:2px;letter-spacing:.5px;text-transform:uppercase}
+
+.sidebar-xp{
+  padding:14px 20px;border-bottom:1px solid var(--border);
+  background:var(--blue-light);
+}
+.xp-label{font-size:11px;font-weight:700;color:var(--blue-dark);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px}
+.xp-bar-wrap{background:rgba(74,144,217,.2);border-radius:20px;height:8px;overflow:hidden}
+.xp-bar{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width .5s ease}
+.xp-info{display:flex;justify-content:space-between;font-size:11px;color:var(--blue-dark);margin-top:4px;font-weight:600}
+
+.sidebar-nav{flex:1;overflow-y:auto;padding:10px 0}
+.nav-group-label{
+  font-size:10px;font-weight:800;letter-spacing:1px;
+  color:var(--text3);text-transform:uppercase;
+  padding:16px 20px 6px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 20px;
+  font-size:13.5px;font-weight:500;color:var(--text2);
+  cursor:pointer;transition:all var(--transition);
+  border-left:3px solid transparent;
+}
+.nav-item:hover{background:var(--bg);color:var(--text)}
+.nav-item.active{
+  background:var(--blue-light);color:var(--blue-dark);
+  border-left-color:var(--blue);font-weight:700;
+}
+.nav-item .nav-icon{font-size:17px;width:22px;text-align:center}
+.nav-item .nav-badge{
+  margin-left:auto;background:var(--orange);color:#fff;
+  font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;
+}
+
+.sidebar-footer{
+  padding:14px 20px;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+}
+.streak-pill{
+  background:var(--orange-light);color:var(--orange-dark);
+  font-size:12px;font-weight:700;padding:6px 12px;
+  border-radius:20px;display:flex;align-items:center;gap:5px;
+}
+
+/* ===== MOBILE TOPBAR ===== */
+.topbar{
+  display:none;position:fixed;top:0;left:0;right:0;z-index:200;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:12px 16px;align-items:center;gap:12px;
+  box-shadow:var(--shadow);
+}
+.menu-btn{
+  background:none;color:var(--text);font-size:22px;padding:4px;
+}
+.topbar-title{font-weight:800;font-size:16px;flex:1}
+.topbar-xp{
+  font-size:12px;font-weight:700;color:var(--blue-dark);
+  background:var(--blue-light);padding:4px 10px;border-radius:20px;
+}
+
+.sidebar-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content{
+  margin-left:240px;flex:1;min-height:100vh;
+  padding:32px;max-width:1200px;
+}
+
+/* ===== SECTION VISIBILITY ===== */
+.section{display:none}
+.section.active{display:block}
+
+/* ===== PAGE HEADER ===== */
+.page-header{margin-bottom:28px}
+.page-header h1{font-size:28px;font-weight:800;color:var(--text);letter-spacing:-.5px}
+.page-header p{font-size:15px;color:var(--text2);margin-top:6px;line-height:1.6}
+
+/* ===== CARDS ===== */
+.card{
+  background:var(--surface);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:24px;
+  border:1px solid var(--border);
+}
+.card-sm{padding:16px}
+
+/* ===== GRID ===== */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+/* ===== BUTTONS ===== */
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:10px 20px;border-radius:var(--radius-sm);
+  font-size:14px;font-weight:700;transition:all var(--transition);
+}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,144,217,.35)}
+.btn-success{background:var(--green);color:#fff}
+.btn-success:hover{background:var(--green-dark);transform:translateY(-1px)}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-purple:hover{background:var(--purple-dark);transform:translateY(-1px)}
+.btn-orange{background:var(--orange);color:#fff}
+.btn-orange:hover{background:var(--orange-dark);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--text2);border:1.5px solid var(--border)}
+.btn-ghost:hover{background:var(--bg);color:var(--text)}
+.btn-lg{padding:14px 28px;font-size:16px;border-radius:12px}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:6px}
+
+/* ===== TAGS/PILLS ===== */
+.tag{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;
+}
+.tag-a1{background:#E8F8F0;color:#1D8C52}
+.tag-a2{background:#EBF4FF;color:#2563A8}
+.tag-b1{background:#F3EEFF;color:#4F3A8A}
+.tag-b2{background:#FEF3E8;color:#B85A0E}
+.tag-c1{background:#FDE8E8;color:#B82E2E}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar{
+  background:var(--bg2);border-radius:20px;height:10px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;border-radius:20px;
+  background:linear-gradient(90deg,var(--blue),var(--purple));
+  transition:width .6s ease;
+}
+.progress-fill.green{background:linear-gradient(90deg,var(--green),#5DE49C)}
+.progress-fill.orange{background:linear-gradient(90deg,var(--orange),#F5AA5A)}
+
+/* ===== STAT BOX ===== */
+.stat-box{
+  background:var(--surface);border-radius:var(--radius);
+  padding:20px;border:1px solid var(--border);
+  box-shadow:var(--shadow);text-align:center;
+}
+.stat-val{font-size:32px;font-weight:900;letter-spacing:-1px}
+.stat-label{font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-top:4px}
+
+/* ===== VERB CARD ===== */
+.verb-card{
+  background:var(--surface);border-radius:var(--radius);
+  border:1px solid var(--border);box-shadow:var(--shadow);
+  overflow:hidden;transition:transform var(--transition),box-shadow var(--transition);
+  cursor:pointer;
+}
+.verb-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.verb-card-header{
+  padding:16px 18px 10px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-between;
+}
+.verb-main{font-size:22px;font-weight:900;color:var(--text)}
+.verb-pron{font-size:12px;color:var(--text3);margin-top:2px;font-style:italic}
+.verb-card-body{padding:14px 18px}
+.verb-meaning{font-size:15px;font-weight:700;color:var(--blue-dark);margin-bottom:8px}
+.verb-forms{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.verb-form{
+  background:var(--surface2);border-radius:6px;
+  padding:4px 10px;font-size:11px;font-weight:700;
+}
+.verb-form span{color:var(--text3);font-weight:500;margin-right:3px}
+.verb-example{
+  font-size:12.5px;color:var(--text2);
+  background:var(--bg);border-left:3px solid var(--blue);
+  padding:8px 12px;border-radius:0 6px 6px 0;
+  margin-top:8px;line-height:1.5;
+}
+.verb-example em{color:var(--blue);font-style:normal;font-weight:700}
+
+/* ===== FLASHCARD ===== */
+.flashcard-scene{
+  perspective:1200px;width:380px;max-width:100%;margin:0 auto;
+  height:240px;cursor:pointer;
+}
+.flashcard-inner{
+  position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1);
+}
+.flashcard-scene.flipped .flashcard-inner{transform:rotateY(180deg)}
+.flashcard-face{
+  position:absolute;inset:0;border-radius:var(--radius-lg);
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:28px;text-align:center;
+  box-shadow:var(--shadow-lg);
+}
+.flashcard-front{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;
+}
+.flashcard-front .fc-verb{font-size:38px;font-weight:900;letter-spacing:-1px}
+.flashcard-front .fc-hint{font-size:13px;opacity:.75;margin-top:8px}
+.flashcard-back{
+  background:var(--surface);border:2px solid var(--blue);
+  transform:rotateY(180deg);
+}
+.flashcard-back .fc-meaning{font-size:22px;font-weight:800;color:var(--text);margin-bottom:10px}
+.flashcard-back .fc-forms{font-size:13px;color:var(--text2);line-height:1.7}
+.flashcard-back .fc-example{
+  font-size:12px;color:var(--text2);
+  background:var(--blue-light);border-radius:8px;padding:8px 12px;
+  margin-top:10px;line-height:1.5;
+}
+
+/* ===== QUIZ ===== */
+.quiz-question{
+  font-size:18px;font-weight:700;color:var(--text);
+  margin-bottom:20px;line-height:1.5;text-align:center;
+}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.quiz-opt{
+  background:var(--surface);border:2px solid var(--border);
+  border-radius:var(--radius-sm);padding:12px 16px;
+  font-size:14px;font-weight:600;color:var(--text);
+  text-align:left;transition:all var(--transition);
+}
+.quiz-opt:hover:not(:disabled){border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark)}
+.quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green-dark)}
+.quiz-opt.wrong{background:#FDE8E8;border-color:var(--red);color:#B82E2E}
+
+/* ===== MEMORY GAME ===== */
+.memory-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  max-width:520px;margin:0 auto;
+}
+.mem-card{
+  aspect-ratio:1;border-radius:10px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:transform var(--transition);
+  font-size:14px;font-weight:700;color:#fff;
+  user-select:none;position:relative;overflow:hidden;
+}
+.mem-card:hover:not(.revealed):not(.matched){transform:scale(1.04)}
+.mem-card .mem-back{
+  position:absolute;inset:0;
+  background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:var(--text);
+  padding:6px;text-align:center;line-height:1.3;
+  border-radius:10px;border:2px solid var(--border);
+  opacity:0;transition:opacity .3s;
+}
+.mem-card.revealed .mem-back,.mem-card.matched .mem-back{opacity:1}
+.mem-card.matched{border:2px solid var(--green);opacity:.7}
+
+/* ===== TIMELINE STORY ===== */
+.story-text{
+  font-size:15px;line-height:1.9;color:var(--text);
+  background:var(--surface);border-radius:var(--radius);
+  padding:24px;border:1px solid var(--border);
+}
+.story-blank{
+  display:inline-block;
+  border-bottom:2px solid var(--blue);
+  min-width:80px;text-align:center;
+  background:var(--blue-light);padding:2px 8px;
+  border-radius:4px;margin:0 4px;
+}
+.story-input{
+  border:none;background:none;
+  border-bottom:2px solid var(--blue);
+  font-size:15px;font-weight:700;color:var(--blue-dark);
+  width:90px;text-align:center;padding:2px 4px;
+  outline:none;
+}
+.story-input.correct{border-color:var(--green);color:var(--green-dark);background:var(--green-light)}
+.story-input.wrong{border-color:var(--red);color:#B82E2E;background:#FDE8E8}
+
+/* ===== ACHIEVEMENT ===== */
+.achievement{
+  display:flex;align-items:center;gap:14px;
+  background:var(--surface);border-radius:var(--radius);
+  padding:16px 20px;border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  transition:transform var(--transition);
+}
+.achievement:hover{transform:translateY(-2px)}
+.ach-icon{
+  font-size:28px;width:52px;height:52px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;flex-shrink:0;
+}
+.ach-icon.unlocked{background:var(--orange-light)}
+.ach-icon.locked{background:var(--bg2);filter:grayscale(1);opacity:.5}
+.ach-title{font-size:14px;font-weight:800}
+.ach-desc{font-size:12px;color:var(--text3);margin-top:2px}
+.ach-xp{
+  margin-left:auto;font-size:12px;font-weight:800;
+  color:var(--orange-dark);background:var(--orange-light);
+  padding:4px 10px;border-radius:20px;white-space:nowrap;
+}
+
+/* ===== HERO BANNER ===== */
+.hero-banner{
+  background:linear-gradient(135deg,var(--blue-dark) 0%,var(--purple) 60%,#9B59B6 100%);
+  border-radius:var(--radius-lg);padding:36px 40px;color:#fff;
+  position:relative;overflow:hidden;margin-bottom:28px;
+}
+.hero-banner::before{
+  content:'';position:absolute;right:-60px;top:-60px;
+  width:280px;height:280px;
+  background:rgba(255,255,255,.06);border-radius:50%;
+}
+.hero-banner::after{
+  content:'';position:absolute;right:60px;bottom:-80px;
+  width:180px;height:180px;
+  background:rgba(255,255,255,.04);border-radius:50%;
+}
+.hero-banner h1{font-size:26px;font-weight:900;margin-bottom:8px;position:relative}
+.hero-banner p{font-size:15px;opacity:.85;position:relative;line-height:1.6;max-width:500px}
+.hero-actions{display:flex;gap:10px;margin-top:20px;position:relative;flex-wrap:wrap}
+.btn-hero{
+  background:rgba(255,255,255,.2);color:#fff;
+  border:1.5px solid rgba(255,255,255,.4);
+  padding:10px 20px;border-radius:10px;
+  font-size:14px;font-weight:700;
+  backdrop-filter:blur(4px);
+  transition:all var(--transition);
+  cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.btn-hero:hover{background:rgba(255,255,255,.3);transform:translateY(-1px)}
+.btn-hero.primary{background:#fff;color:var(--blue-dark)}
+.btn-hero.primary:hover{background:#f0f0ff}
+
+/* ===== LEARNING PATH ===== */
+.path-step{
+  display:flex;gap:16px;padding:16px;
+  background:var(--surface);border-radius:var(--radius);
+  border:1px solid var(--border);
+  transition:transform var(--transition);
+  cursor:pointer;
+}
+.path-step:hover{transform:translateX(4px);border-color:var(--blue)}
+.path-num{
+  width:40px;height:40px;flex-shrink:0;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:900;
+}
+.path-num.done{background:var(--green);color:#fff}
+.path-num.active{background:var(--blue);color:#fff}
+.path-num.locked{background:var(--bg2);color:var(--text3)}
+.path-step-body{flex:1}
+.path-step-title{font-size:15px;font-weight:800;margin-bottom:4px}
+.path-step-sub{font-size:12px;color:var(--text3)}
+
+/* ===== TENSES DISPLAY ===== */
+.tense-table{width:100%;border-collapse:collapse;font-size:14px}
+.tense-table th{
+  background:var(--blue);color:#fff;
+  padding:10px 14px;text-align:left;font-weight:700;
+}
+.tense-table td{padding:10px 14px;border-bottom:1px solid var(--border)}
+.tense-table tr:hover td{background:var(--blue-light)}
+.tense-table .sentence{color:var(--text2)}
+.tense-table .formula{
+  font-size:11px;color:var(--purple);font-weight:700;
+  background:var(--purple-light);padding:2px 8px;border-radius:4px;
+  display:inline-block;margin-bottom:3px;
+}
+
+/* ===== INPUT ===== */
+.input-field{
+  width:100%;border:1.5px solid var(--border);
+  background:var(--surface);border-radius:var(--radius-sm);
+  padding:10px 14px;font-size:14px;color:var(--text);
+  transition:border-color var(--transition);
+}
+.input-field:focus{border-color:var(--blue)}
+.input-group{margin-bottom:14px}
+.input-label{
+  display:block;font-size:12px;font-weight:700;
+  color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;
+}
+
+/* ===== FILL BLANK GAME ===== */
+.fill-sentence{
+  font-size:17px;line-height:2;margin:20px 0;
+  text-align:center;
+}
+.fill-input{
+  border:none;border-bottom:2.5px solid var(--blue);
+  font-size:17px;font-weight:700;width:100px;
+  text-align:center;background:none;
+  padding:2px 4px;color:var(--text);
+}
+.fill-input:focus{border-bottom-color:var(--purple)}
+
+/* ===== TIMER ===== */
+.timer-ring{
+  width:80px;height:80px;
+  border-radius:50%;
+  background:conic-gradient(var(--orange) 0%, var(--orange) calc(var(--pct,100)*1%), var(--bg2) 0);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:900;color:var(--text);
+  position:relative;
+}
+.timer-ring::after{
+  content:'';position:absolute;inset:8px;
+  background:var(--surface);border-radius:50%;
+}
+.timer-num{position:relative;z-index:1}
+
+/* ===== TABS ===== */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:22px;overflow-x:auto}
+.tab{
+  padding:10px 20px;font-size:13.5px;font-weight:700;
+  color:var(--text3);cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:-2px;
+  transition:all var(--transition);
+}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* ===== NOTIFICATION TOAST ===== */
+.toast{
+  position:fixed;top:20px;right:20px;z-index:9998;
+  background:var(--surface);border-radius:var(--radius);
+  padding:14px 20px;box-shadow:var(--shadow-lg);
+  border-left:4px solid var(--green);
+  display:flex;align-items:center;gap:10px;
+  font-size:14px;font-weight:700;color:var(--text);
+  transform:translateX(120%);
+  transition:transform var(--transition);
+  max-width:300px;
+}
+.toast.show{transform:translateX(0)}
+.toast.error{border-left-color:var(--red)}
+.toast.warning{border-left-color:var(--orange)}
+
+/* ===== MODAL ===== */
+.modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.5);z-index:500;
+  align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--surface);border-radius:var(--radius-lg);
+  padding:32px;max-width:520px;width:100%;
+  box-shadow:var(--shadow-lg);
+  animation:slideUp .3s ease;
+}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-title{font-size:20px;font-weight:900;margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--text3);margin-bottom:20px}
+.modal-close{
+  position:absolute;top:14px;right:16px;
+  background:none;font-size:20px;color:var(--text3);
+}
+
+/* ===== CHARTS (CSS only) ===== */
+.bar-chart{display:flex;gap:10px;align-items:flex-end;height:120px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{
+  width:100%;border-radius:6px 6px 0 0;
+  background:linear-gradient(180deg,var(--blue),var(--purple));
+  min-height:4px;transition:height .5s ease;
+}
+.bar-lbl{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase}
+.bar-val{font-size:11px;font-weight:800;color:var(--text2)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .main-content{margin-left:0;padding:80px 16px 24px}
+  .topbar{display:flex}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .quiz-options{grid-template-columns:1fr}
+  .memory-grid{grid-template-columns:repeat(3,1fr)}
+  .hero-banner{padding:24px 20px}
+  .hero-banner h1{font-size:20px}
+  .flashcard-scene{width:100%}
+}
+@media(max-width:480px){
+  .grid-4{grid-template-columns:1fr 1fr}
+  .memory-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .35s ease forwards}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+.pop{animation:pop .3s ease}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin 1s linear infinite}
+
+/* ===== SEPARATOR ===== */
+.section-sep{height:1px;background:var(--border);margin:24px 0}
+</style>
+</head>
+<body>
+
+<!-- WATERMARK -->
+<div class="watermark">✦ En colaboración con Dixy y Jason</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">🎉 ¡Correcto!</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="verbModal">
+  <div class="modal" style="position:relative">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- TOPBAR (mobile) -->
+<div class="topbar" id="topbar">
+  <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+  <span class="topbar-title">VerbMaster</span>
+  <span class="topbar-xp" id="topbarXp">0 XP</span>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-title">VerbMaster</div>
+    <div class="logo-sub">Inglés A1 → C1</div>
+  </div>
+  <div class="sidebar-xp">
+    <div class="xp-label">⚡ Nivel <span id="levelLabel">1</span> — <span id="nextLvl">100</span> XP para subir</div>
+    <div class="xp-bar-wrap"><div class="xp-bar" id="xpBar" style="width:0%"></div></div>
+    <div class="xp-info"><span id="xpCurrent">0</span><span id="xpMax">100 XP</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-group-label">Principal</div>
+    <div class="nav-item active" onclick="showSection('inicio')"><span class="nav-icon">🏠</span>Inicio</div>
+    <div class="nav-item" onclick="showSection('ruta')"><span class="nav-icon">🗺️</span>Ruta de Aprendizaje</div>
+
+    <div class="nav-group-label">Verbos</div>
+    <div class="nav-item" onclick="showSection('basicos')"><span class="nav-icon">📖</span>Verbos Básicos <span class="nav-badge">A1</span></div>
+    <div class="nav-item" onclick="showSection('regulares')"><span class="nav-icon">✅</span>Verbos Regulares <span class="nav-badge" style="background:var(--blue)">A2</span></div>
+    <div class="nav-item" onclick="showSection('irregulares')"><span class="nav-icon">⚡</span>Verbos Irregulares <span class="nav-badge" style="background:var(--purple)">B1</span></div>
+
+    <div class="nav-group-label">Tiempos Verbales</div>
+    <div class="nav-item" onclick="showSection('simplepresent')"><span class="nav-icon">🔵</span>Simple Present</div>
+    <div class="nav-item" onclick="showSection('simplepast')"><span class="nav-icon">🟣</span>Simple Past</div>
+    <div class="nav-item" onclick="showSection('presentcont')"><span class="nav-icon">🟢</span>Present Continuous</div>
+    <div class="nav-item" onclick="showSection('pastcont')"><span class="nav-icon">🟠</span>Past Continuous</div>
+    <div class="nav-item" onclick="showSection('presentperf')"><span class="nav-icon">💙</span>Present Perfect</div>
+    <div class="nav-item" onclick="showSection('pastperf')"><span class="nav-icon">💜</span>Past Perfect</div>
+    <div class="nav-item" onclick="showSection('participios')"><span class="nav-icon">📌</span>Participios</div>
+
+    <div class="nav-group-label">Práctica</div>
+    <div class="nav-item" onclick="showSection('flashcards')"><span class="nav-icon">🃏</span>Flashcards</div>
+    <div class="nav-item" onclick="showSection('juegos')"><span class="nav-icon">🎮</span>Juegos</div>
+    <div class="nav-item" onclick="showSection('desafios')"><span class="nav-icon">🔥</span>Desafíos</div>
+    <div class="nav-item" onclick="showSection('historias')"><span class="nav-icon">📚</span>Historias</div>
+    <div class="nav-item" onclick="showSection('examenes')"><span class="nav-icon">📝</span>Exámenes</div>
+
+    <div class="nav-group-label">Progreso</div>
+    <div class="nav-item" onclick="showSection('estadisticas')"><span class="nav-icon">📊</span>Estadísticas</div>
+    <div class="nav-item" onclick="showSection('repaso')"><span class="nav-icon">🔄</span>Repaso Inteligente</div>
+    <div class="nav-item" onclick="showSection('logros')"><span class="nav-icon">🏆</span>Logros</div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="streak-pill">🔥 <span id="streakCount">0</span> días seguidos</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+<!-- ============================= INICIO ============================= -->
+<div id="inicio" class="section active fade-in">
+  <div class="hero-banner">
+    <h1>¡Domina todos los verbos del inglés! 🚀</h1>
+    <p>Desde A1 hasta C1 — aprende con ciencia, juega y alcanza la fluidez. Tu viaje empieza aquí.</p>
+    <div class="hero-actions">
+      <button class="btn-hero primary" onclick="showSection('ruta')">🗺️ Ver mi ruta</button>
+      <button class="btn-hero" onclick="showSection('flashcards')">🃏 Practicar ahora</button>
+      <button class="btn-hero" onclick="showSection('juegos')">🎮 Jugar</button>
+    </div>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:24px">
+    <div class="stat-box">
+      <div class="stat-val" style="color:var(--blue)" id="statVerbos">0</div>
+      <div class="stat-label">Verbos aprendidos</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" style="color:var(--green)" id="statXp">0</div>
+      <div class="stat-label">XP Total</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" style="color:var(--orange)" id="statRacha">0</div>
+      <div class="stat-label">Días de racha</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" style="color:var(--purple)" id="statNivel">1</div>
+      <div class="stat-label">Nivel actual</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">📈 Progreso por nivel</h3>
+      <div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;font-weight:700">
+          <span>A1 — Básico</span><span id="pctA1">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill green" id="barA1" style="width:0%"></div></div>
+      </div>
+      <div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;font-weight:700">
+          <span>A2 — Elemental</span><span id="pctA2">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="barA2" style="width:0%"></div></div>
+      </div>
+      <div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;font-weight:700">
+          <span>B1 — Intermedio</span><span id="pctB1">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill orange" id="barB1" style="width:0%"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;font-weight:700">
+          <span>B2/C1 — Avanzado</span><span id="pctB2">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="barB2" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">⚡ Actividad reciente</h3>
+      <div id="activityFeed" style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:13px;color:var(--text3);text-align:center;padding:20px">
+          ¡Empieza a estudiar para ver tu actividad aquí! 🌱
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-sep"></div>
+  <h3 style="font-size:16px;font-weight:800;margin-bottom:14px">🎯 Acceso rápido</h3>
+  <div class="grid-3">
+    <div class="card card-sm" style="cursor:pointer;text-align:center;padding:20px" onclick="showSection('basicos')">
+      <div style="font-size:32px;margin-bottom:8px">📖</div>
+      <div style="font-weight:800;font-size:14px">Verbos Básicos</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px">20 verbos esenciales A1</div>
+    </div>
+    <div class="card card-sm" style="cursor:pointer;text-align:center;padding:20px" onclick="showSection('flashcards')">
+      <div style="font-size:32px;margin-bottom:8px">🃏</div>
+      <div style="font-weight:800;font-size:14px">Flashcards</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px">Memoriza rápido</div>
+    </div>
+    <div class="card card-sm" style="cursor:pointer;text-align:center;padding:20px" onclick="showSection('juegos')">
+      <div style="font-size:32px;margin-bottom:8px">🎮</div>
+      <div style="font-weight:800;font-size:14px">Juegos</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px">Aprende jugando</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= RUTA ============================= -->
+<div id="ruta" class="section fade-in">
+  <div class="page-header">
+    <h1>🗺️ Ruta de Aprendizaje</h1>
+    <p>Sigue esta ruta diseñada pedagógicamente para maximizar tu retención y avance.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px" id="pathContainer"></div>
+</div>
+
+<!-- ============================= VERBOS BÁSICOS ============================= -->
+<div id="basicos" class="section fade-in">
+  <div class="page-header">
+    <h1>📖 Verbos Básicos <span class="tag tag-a1">A1</span></h1>
+    <p>Los 20 verbos más importantes del inglés. El núcleo de toda comunicación.</p>
+  </div>
+  <div style="margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap">
+    <button class="btn btn-primary" onclick="markAllLearned('A1')">✅ Marcar todos como vistos</button>
+    <button class="btn btn-ghost" onclick="showSection('flashcards')">🃏 Practicar en Flashcards</button>
+  </div>
+  <div class="grid-2" id="verbsA1Container"></div>
+</div>
+
+<!-- ============================= VERBOS REGULARES ============================= -->
+<div id="regulares" class="section fade-in">
+  <div class="page-header">
+    <h1>✅ Verbos Regulares <span class="tag tag-a2">A2</span></h1>
+    <p>Verbos que forman su pasado y participio añadiendo <strong>-ed</strong>. Consistentes y predecibles.</p>
+  </div>
+  <div style="margin-bottom:18px;padding:16px;background:var(--green-light);border-radius:var(--radius);border-left:4px solid var(--green)">
+    <strong>📏 Regla de oro:</strong> infinitivo + <strong>-ed</strong> = pasado y participio.<br>
+    <span style="font-size:13px;color:var(--text2)">Ejemplo: <em>walk → walked → walked</em></span>
+  </div>
+  <div class="grid-2" id="verbsA2Container"></div>
+</div>
+
+<!-- ============================= VERBOS IRREGULARES ============================= -->
+<div id="irregulares" class="section fade-in">
+  <div class="page-header">
+    <h1>⚡ Verbos Irregulares <span class="tag tag-b1">B1</span></h1>
+    <p>Los verbos más usados del inglés tienen formas propias. ¡Hay que memorizarlos!</p>
+  </div>
+  <div style="margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap">
+    <button class="btn btn-purple" onclick="showSection('flashcards')">🃏 Estudiar con Flashcards</button>
+    <button class="btn btn-orange" onclick="showSection('juegos')">🎮 Practicar con Juegos</button>
+  </div>
+  <div style="overflow-x:auto;margin-bottom:20px">
+    <table class="tense-table" style="width:100%">
+      <thead>
+        <tr>
+          <th>Infinitivo</th><th>Significado</th><th>Pasado</th><th>Participio</th><th>Pronunciación</th><th>Nivel</th>
+        </tr>
+      </thead>
+      <tbody id="irregularTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================= SIMPLE PRESENT ============================= -->
+<div id="simplepresent" class="section fade-in">
+  <div class="page-header">
+    <h1>🔵 Simple Present</h1>
+    <p>Expresa acciones habituales, verdades generales y estados. El tiempo más fundamental.</p>
+  </div>
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card" style="background:linear-gradient(135deg,var(--blue-light),#fff)">
+      <h3 style="font-size:14px;font-weight:800;color:var(--blue-dark);margin-bottom:12px">📐 Estructura</h3>
+      <div style="margin-bottom:8px"><span class="tense-table formula">Afirmativa</span><br><span style="font-size:14px">Subject + verb (+ s/es he/she/it)</span></div>
+      <div style="margin-bottom:8px"><span class="tense-table formula" style="background:#FDE8E8;color:#B82E2E">Negativa</span><br><span style="font-size:14px">Subject + don't / doesn't + verb</span></div>
+      <div><span class="tense-table formula" style="background:var(--green-light);color:var(--green-dark)">Interrogativa</span><br><span style="font-size:14px">Do/Does + subject + verb?</span></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;font-weight:800;margin-bottom:12px">🎯 Usos principales</h3>
+      <ul style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text2)">
+        <li>✅ Hábitos: <em>I drink coffee every day.</em></li>
+        <li>✅ Verdades: <em>The sun rises in the east.</em></li>
+        <li>✅ Horarios: <em>The train leaves at 9 AM.</em></li>
+        <li>✅ Estados: <em>She loves music.</em></li>
+        <li>✅ Instrucciones: <em>You open the box and press.</em></li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">📋 Ejemplos progresivos</h3>
+    <table class="tense-table">
+      <thead><tr><th>Nivel</th><th>Oración</th><th>Traducción</th></tr></thead>
+      <tbody id="spExamples"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================= SIMPLE PAST ============================= -->
+<div id="simplepast" class="section fade-in">
+  <div class="page-header">
+    <h1>🟣 Simple Past</h1>
+    <p>Acciones completadas en un tiempo definido del pasado.</p>
+  </div>
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card" style="background:linear-gradient(135deg,var(--purple-light),#fff)">
+      <h3 style="font-size:14px;font-weight:800;color:var(--purple-dark);margin-bottom:12px">📐 Estructura</h3>
+      <div style="margin-bottom:8px"><span class="tense-table formula">Afirmativa</span><br><span style="font-size:14px">Subject + verb-ed / irregular</span></div>
+      <div style="margin-bottom:8px"><span class="tense-table formula" style="background:#FDE8E8;color:#B82E2E">Negativa</span><br><span style="font-size:14px">Subject + didn't + verb (base)</span></div>
+      <div><span class="tense-table formula" style="background:var(--green-light);color:var(--green-dark)">Interrogativa</span><br><span style="font-size:14px">Did + subject + verb (base)?</span></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;font-weight:800;margin-bottom:12px">⏰ Marcadores temporales</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;font-size:12px">
+        <span class="tag" style="background:var(--purple-light);color:var(--purple-dark)">yesterday</span>
+        <span class="tag" style="background:var(--purple-light);color:var(--purple-dark)">last night/week/year</span>
+        <span class="tag" style="background:var(--purple-light);color:var(--purple-dark)">ago</span>
+        <span class="tag" style="background:var(--purple-light);color:var(--purple-dark)">in 2020</span>
+        <span class="tag" style="background:var(--purple-light);color:var(--purple-dark)">when I was young</span>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <table class="tense-table">
+      <thead><tr><th>Nivel</th><th>Oración</th><th>Traducción</th></tr></thead>
+      <tbody id="pastExamples"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================= PRESENT CONTINUOUS ============================= -->
+<div id="presentcont" class="section fade-in">
+  <div class="page-header">
+    <h1>🟢 Present Continuous</h1>
+    <p>Acciones que ocurren en este momento o en un periodo temporal cercano.</p>
+  </div>
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card" style="background:linear-gradient(135deg,var(--green-light),#fff)">
+      <h3 style="font-size:14px;font-weight:800;color:var(--green-dark);margin-bottom:12px">📐 Estructura</h3>
+      <div style="margin-bottom:8px"><span class="tense-table formula" style="background:var(--green-light);color:var(--green-dark)">Afirmativa</span><br><span style="font-size:14px">Subject + am/is/are + verb-ing</span></div>
+      <div style="margin-bottom:8px"><span class="tense-table formula" style="background:#FDE8E8;color:#B82E2E">Negativa</span><br><span style="font-size:14px">Subject + am/is/are + not + verb-ing</span></div>
+      <div><span class="tense-table formula" style="background:var(--green-light);color:var(--green-dark)">Interrogativa</span><br><span style="font-size:14px">Am/Is/Are + subject + verb-ing?</span></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;font-weight:800;margin-bottom:12px">🎯 Usos</h3>
+      <ul style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text2)">
+        <li>🟢 Ahora mismo: <em>She is studying right now.</em></li>
+        <li>🟢 Planes futuros: <em>We are meeting tomorrow.</em></li>
+        <li>🟢 Cambio temporal: <em>He is living in London this month.</em></li>
+        <li>🔴 NO con: know, like, love, hate, want, need</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <table class="tense-table">
+      <thead><tr><th>Nivel</th><th>Oración</th><th>Traducción</th></tr></thead>
+      <tbody id="presContExamples"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================= PAST CONTINUOUS ============================= -->
+<div id="pastcont" class="section fade-in">
+  <div class="page-header">
+    <h1>🟠 Past Continuous</h1>
+    <p>Acciones que estaban ocurriendo en un momento específico del pasado.</p>
+  </div>
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card" style="background:linear-gradient(135deg,var(--orange-light),#fff)">
+      <h3 style="font-size:14px;font-weight:800;color:var(--orange-dark);margin-bottom:12px">📐 Estructura</h3>
+      <div style="margin-bottom:8px"><span class="tense-table formula" style="background:var(--orange-light);color:var(--orange-dark)">Afirmativa</span><br><span style="font-size:14px">Subject + was/were + verb-ing</span></div>
+      <div><span class="tense-table formula" style="background:#FDE8E8;color:#B82E2E">Negativa</span><br><span style="font-size:14px">Subject + was/were + not + verb-ing</span></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;font-weight:800;margin-bottom:12px">🎯 Combinación clave</h3>
+      <div style="font-size:13px;color:var(--text2);line-height:1.8">
+        <div style="background:var(--orange-light);border-radius:8px;padding:12px;margin-bottom:8px">
+          Past Continuous + Simple Past<br>
+          <em>"I <strong>was cooking</strong> when she <strong>arrived</strong>."</em>
+        </div>
+        La acción larga (was cooking) es interrumpida por la corta (arrived).
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <table class="tense-table">
+      <thead><tr><th>Nivel</th><th>Oración</th><th>Traducción</th></tr></thead>
+      <tbody id="pastContExamples"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================= PRESENT PERFECT ============================= -->
+<div id="presentperf" class="section fade-in">
+  <div class="page-header">
+    <h1>💙 Present Perfect</h1>
+    <p>Conecta el pasado con el presente. Experiencias, logros y situaciones que empezaron antes.</p>
+  </div>
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card" style="background:linear-gradient(135deg,var(--blue-light),#fff)">
+      <h3 style="font-size:14px;font-weight:800;color:var(--blue-dark);margin-bottom:12px">📐 Estructura</h3>
+      <div style="margin-bottom:8px"><span class="tense-table formula">Afirmativa</span><br><span style="font-size:14px">Subject + have/has + past participle</span></div>
+      <div style="margin-bottom:8px"><span class="tense-table formula" style="background:#FDE8E8;color:#B82E2E">Negativa</span><br><span style="font-size:14px">Subject + haven't/hasn't + past participle</span></div>
+      <div><span class="tense-table formula" style="background:var(--green-light);color:var(--green-dark)">Interrogativa</span><br><span style="font-size:14px">Have/Has + subject + past participle?</span></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;font-weight:800;margin-bottom:12px">⏰ Marcadores clave</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;font-size:12px">
+        <span class="tag tag-a2">ever</span><span class="tag tag-a2">never</span>
+        <span class="tag tag-a2">already</span><span class="tag tag-a2">yet</span>
+        <span class="tag tag-a2">just</span><span class="tag tag-a2">since</span>
+        <span class="tag tag-a2">for</span><span class="tag tag-a2">recently</span>
+      </div>
+      <div style="font-size:13px;color:var(--text2);margin-top:12px">
+        ⚠️ <strong>NO</strong> se usa con tiempo específico (yesterday, in 2020...)
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <table class="tense-table">
+      <thead><tr><th>Nivel</th><th>Oración</th><th>Traducción</th></tr></thead>
+      <tbody id="presPerfExamples"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================= PAST PERFECT ============================= -->
+<div id="pastperf" class="section fade-in">
+  <div class="page-header">
+    <h1>💜 Past Perfect</h1>
+    <p>Una acción pasada que ocurrió <em>antes</em> de otra acción pasada. El "pasado del pasado".</p>
+  </div>
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card" style="background:linear-gradient(135deg,var(--purple-light),#fff)">
+      <h3 style="font-size:14px;font-weight:800;color:var(--purple-dark);margin-bottom:12px">📐 Estructura</h3>
+      <div><span class="tense-table formula">Afirmativa</span><br><span style="font-size:14px">Subject + had + past participle</span></div>
+      <div style="margin-top:8px;background:var(--purple-light);border-radius:8px;padding:10px;font-size:13px">
+        <em>"When I arrived, she <strong>had already left</strong>."</em>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;font-weight:800;margin-bottom:12px">⏰ Marcadores</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;font-size:12px">
+        <span class="tag tag-b1">already</span><span class="tag tag-b1">by the time</span>
+        <span class="tag tag-b1">before</span><span class="tag tag-b1">after</span>
+        <span class="tag tag-b1">when</span><span class="tag tag-b1">never</span>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <table class="tense-table">
+      <thead><tr><th>Nivel</th><th>Oración</th><th>Traducción</th></tr></thead>
+      <tbody id="pastPerfExamples"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================= PARTICIPIOS ============================= -->
+<div id="participios" class="section fade-in">
+  <div class="page-header">
+    <h1>📌 Participios</h1>
+    <p>El participio pasado es clave en tiempos perfectos, voz pasiva y adjetivos.</p>
+  </div>
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card">
+      <h3 style="font-size:14px;font-weight:800;color:var(--green-dark);margin-bottom:12px">✅ Regulares: + ED</h3>
+      <div style="font-size:13px;color:var(--text2);line-height:2">
+        <div>play → played → <strong>played</strong></div>
+        <div>study → studied → <strong>studied</strong></div>
+        <div>stop → stopped → <strong>stopped</strong></div>
+        <div>dance → danced → <strong>danced</strong></div>
+        <div>travel → traveled → <strong>traveled</strong></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;font-weight:800;color:var(--purple-dark);margin-bottom:12px">⚡ Irregulares: memorizar</h3>
+      <div style="font-size:13px;color:var(--text2);line-height:2">
+        <div>go → went → <strong>gone</strong></div>
+        <div>be → was/were → <strong>been</strong></div>
+        <div>have → had → <strong>had</strong></div>
+        <div>see → saw → <strong>seen</strong></div>
+        <div>write → wrote → <strong>written</strong></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">🎯 Usos del participio</h3>
+    <table class="tense-table">
+      <thead><tr><th>Uso</th><th>Ejemplo</th><th>Traducción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-a2">Present Perfect</span></td><td><em>I have <strong>eaten</strong> already.</em></td><td>Ya he comido.</td></tr>
+        <tr><td><span class="tag tag-a2">Past Perfect</span></td><td><em>She had <strong>left</strong> before noon.</em></td><td>Ella había salido.</td></tr>
+        <tr><td><span class="tag tag-b1">Voz Pasiva</span></td><td><em>The book was <strong>written</strong> in 1984.</em></td><td>El libro fue escrito.</td></tr>
+        <tr><td><span class="tag tag-b1">Adjetivo</span></td><td><em>A <strong>broken</strong> window.</em></td><td>Una ventana rota.</td></tr>
+        <tr><td><span class="tag tag-b2">Reducción rel.</span></td><td><em>The car <strong>stolen</strong> last night...</em></td><td>El coche robado...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================= FLASHCARDS ============================= -->
+<div id="flashcards" class="section fade-in">
+  <div class="page-header">
+    <h1>🃏 Flashcards</h1>
+    <p>Toca la tarjeta para voltearla. Sistema de repetición espaciada integrado.</p>
+  </div>
+
+  <div style="margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+    <label class="input-label" style="margin-bottom:0">Filtrar:</label>
+    <select class="input-field" style="width:auto;padding:8px 12px" id="fcFilter" onchange="filterFlashcards()">
+      <option value="all">Todos los verbos</option>
+      <option value="A1">A1 — Básicos</option>
+      <option value="A2">A2 — Regulares</option>
+      <option value="B1">B1 — Irregulares</option>
+      <option value="hard">⭐ Difíciles</option>
+    </select>
+    <select class="input-field" style="width:auto;padding:8px 12px" id="fcMode" onchange="filterFlashcards()">
+      <option value="normal">Modo normal</option>
+      <option value="spaced">Repetición espaciada</option>
+    </select>
+  </div>
+
+  <div style="text-align:center;margin-bottom:10px">
+    <span id="fcCounter" style="font-size:13px;color:var(--text3);font-weight:700">1 / 1</span>
+  </div>
+
+  <div class="flashcard-scene" id="flashcardScene" onclick="flipCard()">
+    <div class="flashcard-inner">
+      <div class="flashcard-face flashcard-front">
+        <div class="fc-verb" id="fcVerb">-</div>
+        <div class="fc-hint">Toca para ver la respuesta</div>
+      </div>
+      <div class="flashcard-face flashcard-back">
+        <div class="fc-meaning" id="fcMeaning">-</div>
+        <div class="fc-forms" id="fcForms">-</div>
+        <div class="fc-example" id="fcExample">-</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:10px;justify-content:center;margin:20px 0;flex-wrap:wrap">
+    <button class="btn btn-ghost" onclick="prevCard()">◀ Anterior</button>
+    <button class="btn btn-success" onclick="rateCard('easy')">✅ Fácil</button>
+    <button class="btn btn-orange" onclick="rateCard('hard')">⭐ Difícil</button>
+    <button class="btn btn-primary" onclick="nextCard()">Siguiente ▶</button>
+  </div>
+
+  <div class="card card-sm" style="max-width:380px;margin:0 auto;text-align:center">
+    <div style="font-size:13px;color:var(--text3);font-weight:700;margin-bottom:8px">SESIÓN ACTUAL</div>
+    <div style="display:flex;gap:20px;justify-content:center">
+      <div><div id="fcCorrect" style="font-size:20px;font-weight:900;color:var(--green)">0</div><div style="font-size:11px;color:var(--text3)">Fácil</div></div>
+      <div><div id="fcHard" style="font-size:20px;font-weight:900;color:var(--orange)">0</div><div style="font-size:11px;color:var(--text3)">Difícil</div></div>
+      <div><div id="fcTotal" style="font-size:20px;font-weight:900;color:var(--blue)">0</div><div style="font-size:11px;color:var(--text3)">Total</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= JUEGOS ============================= -->
+<div id="juegos" class="section fade-in">
+  <div class="page-header">
+    <h1>🎮 Juegos de Aprendizaje</h1>
+    <p>Aprende jugando con 5 modos diferentes. Cada partida gana XP.</p>
+  </div>
+
+  <div id="gameSelector">
+    <div class="grid-3" style="margin-bottom:24px">
+      <div class="card" style="cursor:pointer;text-align:center;padding:28px" onclick="startGame('quiz')">
+        <div style="font-size:40px;margin-bottom:10px">❓</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:6px">Quiz Múltiple</div>
+        <div style="font-size:12px;color:var(--text3)">4 opciones, elige la correcta</div>
+        <div style="margin-top:12px"><span class="tag tag-a1">+10 XP / acierto</span></div>
+      </div>
+      <div class="card" style="cursor:pointer;text-align:center;padding:28px" onclick="startGame('memory')">
+        <div style="font-size:40px;margin-bottom:10px">🧠</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:6px">Memoria</div>
+        <div style="font-size:12px;color:var(--text3)">Encuentra los pares verbo-significado</div>
+        <div style="margin-top:12px"><span class="tag tag-a2">+20 XP / juego</span></div>
+      </div>
+      <div class="card" style="cursor:pointer;text-align:center;padding:28px" onclick="startGame('fill')">
+        <div style="font-size:40px;margin-bottom:10px">✏️</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:6px">Completar Oración</div>
+        <div style="font-size:12px;color:var(--text3)">Escribe la forma correcta</div>
+        <div style="margin-top:12px"><span class="tag tag-b1">+15 XP / acierto</span></div>
+      </div>
+      <div class="card" style="cursor:pointer;text-align:center;padding:28px" onclick="startGame('match')">
+        <div style="font-size:40px;margin-bottom:10px">🔗</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:6px">Relacionar</div>
+        <div style="font-size:12px;color:var(--text3)">Une verbo con su significado</div>
+        <div style="margin-top:12px"><span class="tag tag-a1">+10 XP / par</span></div>
+      </div>
+      <div class="card" style="cursor:pointer;text-align:center;padding:28px" onclick="startGame('speed')">
+        <div style="font-size:40px;margin-bottom:10px">⏱️</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:6px">Contra el Reloj</div>
+        <div style="font-size:12px;color:var(--text3)">60 segundos, máximo aciertos</div>
+        <div style="margin-top:12px"><span class="tag tag-b2">+25 XP / ronda</span></div>
+      </div>
+      <div class="card" style="cursor:pointer;text-align:center;padding:28px" onclick="startGame('past')">
+        <div style="font-size:40px;margin-bottom:10px">⏮️</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:6px">Escribe el Pasado</div>
+        <div style="font-size:12px;color:var(--text3)">Escribe la forma pasada del verbo</div>
+        <div style="margin-top:12px"><span class="tag tag-b1">+15 XP / acierto</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="gameArea" style="display:none">
+    <div id="gameContent"></div>
+  </div>
+</div>
+
+<!-- ============================= DESAFÍOS ============================= -->
+<div id="desafios" class="section fade-in">
+  <div class="page-header">
+    <h1>🔥 Desafíos</h1>
+    <p>Pon a prueba tu conocimiento con desafíos de tiempo limitado y puntuación máxima.</p>
+  </div>
+  <div class="grid-2">
+    <div class="card" style="border-left:4px solid var(--orange)">
+      <div style="font-size:28px;margin-bottom:8px">⚡</div>
+      <h3 style="font-size:16px;font-weight:800;margin-bottom:6px">Desafío Rayo</h3>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px">30 preguntas en 3 minutos. Velocidad máxima.</p>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+        <span class="tag tag-b2">+50 XP</span>
+        <span style="font-size:12px;color:var(--text3)">⏱️ 3 min</span>
+      </div>
+      <button class="btn btn-orange" onclick="startChallenge('lightning')">Empezar</button>
+    </div>
+    <div class="card" style="border-left:4px solid var(--purple)">
+      <div style="font-size:28px;margin-bottom:8px">🧩</div>
+      <h3 style="font-size:16px;font-weight:800;margin-bottom:6px">Maratón de Irregulares</h3>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Todos los irregulares sin errores. Sin tiempo.</p>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+        <span class="tag tag-b1">+100 XP</span>
+        <span style="font-size:12px;color:var(--text3)">∞ tiempo</span>
+      </div>
+      <button class="btn btn-purple" onclick="startChallenge('marathon')">Empezar</button>
+    </div>
+    <div class="card" style="border-left:4px solid var(--blue)">
+      <div style="font-size:28px;margin-bottom:8px">🎯</div>
+      <h3 style="font-size:16px;font-weight:800;margin-bottom:6px">Precisión Perfecta</h3>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px">10 preguntas, 0 errores para ganar.</p>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+        <span class="tag tag-a2">+75 XP</span>
+        <span style="font-size:12px;color:var(--text3)">∞ tiempo</span>
+      </div>
+      <button class="btn btn-primary" onclick="startChallenge('perfect')">Empezar</button>
+    </div>
+    <div class="card" style="border-left:4px solid var(--green)">
+      <div style="font-size:28px;margin-bottom:8px">🌍</div>
+      <h3 style="font-size:16px;font-weight:800;margin-bottom:6px">Desafío C1</h3>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Solo verbos B2 y C1. Para los más avanzados.</p>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+        <span class="tag tag-c1">+150 XP</span>
+        <span style="font-size:12px;color:var(--text3)">⏱️ 5 min</span>
+      </div>
+      <button class="btn btn-success" onclick="startChallenge('c1')">Empezar</button>
+    </div>
+  </div>
+  <div id="challengeArea" style="margin-top:24px"></div>
+</div>
+
+<!-- ============================= HISTORIAS ============================= -->
+<div id="historias" class="section fade-in">
+  <div class="page-header">
+    <h1>📚 Historias Interactivas</h1>
+    <p>Aprende verbos en contexto real completando historias fascinantes.</p>
+  </div>
+  <div class="grid-2" style="margin-bottom:18px">
+    <div class="card" style="cursor:pointer" onclick="loadStory(0)">
+      <div style="font-size:24px;margin-bottom:8px">🏖️</div>
+      <div style="font-weight:800;font-size:15px;margin-bottom:4px">Un día en la playa</div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Simple Past · A1-A2</div>
+      <div style="display:flex;gap:6px"><span class="tag tag-a1">A1</span><span class="tag tag-a2">10 verbos</span></div>
+    </div>
+    <div class="card" style="cursor:pointer" onclick="loadStory(1)">
+      <div style="font-size:24px;margin-bottom:8px">🏙️</div>
+      <div style="font-weight:800;font-size:15px;margin-bottom:4px">Una semana en Nueva York</div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Present Perfect · B1</div>
+      <div style="display:flex;gap:6px"><span class="tag tag-b1">B1</span><span class="tag tag-a2">12 verbos</span></div>
+    </div>
+  </div>
+  <div id="storyArea"></div>
+</div>
+
+<!-- ============================= EXÁMENES ============================= -->
+<div id="examenes" class="section fade-in">
+  <div class="page-header">
+    <h1>📝 Exámenes</h1>
+    <p>Evalúa tu nivel real con exámenes por nivel. Obtén tu certificado de superación.</p>
+  </div>
+  <div id="examSelector">
+    <div class="grid-2">
+      <div class="card" style="border-top:4px solid var(--green)">
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:8px">Examen A1</h3>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:14px">15 preguntas sobre verbos básicos y Simple Present.</p>
+        <div style="display:flex;gap:8px;margin-bottom:14px"><span class="tag tag-a1">A1</span><span style="font-size:12px;color:var(--text3)">15 preguntas · ~8 min</span></div>
+        <button class="btn btn-success" onclick="startExam('A1')">Comenzar examen</button>
+      </div>
+      <div class="card" style="border-top:4px solid var(--blue)">
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:8px">Examen A2</h3>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:14px">20 preguntas. Pasado, presente continuo y regulares.</p>
+        <div style="display:flex;gap:8px;margin-bottom:14px"><span class="tag tag-a2">A2</span><span style="font-size:12px;color:var(--text3)">20 preguntas · ~12 min</span></div>
+        <button class="btn btn-primary" onclick="startExam('A2')">Comenzar examen</button>
+      </div>
+      <div class="card" style="border-top:4px solid var(--purple)">
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:8px">Examen B1</h3>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:14px">25 preguntas. Irregulares y tiempos perfectos.</p>
+        <div style="display:flex;gap:8px;margin-bottom:14px"><span class="tag tag-b1">B1</span><span style="font-size:12px;color:var(--text3)">25 preguntas · ~15 min</span></div>
+        <button class="btn btn-purple" onclick="startExam('B1')">Comenzar examen</button>
+      </div>
+      <div class="card" style="border-top:4px solid var(--orange)">
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:8px">Examen B2/C1</h3>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:14px">30 preguntas. Todo el vocabulario avanzado.</p>
+        <div style="display:flex;gap:8px;margin-bottom:14px"><span class="tag tag-c1">C1</span><span style="font-size:12px;color:var(--text3)">30 preguntas · ~20 min</span></div>
+        <button class="btn btn-orange" onclick="startExam('C1')">Comenzar examen</button>
+      </div>
+    </div>
+  </div>
+  <div id="examArea" style="display:none"></div>
+</div>
+
+<!-- ============================= ESTADÍSTICAS ============================= -->
+<div id="estadisticas" class="section fade-in">
+  <div class="page-header">
+    <h1>📊 Estadísticas de Progreso</h1>
+    <p>Visualiza tu avance, puntos fuertes y áreas de mejora.</p>
+  </div>
+  <div class="grid-4" style="margin-bottom:24px">
+    <div class="stat-box"><div class="stat-val" style="color:var(--blue)" id="sVerbos">0</div><div class="stat-label">Verbos vistos</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--green)" id="sXp">0</div><div class="stat-label">XP Total</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--orange)" id="sRacha">0</div><div class="stat-label">Racha máx</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--purple)" id="sJuegos">0</div><div class="stat-label">Juegos jugados</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:16px">📈 Actividad semanal</h3>
+      <div class="bar-chart" id="weeklyChart">
+        <div class="bar-wrap"><div class="bar" style="height:30%"></div><div class="bar-lbl">L</div><div class="bar-val">0</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:60%"></div><div class="bar-lbl">M</div><div class="bar-val">0</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:45%"></div><div class="bar-lbl">X</div><div class="bar-val">0</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:80%"></div><div class="bar-lbl">J</div><div class="bar-val">0</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:50%"></div><div class="bar-lbl">V</div><div class="bar-val">0</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:20%"></div><div class="bar-lbl">S</div><div class="bar-val">0</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:10%"></div><div class="bar-lbl">D</div><div class="bar-val">0</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">🎯 Distribución por nivel</h3>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:4px">
+            <span>A1 — Básico</span><span id="st_pctA1">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill green" id="st_barA1" style="width:0%"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:4px">
+            <span>A2 — Elemental</span><span id="st_pctA2">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="st_barA2" style="width:0%"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:4px">
+            <span>B1 — Intermedio</span><span id="st_pctB1">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill orange" id="st_barB1" style="width:0%"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:4px">
+            <span>B2/C1 — Avanzado</span><span id="st_pctB2">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="st_barB2" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= REPASO ============================= -->
+<div id="repaso" class="section fade-in">
+  <div class="page-header">
+    <h1>🔄 Repaso Inteligente</h1>
+    <p>Algoritmo de repetición espaciada: más práctica donde más lo necesitas.</p>
+  </div>
+  <div class="card" style="margin-bottom:18px;background:linear-gradient(135deg,var(--purple-light),#fff)">
+    <div style="display:flex;align-items:flex-start;gap:14px">
+      <div style="font-size:32px">🧠</div>
+      <div>
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:6px">¿Cómo funciona la Repetición Espaciada?</h3>
+        <p style="font-size:13px;color:var(--text2);line-height:1.7">
+          El sistema analiza qué verbos te cuestan más trabajo y los programa para repasar más seguido.
+          Los verbos que dominas aparecen cada vez menos. Así maximizas la retención a largo plazo con el mínimo tiempo.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div id="spacedReviewArea">
+    <div class="grid-2" style="margin-bottom:18px">
+      <div class="card card-sm" style="text-align:center">
+        <div style="font-size:24px;font-weight:900;color:var(--orange)" id="hardCount">0</div>
+        <div style="font-size:12px;color:var(--text3)">Verbos difíciles</div>
+      </div>
+      <div class="card card-sm" style="text-align:center">
+        <div style="font-size:24px;font-weight:900;color:var(--green)" id="dueCount">0</div>
+        <div style="font-size:12px;color:var(--text3)">Listos para repasar</div>
+      </div>
+    </div>
+    <button class="btn btn-purple btn-lg" onclick="startSpacedReview()">🔄 Iniciar Repaso Ahora</button>
+    <div id="spacedReviewContent" style="margin-top:20px"></div>
+  </div>
+</div>
+
+<!-- ============================= LOGROS ============================= -->
+<div id="logros" class="section fade-in">
+  <div class="page-header">
+    <h1>🏆 Logros</h1>
+    <p>Desbloquea insignias demostrando tu dominio del inglés.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px" id="achievementsContainer"></div>
+</div>
+
+</div><!-- end main-content -->
+
+<script>
+/* ============================================================
+   VERB MASTER — COMPLETE APP JAVASCRIPT
+   ============================================================ */
+
+// ===== DATA =====
+const VERBS = [
+  // A1 BÁSICOS
+  {id:'be',inf:'be',meaning:'ser / estar',pron:'/biː/',past:'was/were',pp:'been',level:'A1',type:'irregular',
+   ex1:'I <em>am</em> happy.',ex2:'She <em>was</em> at school yesterday.',ex3:'They <em>have been</em> friends for years.'},
+  {id:'have',inf:'have',meaning:'tener',pron:'/hæv/',past:'had',pp:'had',level:'A1',type:'irregular',
+   ex1:'I <em>have</em> a dog.',ex2:'We <em>had</em> a great time.',ex3:'She <em>has had</em> that car for 10 years.'},
+  {id:'do',inf:'do',meaning:'hacer',pron:'/duː/',past:'did',pp:'done',level:'A1',type:'irregular',
+   ex1:'I <em>do</em> my homework.',ex2:'He <em>did</em> the dishes.',ex3:'What <em>have</em> you <em>done</em> today?'},
+  {id:'go',inf:'go',meaning:'ir',pron:'/ɡəʊ/',past:'went',pp:'gone',level:'A1',type:'irregular',
+   ex1:'I <em>go</em> to school.',ex2:'She <em>went</em> to the store.',ex3:'They <em>have gone</em> home already.'},
+  {id:'say',inf:'say',meaning:'decir',pron:'/seɪ/',past:'said',pp:'said',level:'A1',type:'irregular',
+   ex1:'I <em>say</em> hello.',ex2:'He <em>said</em> goodbye.',ex3:'What did she <em>say</em>?'},
+  {id:'get',inf:'get',meaning:'obtener / llegar',pron:'/ɡet/',past:'got',pp:'gotten/got',level:'A1',type:'irregular',
+   ex1:'I <em>get</em> up at 7.',ex2:'She <em>got</em> a gift.',ex3:'He <em>has gotten</em> better.'},
+  {id:'make',inf:'make',meaning:'hacer / crear',pron:'/meɪk/',past:'made',pp:'made',level:'A1',type:'irregular',
+   ex1:'I <em>make</em> coffee.',ex2:'She <em>made</em> a cake.',ex3:'They <em>have made</em> a decision.'},
+  {id:'know',inf:'know',meaning:'saber / conocer',pron:'/nəʊ/',past:'knew',pp:'known',level:'A1',type:'irregular',
+   ex1:'I <em>know</em> him.',ex2:'She <em>knew</em> the answer.',ex3:'Have you <em>known</em> her long?'},
+  {id:'think',inf:'think',meaning:'pensar / creer',pron:'/θɪŋk/',past:'thought',pp:'thought',level:'A1',type:'irregular',
+   ex1:'I <em>think</em> it\'s nice.',ex2:'He <em>thought</em> about it.',ex3:'I <em>have thought</em> of a solution.'},
+  {id:'see',inf:'see',meaning:'ver',pron:'/siː/',past:'saw',pp:'seen',level:'A1',type:'irregular',
+   ex1:'I <em>see</em> a bird.',ex2:'We <em>saw</em> a movie.',ex3:'I <em>have seen</em> that film before.'},
+  {id:'come',inf:'come',meaning:'venir',pron:'/kʌm/',past:'came',pp:'come',level:'A1',type:'irregular',
+   ex1:'Please <em>come</em> here.',ex2:'She <em>came</em> home late.',ex3:'He <em>has come</em> a long way.'},
+  {id:'want',inf:'want',meaning:'querer',pron:'/wɒnt/',past:'wanted',pp:'wanted',level:'A1',type:'regular',
+   ex1:'I <em>want</em> water.',ex2:'She <em>wanted</em> a dog.',ex3:'He had <em>wanted</em> to travel.'},
+  {id:'look',inf:'look',meaning:'mirar / parecer',pron:'/lʊk/',past:'looked',pp:'looked',level:'A1',type:'regular',
+   ex1:'<em>Look</em> at that!',ex2:'She <em>looked</em> happy.',ex3:'I\'ve <em>looked</em> everywhere for it.'},
+  {id:'give',inf:'give',meaning:'dar',pron:'/ɡɪv/',past:'gave',pp:'given',level:'A1',type:'irregular',
+   ex1:'Please <em>give</em> me the pen.',ex2:'He <em>gave</em> her a gift.',ex3:'She <em>has given</em> so much.'},
+  {id:'take',inf:'take',meaning:'tomar / llevar',pron:'/teɪk/',past:'took',pp:'taken',level:'A1',type:'irregular',
+   ex1:'<em>Take</em> your umbrella.',ex2:'He <em>took</em> the bus.',ex3:'She <em>has taken</em> medicine.'},
+  {id:'use',inf:'use',meaning:'usar',pron:'/juːz/',past:'used',pp:'used',level:'A1',type:'regular',
+   ex1:'I <em>use</em> my phone.',ex2:'She <em>used</em> a pen.',ex3:'We <em>have used</em> all the paper.'},
+  {id:'like',inf:'like',meaning:'gustar',pron:'/laɪk/',past:'liked',pp:'liked',level:'A1',type:'regular',
+   ex1:'I <em>like</em> pizza.',ex2:'She <em>liked</em> the movie.',ex3:'I\'ve always <em>liked</em> classical music.'},
+  {id:'need',inf:'need',meaning:'necesitar',pron:'/niːd/',past:'needed',pp:'needed',level:'A1',type:'regular',
+   ex1:'I <em>need</em> help.',ex2:'She <em>needed</em> rest.',ex3:'You <em>have needed</em> this for a while.'},
+  {id:'work',inf:'work',meaning:'trabajar / funcionar',pron:'/wɜːk/',past:'worked',pp:'worked',level:'A1',type:'regular',
+   ex1:'I <em>work</em> here.',ex2:'He <em>worked</em> all day.',ex3:'She <em>has worked</em> here for 5 years.'},
+  {id:'call',inf:'call',meaning:'llamar',pron:'/kɔːl/',past:'called',pp:'called',level:'A1',type:'regular',
+   ex1:'<em>Call</em> me later.',ex2:'She <em>called</em> her mom.',ex3:'I\'ve <em>called</em> three times.'},
+  // A2 REGULARES
+  {id:'play',inf:'play',meaning:'jugar / tocar',pron:'/pleɪ/',past:'played',pp:'played',level:'A2',type:'regular',
+   ex1:'I <em>play</em> soccer.',ex2:'They <em>played</em> all afternoon.',ex3:'She <em>has played</em> piano since age 5.'},
+  {id:'open',inf:'open',meaning:'abrir',pron:'/ˈəʊpən/',past:'opened',pp:'opened',level:'A2',type:'regular',
+   ex1:'<em>Open</em> the door.',ex2:'She <em>opened</em> the window.',ex3:'They <em>have opened</em> a new store.'},
+  {id:'close',inf:'close',meaning:'cerrar',pron:'/kləʊz/',past:'closed',pp:'closed',level:'A2',type:'regular',
+   ex1:'Please <em>close</em> the door.',ex2:'He <em>closed</em> his book.',ex3:'The restaurant <em>has closed</em>.'},
+  {id:'walk',inf:'walk',meaning:'caminar',pron:'/wɔːk/',past:'walked',pp:'walked',level:'A2',type:'regular',
+   ex1:'I <em>walk</em> to school.',ex2:'We <em>walked</em> for miles.',ex3:'She <em>has walked</em> this route before.'},
+  {id:'talk',inf:'talk',meaning:'hablar / charlar',pron:'/tɔːk/',past:'talked',pp:'talked',level:'A2',type:'regular',
+   ex1:'We <em>talk</em> every day.',ex2:'They <em>talked</em> for hours.',ex3:'We <em>have talked</em> about this.'},
+  {id:'ask',inf:'ask',meaning:'preguntar / pedir',pron:'/ɑːsk/',past:'asked',pp:'asked',level:'A2',type:'regular',
+   ex1:'I <em>ask</em> questions.',ex2:'She <em>asked</em> for help.',ex3:'He <em>has asked</em> her to marry him.'},
+  {id:'help',inf:'help',meaning:'ayudar',pron:'/help/',past:'helped',pp:'helped',level:'A2',type:'regular',
+   ex1:'Can you <em>help</em> me?',ex2:'He <em>helped</em> his friend.',ex3:'She <em>has helped</em> many people.'},
+  {id:'move',inf:'move',meaning:'mover / mudarse',pron:'/muːv/',past:'moved',pp:'moved',level:'A2',type:'regular',
+   ex1:'Please <em>move</em> the chair.',ex2:'She <em>moved</em> to London.',ex3:'They <em>have moved</em> twice.'},
+  {id:'live',inf:'live',meaning:'vivir',pron:'/lɪv/',past:'lived',pp:'lived',level:'A2',type:'regular',
+   ex1:'I <em>live</em> in Madrid.',ex2:'She <em>lived</em> in Paris.',ex3:'He <em>has lived</em> here for 10 years.'},
+  {id:'love',inf:'love',meaning:'amar / encantar',pron:'/lʌv/',past:'loved',pp:'loved',level:'A2',type:'regular',
+   ex1:'I <em>love</em> music.',ex2:'She <em>loved</em> him deeply.',ex3:'They <em>have loved</em> this place for years.'},
+  {id:'study',inf:'study',meaning:'estudiar',pron:'/ˈstʌdi/',past:'studied',pp:'studied',level:'A2',type:'regular',
+   ex1:'I <em>study</em> English.',ex2:'She <em>studied</em> all night.',ex3:'He <em>has studied</em> medicine.'},
+  {id:'travel',inf:'travel',meaning:'viajar',pron:'/ˈtrævəl/',past:'traveled',pp:'traveled',level:'A2',type:'regular',
+   ex1:'I <em>travel</em> a lot.',ex2:'They <em>traveled</em> to Japan.',ex3:'She <em>has traveled</em> to 30 countries.'},
+  {id:'try',inf:'try',meaning:'intentar / probar',pron:'/traɪ/',past:'tried',pp:'tried',level:'A2',type:'regular',
+   ex1:'<em>Try</em> this food.',ex2:'She <em>tried</em> to run.',ex3:'I <em>have tried</em> everything.'},
+  {id:'start',inf:'start',meaning:'empezar',pron:'/stɑːt/',past:'started',pp:'started',level:'A2',type:'regular',
+   ex1:'Let\'s <em>start</em> now.',ex2:'She <em>started</em> crying.',ex3:'We <em>have started</em> a new project.'},
+  {id:'finish',inf:'finish',meaning:'terminar',pron:'/ˈfɪnɪʃ/',past:'finished',pp:'finished',level:'A2',type:'regular',
+   ex1:'I <em>finish</em> at 5.',ex2:'He <em>finished</em> the book.',ex3:'She <em>has finished</em> her degree.'},
+  // B1 IRREGULARES
+  {id:'speak',inf:'speak',meaning:'hablar (idioma)',pron:'/spiːk/',past:'spoke',pp:'spoken',level:'B1',type:'irregular',
+   ex1:'I <em>speak</em> English.',ex2:'She <em>spoke</em> at the meeting.',ex3:'Have you ever <em>spoken</em> to a native speaker?'},
+  {id:'write',inf:'write',meaning:'escribir',pron:'/raɪt/',past:'wrote',pp:'written',level:'B1',type:'irregular',
+   ex1:'I <em>write</em> every day.',ex2:'She <em>wrote</em> a letter.',ex3:'He <em>has written</em> three novels.'},
+  {id:'read',inf:'read',meaning:'leer',pron:'/riːd/',past:'read',pp:'read',level:'B1',type:'irregular',
+   ex1:'I <em>read</em> books.',ex2:'She <em>read</em> the article.',ex3:'I <em>have read</em> that report already.'},
+  {id:'eat',inf:'eat',meaning:'comer',pron:'/iːt/',past:'ate',pp:'eaten',level:'B1',type:'irregular',
+   ex1:'I <em>eat</em> breakfast at 8.',ex2:'We <em>ate</em> pizza.',ex3:'Have you <em>eaten</em> sushi?'},
+  {id:'drink',inf:'drink',meaning:'beber',pron:'/drɪŋk/',past:'drank',pp:'drunk',level:'B1',type:'irregular',
+   ex1:'I <em>drink</em> water.',ex2:'She <em>drank</em> coffee.',ex3:'He <em>has never drunk</em> wine.'},
+  {id:'run',inf:'run',meaning:'correr',pron:'/rʌn/',past:'ran',pp:'run',level:'B1',type:'irregular',
+   ex1:'I <em>run</em> every morning.',ex2:'She <em>ran</em> a marathon.',ex3:'I <em>have run</em> this route before.'},
+  {id:'drive',inf:'drive',meaning:'conducir',pron:'/draɪv/',past:'drove',pp:'driven',level:'B1',type:'irregular',
+   ex1:'I <em>drive</em> to work.',ex2:'He <em>drove</em> all night.',ex3:'She <em>has driven</em> across the country.'},
+  {id:'fly',inf:'fly',meaning:'volar',pron:'/flaɪ/',past:'flew',pp:'flown',level:'B1',type:'irregular',
+   ex1:'Birds <em>fly</em> south.',ex2:'We <em>flew</em> to Paris.',ex3:'I <em>have flown</em> over 50 times.'},
+  {id:'teach',inf:'teach',meaning:'enseñar',pron:'/tiːtʃ/',past:'taught',pp:'taught',level:'B1',type:'irregular',
+   ex1:'She <em>teaches</em> math.',ex2:'He <em>taught</em> me English.',ex3:'She <em>has taught</em> for 20 years.'},
+  {id:'buy',inf:'buy',meaning:'comprar',pron:'/baɪ/',past:'bought',pp:'bought',level:'B1',type:'irregular',
+   ex1:'I <em>buy</em> groceries.',ex2:'She <em>bought</em> a dress.',ex3:'He <em>has bought</em> a new car.'},
+  {id:'bring',inf:'bring',meaning:'traer',pron:'/brɪŋ/',past:'brought',pp:'brought',level:'B1',type:'irregular',
+   ex1:'<em>Bring</em> your ID.',ex2:'She <em>brought</em> flowers.',ex3:'Have you <em>brought</em> your passport?'},
+  {id:'find',inf:'find',meaning:'encontrar',pron:'/faɪnd/',past:'found',pp:'found',level:'B1',type:'irregular',
+   ex1:'I can\'t <em>find</em> my keys.',ex2:'She <em>found</em> a job.',ex3:'We <em>have found</em> the solution.'},
+  {id:'build',inf:'build',meaning:'construir',pron:'/bɪld/',past:'built',pp:'built',level:'B1',type:'irregular',
+   ex1:'They <em>build</em> houses.',ex2:'He <em>built</em> a table.',ex3:'We <em>have built</em> a strong team.'},
+  {id:'break',inf:'break',meaning:'romper',pron:'/breɪk/',past:'broke',pp:'broken',level:'B1',type:'irregular',
+   ex1:'Don\'t <em>break</em> it.',ex2:'She <em>broke</em> her leg.',ex3:'The record <em>has been broken</em>.'},
+  {id:'leave',inf:'leave',meaning:'salir / dejar',pron:'/liːv/',past:'left',pp:'left',level:'B1',type:'irregular',
+   ex1:'I <em>leave</em> at 8.',ex2:'She <em>left</em> early.',ex3:'He <em>has left</em> the company.'},
+  // B2/C1 AVANZADOS
+  {id:'achieve',inf:'achieve',meaning:'lograr / alcanzar',pron:'/əˈtʃiːv/',past:'achieved',pp:'achieved',level:'B2',type:'regular',
+   ex1:'Set goals and <em>achieve</em> them.',ex2:'She <em>achieved</em> her dreams.',ex3:'He <em>has achieved</em> remarkable success.'},
+  {id:'consider',inf:'consider',meaning:'considerar',pron:'/kənˈsɪdər/',past:'considered',pp:'considered',level:'B2',type:'regular',
+   ex1:'<em>Consider</em> all options.',ex2:'They <em>considered</em> moving.',ex3:'The proposal <em>has been considered</em>.'},
+  {id:'develop',inf:'develop',meaning:'desarrollar',pron:'/dɪˈveləp/',past:'developed',pp:'developed',level:'B2',type:'regular',
+   ex1:'We <em>develop</em> new skills.',ex2:'She <em>developed</em> an app.',ex3:'The city <em>has developed</em> rapidly.'},
+  {id:'establish',inf:'establish',meaning:'establecer',pron:'/ɪˈstæblɪʃ/',past:'established',pp:'established',level:'C1',type:'regular',
+   ex1:'<em>Establish</em> clear rules.',ex2:'They <em>established</em> a company.',ex3:'She <em>has established</em> herself in the field.'},
+  {id:'maintain',inf:'maintain',meaning:'mantener',pron:'/meɪnˈteɪn/',past:'maintained',pp:'maintained',level:'C1',type:'regular',
+   ex1:'<em>Maintain</em> a healthy diet.',ex2:'She <em>maintained</em> her composure.',ex3:'We <em>have maintained</em> high standards.'},
+  {id:'argue',inf:'argue',meaning:'argumentar / discutir',pron:'/ˈɑːɡjuː/',past:'argued',pp:'argued',level:'B2',type:'regular',
+   ex1:'They <em>argue</em> often.',ex2:'She <em>argued</em> her point.',ex3:'They <em>have argued</em> about this for years.'},
+  {id:'identify',inf:'identify',meaning:'identificar',pron:'/aɪˈdentɪfaɪ/',past:'identified',pp:'identified',level:'B2',type:'regular',
+   ex1:'<em>Identify</em> the problem.',ex2:'She <em>identified</em> the suspect.',ex3:'We <em>have identified</em> the key issues.'},
+  {id:'provide',inf:'provide',meaning:'proporcionar',pron:'/prəˈvaɪd/',past:'provided',pp:'provided',level:'B2',type:'regular',
+   ex1:'<em>Provide</em> evidence.',ex2:'They <em>provided</em> food.',ex3:'The company <em>has provided</em> training.'},
+  {id:'involve',inf:'involve',meaning:'involucrar / implicar',pron:'/ɪnˈvɒlv/',past:'involved',pp:'involved',level:'B2',type:'regular',
+   ex1:'The plan <em>involves</em> risk.',ex2:'It <em>involved</em> a lot of work.',ex3:'She <em>has been involved</em> since day one.'},
+  {id:'represent',inf:'represent',meaning:'representar',pron:'/ˌreprɪˈzent/',past:'represented',pp:'represented',level:'C1',type:'regular',
+   ex1:'This symbol <em>represents</em> peace.',ex2:'He <em>represented</em> his country.',ex3:'She <em>has represented</em> thousands of clients.'},
+];
+
+// ===== TENSE EXAMPLES =====
+const tenseExamples = {
+  simplepresent: [
+    {level:'A1',sentence:'I <strong>wake up</strong> at 7 every morning.',trans:'Me despierto a las 7 cada mañana.'},
+    {level:'A1',sentence:'She <strong>works</strong> at a hospital.',trans:'Ella trabaja en un hospital.'},
+    {level:'A2',sentence:'He <strong>doesn\'t eat</strong> meat.',trans:'Él no come carne.'},
+    {level:'A2',sentence:'<strong>Do</strong> you <strong>speak</strong> French?',trans:'¿Hablas francés?'},
+    {level:'B1',sentence:'The train to London <strong>leaves</strong> at 9:15.',trans:'El tren a Londres sale a las 9:15.'},
+    {level:'B2',sentence:'Scientists <strong>claim</strong> that the data <strong>confirms</strong> their theory.',trans:'Los científicos afirman que los datos confirman su teoría.'},
+    {level:'C1',sentence:'The policy <strong>stipulates</strong> that all employees <strong>comply</strong> with safety regulations.',trans:'La política estipula que todos los empleados cumplan las normas de seguridad.'},
+  ],
+  simplepast: [
+    {level:'A1',sentence:'I <strong>went</strong> to the park yesterday.',trans:'Fui al parque ayer.'},
+    {level:'A1',sentence:'She <strong>made</strong> a delicious cake.',trans:'Ella hizo un pastel delicioso.'},
+    {level:'A2',sentence:'They <strong>didn\'t go</strong> to the party last night.',trans:'Ellos no fueron a la fiesta anoche.'},
+    {level:'A2',sentence:'<strong>Did</strong> you <strong>see</strong> that movie?',trans:'¿Viste esa película?'},
+    {level:'B1',sentence:'He <strong>was working</strong> when the earthquake <strong>struck</strong>.',trans:'Él estaba trabajando cuando el terremoto golpeó.'},
+    {level:'B2',sentence:'The company <strong>underwent</strong> significant restructuring last year.',trans:'La empresa sufrió una reestructuración significativa el año pasado.'},
+    {level:'C1',sentence:'The treaty <strong>was ratified</strong> in 1889, fundamentally <strong>altering</strong> the political landscape.',trans:'El tratado fue ratificado en 1889, alterando fundamentalmente el panorama político.'},
+  ],
+  presentcont: [
+    {level:'A1',sentence:'I <strong>am eating</strong> lunch right now.',trans:'Estoy comiendo el almuerzo ahora mismo.'},
+    {level:'A1',sentence:'She <strong>is studying</strong> for the exam.',trans:'Ella está estudiando para el examen.'},
+    {level:'A2',sentence:'They <strong>are not playing</strong> outside today.',trans:'Ellos no están jugando afuera hoy.'},
+    {level:'B1',sentence:'We <strong>are meeting</strong> the clients tomorrow morning.',trans:'Nos reunimos con los clientes mañana por la mañana.'},
+    {level:'B2',sentence:'The economy <strong>is growing</strong> at an unprecedented rate.',trans:'La economía está creciendo a un ritmo sin precedentes.'},
+    {level:'C1',sentence:'The committee <strong>is currently reviewing</strong> the implications of the new legislation.',trans:'El comité está revisando actualmente las implicaciones de la nueva legislación.'},
+  ],
+  pastcont: [
+    {level:'A2',sentence:'I <strong>was watching</strong> TV when you called.',trans:'Estaba viendo la TV cuando llamaste.'},
+    {level:'A2',sentence:'They <strong>were playing</strong> football all afternoon.',trans:'Estaban jugando al fútbol toda la tarde.'},
+    {level:'B1',sentence:'She <strong>was working</strong> late when the power went out.',trans:'Ella estaba trabajando tarde cuando se fue la luz.'},
+    {level:'B2',sentence:'While he <strong>was negotiating</strong> the contract, his partner <strong>secured</strong> the deal.',trans:'Mientras negociaba el contrato, su socio cerró el trato.'},
+    {level:'C1',sentence:'The suspect <strong>was reportedly staying</strong> at a local hotel when the incident occurred.',trans:'El sospechoso supuestamente se alojaba en un hotel local cuando ocurrió el incidente.'},
+  ],
+  presentperf: [
+    {level:'A2',sentence:'I <strong>have visited</strong> Paris twice.',trans:'He visitado París dos veces.'},
+    {level:'A2',sentence:'She <strong>hasn\'t eaten</strong> yet.',trans:'Ella todavía no ha comido.'},
+    {level:'B1',sentence:'They <strong>have lived</strong> in this house since 2010.',trans:'Han vivido en esta casa desde 2010.'},
+    {level:'B1',sentence:'<strong>Have</strong> you ever <strong>tried</strong> sushi?',trans:'¿Alguna vez has probado el sushi?'},
+    {level:'B2',sentence:'Scientists <strong>have recently discovered</strong> a new species of bird.',trans:'Los científicos han descubierto recientemente una nueva especie de ave.'},
+    {level:'C1',sentence:'The research group <strong>has consistently demonstrated</strong> that early intervention significantly <strong>improves</strong> outcomes.',trans:'El grupo de investigación ha demostrado constantemente que la intervención temprana mejora significativamente los resultados.'},
+  ],
+  pastperf: [
+    {level:'B1',sentence:'When I arrived, she <strong>had already left</strong>.',trans:'Cuando llegué, ella ya se había ido.'},
+    {level:'B1',sentence:'He <strong>had never seen</strong> the ocean before.',trans:'Nunca había visto el océano antes.'},
+    {level:'B2',sentence:'By the time the ambulance arrived, the doctors <strong>had stabilized</strong> the patient.',trans:'Cuando llegó la ambulancia, los médicos ya habían estabilizado al paciente.'},
+    {level:'C1',sentence:'The negotiators realized they <strong>had misunderstood</strong> the terms of the original agreement.',trans:'Los negociadores se dieron cuenta de que habían malinterpretado los términos del acuerdo original.'},
+  ],
+};
+
+// ===== STORIES =====
+const STORIES = [
+  {
+    title:'Un día en la playa',
+    level:'A1-A2',
+    text:'Last summer, Maria __[go]__ to the beach with her family. They __[wake]__ up early and __[pack]__ their bags. When they __[arrive]__ at the beach, the sun __[shine]__ brightly. Maria __[swim]__ in the ocean while her brother __[build]__ a sandcastle. They __[eat]__ sandwiches for lunch and __[drink]__ lemonade. In the evening, they __[watch]__ the sunset and __[feel]__ very happy.',
+    blanks:['went','woke','packed','arrived','was shining','swam','built','ate','drank','watched','felt'],
+  },
+  {
+    title:'Una semana en Nueva York',
+    level:'B1',
+    text:'Sara __[visit]__ New York for the first time. She __[never/be]__ to the United States before. She __[already/see]__ Times Square and __[eat]__ a real New York bagel. She __[also/take]__ the subway and __[visit]__ the Metropolitan Museum. However, she __[not/see]__ the Statue of Liberty yet — she __[plan]__ to go tomorrow. It __[be]__ the most exciting trip of her life so far.',
+    blanks:['has visited','had never been','has already seen','has eaten','has also taken','has visited','hasn\'t seen','has planned','has been'],
+  },
+];
+
+// ===== ACHIEVEMENTS =====
+const ACHIEVEMENTS_DEF = [
+  {id:'first_verb',icon:'🌱',title:'Primer Paso',desc:'Aprende tu primer verbo',xp:10,cond:s=>s.verbsSeen>=1},
+  {id:'ten_verbs',icon:'📖',title:'Estudiante Activo',desc:'Aprende 10 verbos',xp:25,cond:s=>s.verbsSeen>=10},
+  {id:'all_a1',icon:'🅰️',title:'Nivel A1 Completo',desc:'Aprende todos los verbos A1',xp:50,cond:s=>s.verbsSeen>=20},
+  {id:'all_a2',icon:'📗',title:'Nivel A2 Completo',desc:'Aprende todos los verbos A2',xp:75,cond:s=>s.verbsSeen>=35},
+  {id:'first_game',icon:'🎮',title:'¡A Jugar!',desc:'Completa tu primer juego',xp:15,cond:s=>s.gamesPlayed>=1},
+  {id:'streak3',icon:'🔥',title:'Racha de 3 Días',desc:'Estudia 3 días seguidos',xp:30,cond:s=>s.streak>=3},
+  {id:'streak7',icon:'💫',title:'Una Semana Entera',desc:'Estudia 7 días seguidos',xp:75,cond:s=>s.streak>=7},
+  {id:'fc100',icon:'🃏',title:'Flashcard Master',desc:'Repasa 100 flashcards',xp:40,cond:s=>s.flashcardsReviewed>=100},
+  {id:'xp500',icon:'⚡',title:'500 XP',desc:'Acumula 500 XP',xp:50,cond:s=>s.xp>=500},
+  {id:'xp1000',icon:'🏆',title:'1000 XP',desc:'Acumula 1000 XP',xp:100,cond:s=>s.xp>=1000},
+  {id:'all_irregular',icon:'🌀',title:'Rey de los Irregulares',desc:'Aprende todos los irregulares',xp:100,cond:s=>s.verbsSeen>=50},
+  {id:'perfect_exam',icon:'🎓',title:'Examen Perfecto',desc:'Saca 100% en un examen',xp:150,cond:s=>s.perfectExams>=1},
+];
+
+// ===== STATE =====
+let state = {
+  xp:0, level:1, streak:0, verbsSeen:0,
+  gamesPlayed:0, flashcardsReviewed:0, perfectExams:0,
+  seenVerbs:{}, hardVerbs:{}, ratings:{},
+  lastStudyDate:'', activities:[],
+};
+
+function loadState(){
+  try{
+    const saved = localStorage.getItem('vm_state');
+    if(saved) state = {...state,...JSON.parse(saved)};
+  }catch(e){}
+  checkStreak();
+}
+function saveState(){
+  try{ localStorage.setItem('vm_state',JSON.stringify(state)); }catch(e){}
+}
+function addXP(amount,reason=''){
+  state.xp += amount;
+  const lvlThresholds = [0,100,250,450,700,1000,1400,1900,2500,3200,4000];
+  let newLevel = 1;
+  for(let i=0;i<lvlThresholds.length;i++){ if(state.xp>=lvlThresholds[i]) newLevel=i+1; }
+  if(newLevel>state.level){ state.level=newLevel; showToast(`🎉 ¡Subiste al nivel ${newLevel}!`,'success'); }
+  if(reason) addActivity(`+${amount} XP — ${reason}`);
+  updateXPDisplay();
+  checkAchievements();
+  saveState();
+}
+function checkStreak(){
+  const today = new Date().toDateString();
+  if(state.lastStudyDate === today) return;
+  const yesterday = new Date(Date.now()-86400000).toDateString();
+  if(state.lastStudyDate === yesterday){ state.streak++; }
+  else if(state.lastStudyDate !== today){ state.streak = state.lastStudyDate ? 0 : state.streak; }
+  state.lastStudyDate = today;
+}
+function addActivity(txt){
+  state.activities.unshift({txt,time:Date.now()});
+  if(state.activities.length>20) state.activities=state.activities.slice(0,20);
+  renderActivity();
+}
+function renderActivity(){
+  const el = document.getElementById('activityFeed');
+  if(!el) return;
+  if(!state.activities.length){
+    el.innerHTML='<div style="font-size:13px;color:var(--text3);text-align:center;padding:20px">¡Empieza a estudiar para ver tu actividad aquí! 🌱</div>';
+    return;
+  }
+  el.innerHTML = state.activities.slice(0,5).map(a=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg);border-radius:8px;">
+      <span style="font-size:11px;color:var(--text3)">${timeAgo(a.time)}</span>
+      <span style="font-size:13px;font-weight:600">${a.txt}</span>
+    </div>`).join('');
+}
+function timeAgo(ts){
+  const d=Date.now()-ts,m=Math.floor(d/60000),h=Math.floor(d/3600000);
+  if(d<60000) return 'ahora';
+  if(m<60) return `${m}min`;
+  if(h<24) return `${h}h`;
+  return `${Math.floor(h/24)}d`;
+}
+function updateXPDisplay(){
+  const lvlThresholds = [0,100,250,450,700,1000,1400,1900,2500,3200,4000];
+  const cur = lvlThresholds[state.level-1]||0;
+  const next = lvlThresholds[state.level]||4000;
+  const pct = Math.min(100,Math.round((state.xp-cur)/(next-cur)*100));
+  document.getElementById('xpBar').style.width=pct+'%';
+  document.getElementById('xpCurrent').textContent=state.xp;
+  document.getElementById('xpMax').textContent=next+' XP';
+  document.getElementById('levelLabel').textContent=state.level;
+  document.getElementById('nextLvl').textContent=(next-state.xp);
+  document.getElementById('topbarXp').textContent=state.xp+' XP';
+  // Home stats
+  ['statXp','sXp'].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent=state.xp; });
+  ['statNivel'].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent=state.level; });
+  ['statRacha','sRacha'].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent=state.streak; });
+  const sv=Object.keys(state.seenVerbs).length;
+  ['statVerbos','sVerbos'].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent=sv; });
+  ['sJuegos'].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent=state.gamesPlayed; });
+  document.getElementById('streakCount').textContent=state.streak;
+  // Progress bars
+  const a1v=VERBS.filter(v=>v.level==='A1').length;
+  const a2v=VERBS.filter(v=>v.level==='A2').length;
+  const b1v=VERBS.filter(v=>v.level==='B1').length;
+  const b2v=VERBS.filter(v=>v.level==='B2'||v.level==='C1').length;
+  const a1s=VERBS.filter(v=>v.level==='A1'&&state.seenVerbs[v.id]).length;
+  const a2s=VERBS.filter(v=>v.level==='A2'&&state.seenVerbs[v.id]).length;
+  const b1s=VERBS.filter(v=>v.level==='B1'&&state.seenVerbs[v.id]).length;
+  const b2s=VERBS.filter(v=>(v.level==='B2'||v.level==='C1')&&state.seenVerbs[v.id]).length;
+  const pcts = [
+    {pct:Math.round(a1s/a1v*100)||0,bar:'barA1',pctEl:'pctA1',sb:'st_barA1',sp:'st_pctA1'},
+    {pct:Math.round(a2s/a2v*100)||0,bar:'barA2',pctEl:'pctA2',sb:'st_barA2',sp:'st_pctA2'},
+    {pct:Math.round(b1s/b1v*100)||0,bar:'barB1',pctEl:'pctB1',sb:'st_barB1',sp:'st_pctB1'},
+    {pct:Math.round(b2s/b2v*100)||0,bar:'barB2',pctEl:'pctB2',sb:'st_barB2',sp:'st_pctB2'},
+  ];
+  pcts.forEach(p=>{
+    [p.bar,p.sb].forEach(id=>{ const e=document.getElementById(id); if(e) e.style.width=p.pct+'%'; });
+    [p.pctEl,p.sp].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent=p.pct+'%'; });
+  });
+  // Spaced review counts
+  const hc=document.getElementById('hardCount');
+  const dc=document.getElementById('dueCount');
+  if(hc) hc.textContent=Object.keys(state.hardVerbs).length;
+  if(dc) dc.textContent=Object.keys(state.hardVerbs).length+Math.floor(sv/5);
+}
+function checkAchievements(){
+  ACHIEVEMENTS_DEF.forEach(a=>{
+    if(!state['ach_'+a.id] && a.cond(state)){
+      state['ach_'+a.id]=true;
+      showToast(`🏆 Logro: ${a.title} (+${a.xp} XP)`,'success');
+      saveState();
+    }
+  });
+}
+
+// ===== NAVIGATION =====
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const sec = document.getElementById(id);
+  if(sec){ sec.classList.add('active'); sec.classList.add('fade-in'); }
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    if(n.getAttribute('onclick') && n.getAttribute('onclick').includes(`'${id}'`))
+      n.classList.add('active');
+  });
+  closeSidebar();
+  updateXPDisplay();
+  // Section-specific inits
+  if(id==='flashcards') initFlashcards();
+  if(id==='logros') renderAchievements();
+  if(id==='repaso') updateRepaso();
+}
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// ===== TOAST =====
+function showToast(msg, type='success'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show '+(type==='error'?'error':type==='warning'?'warning':'');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ===== MODAL =====
+function openVerbModal(verbId){
+  const v = VERBS.find(x=>x.id===verbId);
+  if(!v) return;
+  document.getElementById('modalContent').innerHTML = `
+    <div style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+        <span style="font-size:30px;font-weight:900">${v.inf}</span>
+        <span class="tag tag-${v.level.toLowerCase()}">${v.level}</span>
+      </div>
+      <div style="font-size:13px;color:var(--text3);margin-bottom:2px">🔊 ${v.pron}</div>
+      <div style="font-size:18px;font-weight:800;color:var(--blue-dark)">${v.meaning}</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+      <div class="verb-form" style="padding:8px 14px"><span>Pasado:</span> <strong>${v.past}</strong></div>
+      <div class="verb-form" style="padding:8px 14px"><span>Participio:</span> <strong>${v.pp}</strong></div>
+      <div class="verb-form" style="padding:8px 14px"><span>Tipo:</span> <strong>${v.type}</strong></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div><span style="font-size:11px;font-weight:800;color:var(--text3);letter-spacing:.5px">BÁSICO (A1)</span>
+        <div class="verb-example" style="margin-top:4px">${v.ex1}</div></div>
+      <div><span style="font-size:11px;font-weight:800;color:var(--text3);letter-spacing:.5px">INTERMEDIO (B1)</span>
+        <div class="verb-example" style="margin-top:4px;border-left-color:var(--purple)">${v.ex2}</div></div>
+      <div><span style="font-size:11px;font-weight:800;color:var(--text3);letter-spacing:.5px">AVANZADO (C1)</span>
+        <div class="verb-example" style="margin-top:4px;border-left-color:var(--orange)">${v.ex3}</div></div>
+    </div>
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-success btn-sm" onclick="markSeen('${v.id}');closeModal()">✅ Marcar aprendido</button>
+      <button class="btn btn-orange btn-sm" onclick="markHard('${v.id}');closeModal()">⭐ Marcar difícil</button>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cerrar</button>
+    </div>
+  `;
+  document.getElementById('verbModal').classList.add('open');
+}
+function closeModal(){ document.getElementById('verbModal').classList.remove('open'); }
+function markSeen(id){
+  state.seenVerbs[id]=true; state.verbsSeen=Object.keys(state.seenVerbs).length;
+  addXP(5,'Verbo aprendido');
+  showToast('✅ Marcado como aprendido');
+  checkAchievements(); saveState(); updateXPDisplay();
+}
+function markHard(id){ state.hardVerbs[id]=true; saveState(); showToast('⭐ Marcado como difícil'); }
+function markAllLearned(lvl){
+  VERBS.filter(v=>v.level===lvl).forEach(v=>{ if(!state.seenVerbs[v.id]){ state.seenVerbs[v.id]=true; }});
+  state.verbsSeen=Object.keys(state.seenVerbs).length;
+  addXP(50,`Nivel ${lvl} completado`); updateXPDisplay(); saveState();
+  showToast(`✅ ¡Todos los verbos ${lvl} marcados!`);
+}
+
+// ===== RENDER VERBS =====
+function renderVerbCard(v){
+  const seen = state.seenVerbs[v.id];
+  return `<div class="verb-card${seen?' seen':''}" onclick="openVerbModal('${v.id}')">
+    <div class="verb-card-header">
+      <div>
+        <div class="verb-main">${v.inf}</div>
+        <div class="verb-pron">${v.pron}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <span class="tag tag-${v.level.toLowerCase()}">${v.level}</span>
+        ${seen?'<span style="font-size:14px">✅</span>':''}
+      </div>
+    </div>
+    <div class="verb-card-body">
+      <div class="verb-meaning">${v.meaning}</div>
+      <div class="verb-forms">
+        <div class="verb-form"><span>Past:</span>${v.past}</div>
+        <div class="verb-form"><span>PP:</span>${v.pp}</div>
+      </div>
+      <div class="verb-example">${v.ex1}</div>
+    </div>
+  </div>`;
+}
+function renderVerbSection(containerId, level){
+  const c = document.getElementById(containerId);
+  if(!c) return;
+  c.innerHTML = VERBS.filter(v=>v.level===level).map(renderVerbCard).join('');
+}
+function renderIrregularTable(){
+  const tbody = document.getElementById('irregularTableBody');
+  if(!tbody) return;
+  tbody.innerHTML = VERBS.filter(v=>v.type==='irregular').map(v=>`
+    <tr style="cursor:pointer" onclick="openVerbModal('${v.id}')">
+      <td><strong>${v.inf}</strong></td>
+      <td>${v.meaning}</td>
+      <td><strong style="color:var(--purple)">${v.past}</strong></td>
+      <td><strong style="color:var(--orange)">${v.pp}</strong></td>
+      <td style="font-style:italic;color:var(--text3)">${v.pron}</td>
+      <td><span class="tag tag-${v.level.toLowerCase()}">${v.level}</span></td>
+    </tr>`).join('');
+}
+function renderTenseExamples(sectionId, dataKey){
+  const tbody = document.getElementById(sectionId);
+  if(!tbody || !tenseExamples[dataKey]) return;
+  tbody.innerHTML = tenseExamples[dataKey].map(e=>`
+    <tr>
+      <td><span class="tag tag-${e.level.toLowerCase()}">${e.level}</span></td>
+      <td class="sentence">${e.sentence}</td>
+      <td style="color:var(--text3);font-size:13px">${e.trans}</td>
+    </tr>`).join('');
+}
+function renderPath(){
+  const steps = [
+    {title:'Verbos Básicos A1',sub:'20 verbos esenciales del inglés',section:'basicos',status: Object.keys(state.seenVerbs).length>=5?'done':'active'},
+    {title:'Simple Present',sub:'El tiempo más fundamental',section:'simplepresent',status: Object.keys(state.seenVerbs).length>=10?'done':'active'},
+    {title:'Verbos Regulares A2',sub:'Forma el pasado con -ed',section:'regulares',status: Object.keys(state.seenVerbs).length>=20?'done':'locked'},
+    {title:'Simple Past',sub:'Acciones completadas en el pasado',section:'simplepast',status:'locked'},
+    {title:'Present Continuous',sub:'Lo que ocurre ahora',section:'presentcont',status:'locked'},
+    {title:'Verbos Irregulares B1',sub:'Las formas únicas más usadas',section:'irregulares',status:'locked'},
+    {title:'Present Perfect',sub:'Pasado con relevancia presente',section:'presentperf',status:'locked'},
+    {title:'Past Continuous',sub:'Acciones en progreso en el pasado',section:'pastcont',status:'locked'},
+    {title:'Past Perfect',sub:'El pasado del pasado',section:'pastperf',status:'locked'},
+    {title:'Vocabulario B2/C1',sub:'Verbos avanzados y académicos',section:'regulares',status:'locked'},
+  ];
+  document.getElementById('pathContainer').innerHTML = steps.map((s,i)=>`
+    <div class="path-step" onclick="showSection('${s.section}')">
+      <div class="path-num ${s.status}">${s.status==='done'?'✓':(i+1)}</div>
+      <div class="path-step-body">
+        <div class="path-step-title">${s.title}</div>
+        <div class="path-step-sub">${s.sub}</div>
+      </div>
+      ${s.status==='locked'?'<span style="font-size:18px;color:var(--text3)">🔒</span>':'<span style="font-size:18px">→</span>'}
+    </div>`).join('');
+}
+
+// ===== FLASHCARDS =====
+let fcCards = [], fcIdx = 0, fcCorrect = 0, fcHard = 0, fcTotal = 0;
+function filterFlashcards(){
+  const filter = document.getElementById('fcFilter').value;
+  const mode = document.getElementById('fcMode').value;
+  if(filter==='all') fcCards=[...VERBS];
+  else if(filter==='hard') fcCards=VERBS.filter(v=>state.hardVerbs[v.id]);
+  else fcCards=VERBS.filter(v=>v.level===filter);
+  if(mode==='spaced'){
+    const hard=fcCards.filter(v=>state.hardVerbs[v.id]);
+    const rest=fcCards.filter(v=>!state.hardVerbs[v.id]);
+    fcCards=[...hard,...hard,...rest];
+    fcCards.sort(()=>Math.random()-.5);
+  } else {
+    fcCards.sort(()=>Math.random()-.5);
+  }
+  fcIdx=0; fcCorrect=0; fcHard=0; fcTotal=0;
+  updateFCDisplay();
+}
+function initFlashcards(){
+  if(!fcCards.length) filterFlashcards();
+  updateFCDisplay();
+}
+function updateFCDisplay(){
+  if(!fcCards.length){ document.getElementById('fcVerb').textContent='No hay verbos'; return; }
+  const v=fcCards[fcIdx];
+  document.getElementById('fcVerb').textContent=v.inf;
+  document.getElementById('fcMeaning').textContent=v.meaning;
+  document.getElementById('fcForms').innerHTML=`<strong>Past:</strong> ${v.past} &nbsp;|&nbsp; <strong>PP:</strong> ${v.pp}<br><em>${v.pron}</em>`;
+  document.getElementById('fcExample').innerHTML=v.ex1;
+  document.getElementById('fcCounter').textContent=`${fcIdx+1} / ${fcCards.length}`;
+  document.getElementById('fcCorrect').textContent=fcCorrect;
+  document.getElementById('fcHard').textContent=fcHard;
+  document.getElementById('fcTotal').textContent=fcTotal;
+  document.getElementById('flashcardScene').classList.remove('flipped');
+}
+function flipCard(){ document.getElementById('flashcardScene').classList.toggle('flipped'); }
+function nextCard(){
+  if(fcIdx<fcCards.length-1) fcIdx++;
+  else { fcIdx=0; showToast('🔄 ¡Vuelta completa!'); }
+  updateFCDisplay();
+}
+function prevCard(){
+  if(fcIdx>0) fcIdx--;
+  updateFCDisplay();
+}
+function rateCard(rating){
+  const v=fcCards[fcIdx];
+  fcTotal++;
+  state.flashcardsReviewed++;
+  if(rating==='easy'){ fcCorrect++; delete state.hardVerbs[v.id]; markSeen(v.id); }
+  else { fcHard++; state.hardVerbs[v.id]=true; }
+  addXP(rating==='easy'?5:2,'Flashcard revisada');
+  saveState();
+  nextCard();
+}
+
+// ===== GAMES =====
+let currentGame = null;
+let gameTimer = null;
+
+function startGame(type){
+  currentGame = type;
+  document.getElementById('gameSelector').style.display='none';
+  document.getElementById('gameArea').style.display='block';
+  if(type==='quiz') renderQuizGame();
+  else if(type==='memory') renderMemoryGame();
+  else if(type==='fill') renderFillGame();
+  else if(type==='match') renderMatchGame();
+  else if(type==='speed') renderSpeedGame();
+  else if(type==='past') renderPastGame();
+}
+function backToGames(){
+  document.getElementById('gameSelector').style.display='block';
+  document.getElementById('gameArea').style.display='none';
+  clearInterval(gameTimer);
+  document.getElementById('gameContent').innerHTML='';
+}
+
+// QUIZ GAME
+let quizState={q:0,score:0,total:10,wrong:[]};
+function renderQuizGame(){
+  quizState={q:0,score:0,total:10,wrong:[]};
+  state.gamesPlayed++;
+  nextQuiz();
+}
+function nextQuiz(){
+  const gc=document.getElementById('gameContent');
+  if(quizState.q>=quizState.total){
+    const pct=Math.round(quizState.score/quizState.total*100);
+    const xpGained=quizState.score*10;
+    addXP(xpGained,'Quiz completado');
+    if(pct===100) state.perfectExams++;
+    checkAchievements(); saveState();
+    gc.innerHTML=`
+      <div style="text-align:center">
+        <div style="font-size:48px;margin-bottom:12px">${pct>=80?'🎉':'😅'}</div>
+        <h2 style="font-size:22px;font-weight:900;margin-bottom:8px">¡Quiz terminado!</h2>
+        <div style="font-size:36px;font-weight:900;color:${pct>=80?'var(--green)':'var(--orange)'};margin-bottom:4px">${pct}%</div>
+        <div style="font-size:14px;color:var(--text3);margin-bottom:20px">${quizState.score}/${quizState.total} correctas · +${xpGained} XP</div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="renderQuizGame()">🔄 Jugar de nuevo</button>
+          <button class="btn btn-ghost" onclick="backToGames()">← Volver</button>
+        </div>
+      </div>`;
+    return;
+  }
+  const pool=shuffle([...VERBS]);
+  const correct=pool[0];
+  const opts=shuffle([correct,...pool.slice(1,4)]);
+  gc.innerHTML=`
+    <div style="text-align:center;margin-bottom:8px">
+      <span style="font-size:12px;font-weight:700;color:var(--text3)">PREGUNTA ${quizState.q+1}/${quizState.total}</span>
+      <div class="progress-bar" style="margin-top:6px"><div class="progress-fill" style="width:${(quizState.q/quizState.total)*100}%"></div></div>
+    </div>
+    <div class="quiz-question">¿Qué significa <strong>"${correct.inf}"</strong>?</div>
+    <div class="quiz-options" id="quizOpts">
+      ${opts.map(o=>`<button class="quiz-opt" onclick="answerQuiz('${o.id}','${correct.id}',this)">${o.meaning}</button>`).join('')}
+    </div>
+    <div style="text-align:center;margin-top:8px"><span style="font-size:13px;font-weight:700;color:var(--green)">✅ ${quizState.score} correctas</span></div>
+  `;
+}
+function answerQuiz(chosen, correct, btn){
+  document.querySelectorAll('.quiz-opt').forEach(b=>b.disabled=true);
+  if(chosen===correct){ btn.classList.add('correct'); quizState.score++; showToast('¡Correcto! ✅'); }
+  else{
+    btn.classList.add('wrong');
+    document.querySelectorAll('.quiz-opt').forEach(b=>{ if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes(`'${correct}'`)) b.classList.add('correct'); });
+    showToast('Incorrecto ❌','error');
+  }
+  quizState.q++;
+  setTimeout(nextQuiz, 1200);
+}
+
+// MEMORY GAME
+let memCards=[], memFlipped=[], memMatched=0;
+function renderMemoryGame(){
+  state.gamesPlayed++;
+  const pool=shuffle([...VERBS]).slice(0,6);
+  memCards=shuffle([...pool.map(v=>({id:v.id,text:v.inf,pair:v.id+'_a'})),...pool.map(v=>({id:v.id,text:v.meaning,pair:v.id+'_b'}))]);
+  memFlipped=[]; memMatched=0;
+  document.getElementById('gameContent').innerHTML=`
+    <div style="text-align:center;margin-bottom:16px">
+      <h3 style="font-size:16px;font-weight:800">🧠 Juego de Memoria</h3>
+      <p style="font-size:13px;color:var(--text2)">Encuentra los pares: verbo — significado</p>
+      <div style="margin-top:6px;font-size:13px;font-weight:700" id="memScore">Parejas: 0/6</div>
+    </div>
+    <div class="memory-grid" id="memGrid"></div>
+    <div style="text-align:center;margin-top:16px">
+      <button class="btn btn-ghost btn-sm" onclick="backToGames()">← Volver</button>
+    </div>`;
+  renderMemGrid();
+}
+function renderMemGrid(){
+  const grid=document.getElementById('memGrid');
+  if(!grid) return;
+  grid.innerHTML=memCards.map((c,i)=>`
+    <div class="mem-card" id="mc_${i}" onclick="flipMem(${i})">
+      <span style="font-size:20px">?</span>
+      <div class="mem-back">${c.text}</div>
+    </div>`).join('');
+}
+function flipMem(i){
+  if(memFlipped.length>=2) return;
+  const el=document.getElementById('mc_'+i);
+  if(!el||el.classList.contains('revealed')||el.classList.contains('matched')) return;
+  el.classList.add('revealed');
+  memFlipped.push(i);
+  if(memFlipped.length===2){
+    const [a,b]=memFlipped;
+    const ca=memCards[a], cb=memCards[b];
+    setTimeout(()=>{
+      if(ca.id===cb.id&&ca.pair!==cb.pair){
+        document.getElementById('mc_'+a).classList.add('matched');
+        document.getElementById('mc_'+b).classList.add('matched');
+        memMatched++;
+        document.getElementById('memScore').textContent=`Parejas: ${memMatched}/6`;
+        showToast('¡Par correcto! 🎯');
+        if(memMatched===6){
+          addXP(20,'Juego de Memoria completado');
+          showToast('🎉 ¡Juego completado! +20 XP');
+        }
+      } else {
+        document.getElementById('mc_'+a).classList.remove('revealed');
+        document.getElementById('mc_'+b).classList.remove('revealed');
+      }
+      memFlipped=[];
+    },900);
+  }
+}
+
+// FILL GAME
+let fillQ=0, fillScore=0;
+const fillQuestions=VERBS.slice(0,15).map(v=>({
+  template:`She ${v.inf==='be'?'was':'___'} very tired.`,
+  sentence:`I _____ the book yesterday.`,
+  answer:v.past, hint:`Pasado de "${v.inf}"`, verb:v
+}));
+function renderFillGame(){
+  state.gamesPlayed++; fillQ=0; fillScore=0;
+  nextFill();
+}
+function nextFill(){
+  const gc=document.getElementById('gameContent');
+  if(fillQ>=10){
+    const xp=fillScore*15;
+    addXP(xp,'Completar oraciones'); saveState();
+    gc.innerHTML=`
+      <div style="text-align:center">
+        <div style="font-size:48px">✏️</div>
+        <h2 style="font-size:22px;font-weight:900;margin:12px 0">¡Completado!</h2>
+        <div style="font-size:32px;font-weight:900;color:var(--blue);margin-bottom:16px">${fillScore}/10 · +${xp} XP</div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="renderFillGame()">🔄 Jugar de nuevo</button>
+          <button class="btn btn-ghost" onclick="backToGames()">← Volver</button>
+        </div>
+      </div>`;
+    return;
+  }
+  const v=VERBS[fillQ % VERBS.length];
+  gc.innerHTML=`
+    <div style="text-align:center;margin-bottom:16px">
+      <span style="font-size:12px;font-weight:700;color:var(--text3)">PREGUNTA ${fillQ+1}/10</span>
+      <div class="progress-bar" style="margin-top:6px"><div class="progress-fill" style="width:${fillQ*10}%"></div></div>
+    </div>
+    <div class="card" style="text-align:center;padding:30px">
+      <div style="font-size:13px;color:var(--text3);margin-bottom:8px">Escribe el PASADO de:</div>
+      <div style="font-size:36px;font-weight:900;color:var(--blue);margin-bottom:16px">${v.inf}</div>
+      <div class="fill-sentence">
+        She _____ a book yesterday.
+        <br><br>
+        <input class="fill-input" id="fillAns" placeholder="pasado..." onkeydown="if(event.key==='Enter')checkFill('${v.past.split('/')[0]}','${v.id}')">
+      </div>
+      <button class="btn btn-primary" style="margin-top:14px" onclick="checkFill('${v.past.split('/')[0]}','${v.id}')">Verificar</button>
+    </div>
+    <div style="text-align:center;margin-top:10px">
+      <button class="btn btn-ghost btn-sm" onclick="backToGames()">← Volver</button>
+    </div>`;
+  document.getElementById('fillAns').focus();
+}
+function checkFill(correct, verbId){
+  const ans=(document.getElementById('fillAns').value||'').trim().toLowerCase();
+  if(ans===correct.toLowerCase()){ fillScore++; showToast('¡Correcto! ✅'); markSeen(verbId); }
+  else { showToast(`La respuesta es: "${correct}" ❌`,'error'); }
+  fillQ++;
+  setTimeout(nextFill, 1000);
+}
+
+// MATCH GAME
+let matchLeft=[], matchRight=[], matchSel=null, matchPairs=0;
+function renderMatchGame(){
+  state.gamesPlayed++;
+  const pool=shuffle([...VERBS]).slice(0,6);
+  matchLeft=shuffle(pool.map(v=>({id:v.id,text:v.inf})));
+  matchRight=shuffle(pool.map(v=>({id:v.id,text:v.meaning})));
+  matchSel=null; matchPairs=0;
+  document.getElementById('gameContent').innerHTML=`
+    <div style="text-align:center;margin-bottom:16px">
+      <h3 style="font-weight:800">🔗 Relacionar</h3>
+      <p style="font-size:13px;color:var(--text2)">Toca un verbo y luego su significado.</p>
+      <div style="margin-top:4px;font-weight:700;font-size:13px" id="matchScore">Pares: 0/6</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:460px;margin:0 auto" id="matchGrid"></div>
+    <div style="text-align:center;margin-top:14px"><button class="btn btn-ghost btn-sm" onclick="backToGames()">← Volver</button></div>`;
+  renderMatchGrid();
+}
+function renderMatchGrid(){
+  const g=document.getElementById('matchGrid');
+  if(!g) return;
+  const left=matchLeft.map((item,i)=>`
+    <button class="quiz-opt" id="ml_${i}" onclick="selectMatch('left',${i})">
+      <strong>${item.text}</strong>
+    </button>`);
+  const right=matchRight.map((item,i)=>`
+    <button class="quiz-opt" id="mr_${i}" onclick="selectMatch('right',${i})">
+      ${item.text}
+    </button>`);
+  // Interleave
+  let html='';
+  for(let i=0;i<left.length;i++) html+=left[i]+right[i];
+  g.innerHTML=html;
+}
+function selectMatch(side, idx){
+  const item=side==='left'?matchLeft[idx]:matchRight[idx];
+  if(matchSel===null){
+    matchSel={side,idx,id:item.id};
+    document.getElementById((side==='left'?'ml_':'mr_')+idx).style.borderColor='var(--blue)';
+    document.getElementById((side==='left'?'ml_':'mr_')+idx).style.background='var(--blue-light)';
+  } else {
+    if(matchSel.side===side){ 
+      document.getElementById((matchSel.side==='left'?'ml_':'mr_')+matchSel.idx).style.borderColor='';
+      document.getElementById((matchSel.side==='left'?'ml_':'mr_')+matchSel.idx).style.background='';
+      matchSel={side,idx,id:item.id};
+      document.getElementById((side==='left'?'ml_':'mr_')+idx).style.borderColor='var(--blue)';
+      return;
+    }
+    if(matchSel.id===item.id){
+      const a=document.getElementById((matchSel.side==='left'?'ml_':'mr_')+matchSel.idx);
+      const b=document.getElementById((side==='left'?'ml_':'mr_')+idx);
+      if(a){a.classList.add('correct');a.disabled=true;}
+      if(b){b.classList.add('correct');b.disabled=true;}
+      matchPairs++;
+      document.getElementById('matchScore').textContent=`Pares: ${matchPairs}/6`;
+      showToast('¡Par correcto! 🎯');
+      if(matchPairs===6){ addXP(10,'Juego relacionar'); showToast('🎉 +10 XP'); }
+    } else {
+      const a=document.getElementById((matchSel.side==='left'?'ml_':'mr_')+matchSel.idx);
+      const b=document.getElementById((side==='left'?'ml_':'mr_')+idx);
+      if(a){a.classList.add('wrong'); setTimeout(()=>{a.classList.remove('wrong');a.style.borderColor='';a.style.background='';},700);}
+      if(b){b.classList.add('wrong'); setTimeout(()=>{b.classList.remove('wrong');},700);}
+      showToast('No coinciden ❌','error');
+    }
+    matchSel=null;
+  }
+}
+
+// SPEED GAME
+let speedScore=0, speedTime=60;
+function renderSpeedGame(){
+  state.gamesPlayed++; speedScore=0; speedTime=60;
+  clearInterval(gameTimer);
+  nextSpeed();
+  gameTimer=setInterval(()=>{
+    speedTime--;
+    const te=document.getElementById('speedTimer');
+    if(te) te.style.setProperty('--pct',(speedTime/60*100).toFixed(1));
+    const tn=document.getElementById('speedTimerNum');
+    if(tn) tn.textContent=speedTime;
+    if(speedTime<=0){
+      clearInterval(gameTimer);
+      const xp=speedScore*25;
+      addXP(xp,'Desafío de velocidad');
+      document.getElementById('gameContent').innerHTML=`
+        <div style="text-align:center">
+          <div style="font-size:48px">⏱️</div>
+          <h2 style="font-size:22px;font-weight:900;margin:12px 0">¡Tiempo!</h2>
+          <div style="font-size:32px;font-weight:900;color:var(--orange);margin-bottom:16px">${speedScore} aciertos · +${xp} XP</div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+            <button class="btn btn-orange" onclick="renderSpeedGame()">🔄 Reintentar</button>
+            <button class="btn btn-ghost" onclick="backToGames()">← Volver</button>
+          </div>
+        </div>`;
+    }
+  },1000);
+}
+function nextSpeed(){
+  const gc=document.getElementById('gameContent');
+  const pool=shuffle([...VERBS]);
+  const correct=pool[0];
+  const opts=shuffle([correct,...pool.slice(1,4)]);
+  gc.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-weight:700">✅ ${speedScore} correctas</div>
+      <div class="timer-ring" id="speedTimer" style="--pct:${(speedTime/60*100).toFixed(1)}">
+        <span class="timer-num" id="speedTimerNum">${speedTime}</span>
+      </div>
+    </div>
+    <div class="quiz-question">¿Cuál es el PASADO de <strong>"${correct.inf}"</strong>?</div>
+    <div class="quiz-options">
+      ${opts.map(o=>`<button class="quiz-opt" onclick="speedAnswer('${o.past.split('/')[0]}','${correct.past.split('/')[0]}')">${o.past}</button>`).join('')}
+    </div>`;
+}
+function speedAnswer(chosen, correct){
+  if(chosen.toLowerCase()===correct.toLowerCase()){ speedScore++; showToast('✅'); }
+  else showToast('❌','error');
+  nextSpeed();
+}
+
+// PAST GAME
+let pastQ=0, pastScore=0;
+function renderPastGame(){
+  state.gamesPlayed++; pastQ=0; pastScore=0;
+  nextPastQ();
+}
+function nextPastQ(){
+  const gc=document.getElementById('gameContent');
+  if(pastQ>=10){
+    const xp=pastScore*15; addXP(xp,'Juego de pasados'); saveState();
+    gc.innerHTML=`
+      <div style="text-align:center">
+        <div style="font-size:48px">⏮️</div>
+        <h2 style="font-size:22px;font-weight:900;margin:12px 0">¡Juego terminado!</h2>
+        <div style="font-size:32px;font-weight:900;color:var(--purple);margin-bottom:16px">${pastScore}/10 · +${xp} XP</div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-purple" onclick="renderPastGame()">🔄 Jugar de nuevo</button>
+          <button class="btn btn-ghost" onclick="backToGames()">← Volver</button>
+        </div>
+      </div>`;
+    return;
+  }
+  const v=VERBS[Math.floor(Math.random()*VERBS.length)];
+  gc.innerHTML=`
+    <div style="text-align:center;margin-bottom:16px">
+      <span style="font-size:12px;font-weight:700;color:var(--text3)">PREGUNTA ${pastQ+1}/10</span>
+    </div>
+    <div class="card" style="text-align:center;padding:30px">
+      <div style="font-size:13px;color:var(--text3);margin-bottom:8px">Escribe el PASADO SIMPLE de:</div>
+      <div style="font-size:40px;font-weight:900;color:var(--purple);margin-bottom:20px">${v.inf}</div>
+      <input class="input-field" id="pastAns" placeholder="escribe el pasado..." style="text-align:center;font-size:18px;font-weight:700;max-width:250px" onkeydown="if(event.key==='Enter')checkPast('${v.past.split('/')[0]}','${v.id}')">
+      <div style="margin-top:14px;display:flex;gap:10px;justify-content:center">
+        <button class="btn btn-purple" onclick="checkPast('${v.past.split('/')[0]}','${v.id}')">Verificar</button>
+        <button class="btn btn-ghost btn-sm" onclick="backToGames()">← Salir</button>
+      </div>
+    </div>`;
+  document.getElementById('pastAns').focus();
+}
+function checkPast(correct, verbId){
+  const ans=(document.getElementById('pastAns').value||'').trim().toLowerCase();
+  const alts=correct.toLowerCase().split('/');
+  if(alts.includes(ans)){ pastScore++; showToast('¡Correcto! ✅'); markSeen(verbId); }
+  else { showToast(`Correcto: "${correct}" ❌`,'error'); }
+  pastQ++;
+  setTimeout(nextPastQ, 1000);
+}
+
+// ===== CHALLENGES =====
+function startChallenge(type){
+  const area=document.getElementById('challengeArea');
+  if(type==='lightning') startQuickChallenge(area,30,180,'⚡ Desafío Rayo',50);
+  else if(type==='marathon') startQuickChallenge(area,15,0,'🧩 Maratón',100);
+  else if(type==='perfect') startPerfectChallenge(area);
+  else if(type==='c1') startLevelChallenge(area,['B2','C1'],150);
+}
+function startQuickChallenge(area, total, time, name, xp){
+  let score=0, q=0, timer=time, interval=null;
+  const pool=shuffle([...VERBS]);
+  function renderQ(){
+    if(q>=total){
+      clearInterval(interval);
+      area.innerHTML=`<div class="card" style="text-align:center"><div style="font-size:40px">🏆</div><h3 style="font-size:20px;font-weight:900;margin:10px 0">${name}</h3><div style="font-size:28px;font-weight:900;color:var(--green)">${score}/${total} · +${Math.floor(score/total*xp)} XP</div><button class="btn btn-primary" style="margin-top:14px" onclick="document.getElementById('challengeArea').innerHTML=''">Cerrar</button></div>`;
+      addXP(Math.floor(score/total*xp),'Desafío completado'); return;
+    }
+    const v=pool[q%pool.length];
+    const opts=shuffle([v,...shuffle(VERBS.filter(x=>x.id!==v.id)).slice(0,3)]);
+    area.innerHTML=`
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+          <span style="font-weight:700">✅ ${score}/${total}</span>
+          ${time>0?`<span style="font-weight:700;color:var(--orange)">⏱️ ${timer}s</span>`:''}
+        </div>
+        <div class="quiz-question">¿Qué significa "${v.inf}"?</div>
+        <div class="quiz-options">
+          ${opts.map(o=>`<button class="quiz-opt" onclick="chAnswer(this,'${o.id}','${v.id}')">${o.meaning}</button>`).join('')}
+        </div>
+      </div>`;
+    window._chCorrect=v.id; window._chNext=()=>{q++;renderQ();};
+  }
+  window.chAnswer=function(btn,chosen,correct){
+    document.querySelectorAll('.quiz-opt').forEach(b=>b.disabled=true);
+    if(chosen===correct){btn.classList.add('correct');score++;showToast('✅');}
+    else{btn.classList.add('wrong');showToast('❌','error');}
+    setTimeout(()=>{q++;renderQ();},800);
+  };
+  if(time>0){
+    interval=setInterval(()=>{
+      timer--;
+      const te=area.querySelector('[data-timer]');
+      if(te) te.textContent=timer+'s';
+      if(timer<=0){ clearInterval(interval); area.innerHTML=`<div class="card" style="text-align:center"><h3>⏱️ ¡Tiempo!</h3><div style="font-size:28px;font-weight:900;color:var(--orange);margin:10px 0">${score}/${q} · +${Math.floor(score/total*xp)} XP</div><button class="btn btn-primary" style="margin-top:10px" onclick="document.getElementById('challengeArea').innerHTML=''">Cerrar</button></div>`; addXP(Math.floor(score/total*xp),'Desafío');}
+    },1000);
+  }
+  renderQ();
+}
+function startPerfectChallenge(area){
+  let score=0, q=0; const total=10;
+  const pool=shuffle([...VERBS]);
+  function renderQ(){
+    if(q>=total){
+      if(score===10) state.perfectExams++;
+      addXP(score===10?75:30,'Desafío Precisión'); checkAchievements(); saveState();
+      area.innerHTML=`<div class="card" style="text-align:center"><div style="font-size:40px">${score===10?'🎯':'😅'}</div><div style="font-size:28px;font-weight:900;margin:10px 0;color:${score===10?'var(--green)':'var(--orange)'}">  ${score}/10 · +${score===10?75:30} XP</div><button class="btn btn-primary" style="margin-top:10px" onclick="document.getElementById('challengeArea').innerHTML=''">Cerrar</button></div>`;
+      return;
+    }
+    const v=pool[q];
+    const opts=shuffle([v,...shuffle(VERBS.filter(x=>x.id!==v.id)).slice(0,3)]);
+    area.innerHTML=`
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+          <span>✅ ${score}/${q}</span><span style="color:var(--purple)">🎯 Sin errores</span>
+        </div>
+        <div class="quiz-question">"${v.inf}" → pasado simple</div>
+        <div class="quiz-options">
+          ${opts.map(o=>`<button class="quiz-opt" onclick="perfectAnswer(this,'${o.past}','${v.past}','${v.id}')">${o.past}</button>`).join('')}
+        </div>
+      </div>`;
+  }
+  window.perfectAnswer=function(btn,chosen,correct,vid){
+    document.querySelectorAll('.quiz-opt').forEach(b=>b.disabled=true);
+    if(chosen.split('/')[0]===correct.split('/')[0]){btn.classList.add('correct');score++;showToast('✅');}
+    else{btn.classList.add('wrong');showToast(`Correcto: ${correct}`,'error');}
+    q++;
+    setTimeout(renderQ,1000);
+  };
+  renderQ();
+}
+function startLevelChallenge(area,levels,xp){
+  const pool=shuffle(VERBS.filter(v=>levels.includes(v.level)));
+  if(!pool.length){ area.innerHTML='<div class="card" style="text-align:center;padding:20px">Primero aprende verbos B2/C1 🎯</div>'; return; }
+  startQuickChallenge(area,Math.min(15,pool.length),300,'🌍 Desafío C1',xp);
+}
+
+// ===== STORIES =====
+function loadStory(idx){
+  const story=STORIES[idx];
+  const parts=story.text.split('__[');
+  let html='<div class="story-text">';
+  parts.forEach((part,i)=>{
+    if(i===0){ html+=part; return; }
+    const [blank, rest]=part.split(']__');
+    const ans=story.blanks[i-1]||blank;
+    html+=`<input class="story-input" data-answer="${ans}" placeholder="..." oninput="checkStoryInput(this)">`;
+    html+=rest;
+  });
+  html+='</div>';
+  document.getElementById('storyArea').innerHTML=`
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div>
+          <h3 style="font-size:18px;font-weight:900">${story.title}</h3>
+          <span class="tag tag-a1" style="margin-top:4px">${story.level}</span>
+        </div>
+        <button class="btn btn-success btn-sm" onclick="checkAllStory()">✅ Verificar todo</button>
+      </div>
+      ${html}
+      <div style="margin-top:16px;font-size:13px;color:var(--text3)">💡 Escribe los verbos en la forma correcta según el contexto.</div>
+    </div>`;
+}
+function checkStoryInput(input){
+  const ans=input.getAttribute('data-answer').toLowerCase();
+  const val=input.value.trim().toLowerCase();
+  if(val.length>=ans.length-1){
+    if(val===ans){ input.classList.add('correct'); input.classList.remove('wrong'); showToast('✅ Correcto!'); addXP(5,'Historia interactiva'); }
+    else if(val.length>=ans.length){ input.classList.add('wrong'); input.classList.remove('correct'); }
+  }
+}
+function checkAllStory(){
+  let correct=0, total=0;
+  document.querySelectorAll('.story-input').forEach(inp=>{
+    total++;
+    const ans=inp.getAttribute('data-answer').toLowerCase();
+    if(inp.value.trim().toLowerCase()===ans){ inp.classList.add('correct'); inp.classList.remove('wrong'); correct++; }
+    else{ inp.classList.add('wrong'); inp.classList.remove('correct'); }
+  });
+  const pct=Math.round(correct/total*100);
+  addXP(correct*5,'Historia completada');
+  showToast(`${pct}% correcto! +${correct*5} XP`);
+}
+
+// ===== EXAMS =====
+const examData = {
+  A1: {total:15, pool:VERBS.filter(v=>v.level==='A1')},
+  A2: {total:20, pool:VERBS.filter(v=>v.level==='A1'||v.level==='A2')},
+  B1: {total:25, pool:VERBS.filter(v=>['A1','A2','B1'].includes(v.level))},
+  C1: {total:30, pool:[...VERBS]},
+};
+let examState={q:0,score:0,level:'A1',pool:[]};
+function startExam(level){
+  document.getElementById('examSelector').style.display='none';
+  document.getElementById('examArea').style.display='block';
+  const ed=examData[level];
+  examState={q:0,score:0,level,total:ed.total,pool:shuffle([...ed.pool])};
+  nextExam();
+}
+function nextExam(){
+  const area=document.getElementById('examArea');
+  if(examState.q>=examState.total){
+    const pct=Math.round(examState.score/examState.total*100);
+    const xpMap={A1:50,A2:75,B1:100,C1:150};
+    const xp=Math.floor(pct/100*xpMap[examState.level]);
+    addXP(xp,`Examen ${examState.level}`);
+    if(pct===100){state.perfectExams++;checkAchievements();}
+    saveState();
+    area.innerHTML=`
+      <div class="card" style="text-align:center;padding:40px">
+        <div style="font-size:56px;margin-bottom:12px">${pct>=90?'🎓':pct>=70?'📚':'📖'}</div>
+        <h2 style="font-size:24px;font-weight:900;margin-bottom:8px">Examen ${examState.level} — Resultado</h2>
+        <div style="font-size:48px;font-weight:900;color:${pct>=80?'var(--green)':pct>=60?'var(--orange)':'var(--red)'};margin-bottom:8px">${pct}%</div>
+        <div style="font-size:16px;color:var(--text2);margin-bottom:4px">${examState.score}/${examState.total} respuestas correctas</div>
+        <div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:24px">+${xp} XP ganados</div>
+        <div style="font-size:14px;color:var(--text2);margin-bottom:20px;background:var(--bg);border-radius:10px;padding:12px">
+          ${pct>=90?'🌟 Excelente dominio del nivel '+examState.level:pct>=70?'👍 Buen nivel. Sigue practicando.':'💪 Continúa estudiando para mejorar.'}
+        </div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="startExam('${examState.level}')">🔄 Repetir examen</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('examSelector').style.display='';document.getElementById('examArea').style.display='none'">← Volver</button>
+        </div>
+      </div>`;
+    return;
+  }
+  const v=examState.pool[examState.q%examState.pool.length];
+  const typeRng=Math.random();
+  let question, opts, correct;
+  if(typeRng<0.4){
+    question=`¿Qué significa <strong>"${v.inf}"</strong>?`;
+    opts=shuffle([v,...shuffle(VERBS.filter(x=>x.id!==v.id)).slice(0,3)]).map(o=>({text:o.meaning,correct:o.id===v.id}));
+  } else if(typeRng<0.7){
+    question=`¿Cuál es el PASADO de <strong>"${v.inf}"</strong>?`;
+    opts=shuffle([v,...shuffle(VERBS.filter(x=>x.id!==v.id)).slice(0,3)]).map(o=>({text:o.past,correct:o.id===v.id}));
+  } else {
+    question=`¿Cuál es el PARTICIPIO de <strong>"${v.inf}"</strong>?`;
+    opts=shuffle([v,...shuffle(VERBS.filter(x=>x.id!==v.id)).slice(0,3)]).map(o=>({text:o.pp,correct:o.id===v.id}));
+  }
+  area.innerHTML=`
+    <div style="text-align:center;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--text3)">EXAMEN ${examState.level} — Pregunta ${examState.q+1}/${examState.total}</div>
+      <div class="progress-bar" style="margin-top:6px"><div class="progress-fill" style="width:${(examState.q/examState.total)*100}%"></div></div>
+      <div style="font-size:13px;font-weight:700;color:var(--green);margin-top:4px">✅ ${examState.score} correctas</div>
+    </div>
+    <div class="card">
+      <div class="quiz-question">${question}</div>
+      <div class="quiz-options">
+        ${opts.map((o,i)=>`<button class="quiz-opt" onclick="answerExam(this,${o.correct})">${o.text}</button>`).join('')}
+      </div>
+    </div>`;
+}
+function answerExam(btn, isCorrect){
+  document.querySelectorAll('.quiz-opt').forEach(b=>b.disabled=true);
+  if(isCorrect){ btn.classList.add('correct'); examState.score++; showToast('✅ Correcto!'); }
+  else{
+    btn.classList.add('wrong');
+    document.querySelectorAll('.quiz-opt').forEach(b=>{ if(b.onclick&&b.getAttribute('onclick')&&b.getAttribute('onclick').includes('true')) b.classList.add('correct'); });
+    showToast('❌ Incorrecto','error');
+  }
+  examState.q++;
+  setTimeout(nextExam, 1000);
+}
+
+// ===== SPACED REVIEW =====
+function updateRepaso(){
+  const hc=document.getElementById('hardCount');
+  const dc=document.getElementById('dueCount');
+  if(hc) hc.textContent=Object.keys(state.hardVerbs).length;
+  if(dc) dc.textContent=Object.keys(state.hardVerbs).length+Math.max(0,Object.keys(state.seenVerbs).length-5);
+}
+function startSpacedReview(){
+  let reviewPool=[...VERBS.filter(v=>state.hardVerbs[v.id])];
+  if(reviewPool.length<5) reviewPool=[...reviewPool,...shuffle(VERBS.filter(v=>state.seenVerbs[v.id]&&!state.hardVerbs[v.id])).slice(0,5)];
+  if(!reviewPool.length) reviewPool=shuffle([...VERBS]).slice(0,10);
+  reviewPool=shuffle(reviewPool).slice(0,10);
+  let idx=0, score=0;
+  function renderReviewQ(){
+    const area=document.getElementById('spacedReviewContent');
+    if(idx>=reviewPool.length){
+      addXP(score*8,'Repaso espaciado'); saveState();
+      area.innerHTML=`<div class="card" style="text-align:center;padding:24px"><div style="font-size:36px">🧠</div><div style="font-size:22px;font-weight:900;margin:10px 0">${score}/${reviewPool.length} correctas</div><div style="color:var(--blue);font-weight:700">+${score*8} XP</div><button class="btn btn-purple" style="margin-top:14px" onclick="startSpacedReview()">Otro repaso</button></div>`;
+      return;
+    }
+    const v=reviewPool[idx];
+    const opts=shuffle([v,...shuffle(VERBS.filter(x=>x.id!==v.id)).slice(0,3)]);
+    area.innerHTML=`
+      <div class="card">
+        <div style="margin-bottom:8px;font-size:12px;font-weight:700;color:var(--purple)">🔄 REPASO ESPACIADO — ${idx+1}/${reviewPool.length}</div>
+        ${state.hardVerbs[v.id]?'<div style="font-size:11px;color:var(--orange);margin-bottom:8px">⭐ Este verbo está marcado como difícil</div>':''}
+        <div class="quiz-question">¿Qué significa <strong>"${v.inf}"</strong>?</div>
+        <div class="quiz-options">
+          ${opts.map(o=>`<button class="quiz-opt" onclick="reviewAnswer(this,'${o.id}','${v.id}')">${o.meaning}</button>`).join('')}
+        </div>
+      </div>`;
+    window.reviewAnswer=function(btn,chosen,correct){
+      document.querySelectorAll('.quiz-opt').forEach(b=>b.disabled=true);
+      if(chosen===correct){
+        btn.classList.add('correct'); score++;
+        if(state.hardVerbs[correct]) delete state.hardVerbs[correct];
+        showToast('✅ ¡Correcto!');
+      } else { btn.classList.add('wrong'); state.hardVerbs[correct]=true; showToast('❌','error'); }
+      idx++; setTimeout(renderReviewQ,1000);
+    };
+  }
+  renderReviewQ();
+}
+
+// ===== ACHIEVEMENTS =====
+function renderAchievements(){
+  document.getElementById('achievementsContainer').innerHTML=ACHIEVEMENTS_DEF.map(a=>`
+    <div class="achievement">
+      <div class="ach-icon ${state['ach_'+a.id]?'unlocked':'locked'}">${a.icon}</div>
+      <div>
+        <div class="ach-title" style="color:${state['ach_'+a.id]?'var(--text)':'var(--text3)'}">${a.title}</div>
+        <div class="ach-desc">${a.desc}</div>
+        ${state['ach_'+a.id]?'<div style="font-size:11px;color:var(--green);font-weight:700;margin-top:2px">✅ Desbloqueado</div>':'<div style="font-size:11px;color:var(--text3);margin-top:2px">🔒 Bloqueado</div>'}
+      </div>
+      <div class="ach-xp">+${a.xp} XP</div>
+    </div>`).join('');
+}
+
+// ===== UTILS =====
+function shuffle(arr){ return arr.sort(()=>Math.random()-.5); }
+
+// ===== INIT =====
+function init(){
+  loadState();
+  renderVerbSection('verbsA1Container','A1');
+  renderVerbSection('verbsA2Container','A2');
+  renderIrregularTable();
+  renderTenseExamples('spExamples','simplepresent');
+  renderTenseExamples('pastExamples','simplepast');
+  renderTenseExamples('presContExamples','presentcont');
+  renderTenseExamples('pastContExamples','pastcont');
+  renderTenseExamples('presPerfExamples','presentperf');
+  renderTenseExamples('pastPerfExamples','pastperf');
+  renderPath();
+  renderAchievements();
+  renderActivity();
+  updateXPDisplay();
+  // Streak & daily XP
+  const today=new Date().toDateString();
+  if(!state['dailyXP_'+today]){ state['dailyXP_'+today]=true; addXP(10,'Inicio de sesión diario'); saveState(); }
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

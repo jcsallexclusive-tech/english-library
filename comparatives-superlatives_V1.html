@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparatives & Superlatives · English Grammar Explorer</title>
+<style>
+  :root {
+    --blue: #3b82f6;
+    --blue-dark: #1d4ed8;
+    --blue-light: #eff6ff;
+    --green: #10b981;
+    --green-light: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-light: #fffbeb;
+    --red: #ef4444;
+    --red-light: #fef2f2;
+    --indigo: #1a1a4e;
+    --purple: #7c3aed;
+    --white: #ffffff;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-400: #94a3b8;
+    --gray-600: #475569;
+    --gray-800: #1e293b;
+    --radius: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 48px rgba(0,0,0,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(26,26,78,0.95);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  #progress-bar .logo { color: #fff; font-weight: 800; font-size: 14px; letter-spacing: -0.3px; white-space: nowrap; }
+  #progress-track { flex: 1; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; overflow: hidden; }
+  #progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--blue), var(--green)); border-radius: 3px; transition: width 0.6s ease; }
+  #progress-label { color: rgba(255,255,255,0.7); font-size: 12px; white-space: nowrap; }
+
+  /* ── NAV DOTS ── */
+  #nav-dots {
+    position: fixed; right: 16px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 8px; z-index: 999;
+  }
+  .nav-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--gray-200); border: 2px solid transparent;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .nav-dot.active { background: var(--blue); transform: scale(1.3); }
+  .nav-dot:hover { background: var(--blue); opacity: 0.7; }
+
+  /* ── SECTIONS ── */
+  section { min-height: 100vh; padding: 80px 20px 60px; }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* ── HERO ── */
+  #hero {
+    background: linear-gradient(135deg, var(--indigo) 0%, #2d2d8e 50%, #1a3a6e 100%);
+    display: flex; align-items: center;
+    padding: 60px 20px;
+    min-height: 100vh;
+  }
+  #hero .container { text-align: center; }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(59,130,246,0.3);
+    color: #93c5fd;
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    padding: 6px 16px; border-radius: 20px;
+    margin-bottom: 24px; text-transform: uppercase;
+  }
+  .hero-title {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 900; color: #fff; line-height: 1.1;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+  }
+  .hero-title span { color: #60a5fa; }
+  .hero-sub {
+    color: rgba(255,255,255,0.65); font-size: 18px;
+    max-width: 500px; margin: 0 auto 40px;
+  }
+  .hero-svg-row {
+    display: flex; justify-content: center; align-items: flex-end;
+    gap: 8px; margin: 40px 0; flex-wrap: wrap;
+  }
+  .hero-animal-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px; padding: 16px 12px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .hero-animal-card:hover { background: rgba(255,255,255,0.15); transform: translateY(-4px); }
+  .hero-animal-card .label { color: rgba(255,255,255,0.8); font-size: 13px; font-weight: 600; }
+  .hero-animal-card .sublabel { color: rgba(255,255,255,0.4); font-size: 11px; }
+  .btn-start {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--blue); color: #fff;
+    font-weight: 700; font-size: 16px;
+    padding: 14px 32px; border-radius: 50px;
+    border: none; cursor: pointer;
+    transition: all 0.3s; box-shadow: 0 8px 32px rgba(59,130,246,0.4);
+  }
+  .btn-start:hover { background: var(--blue-dark); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(59,130,246,0.5); }
+
+  /* ── SECTION HEADER ── */
+  .section-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+    padding: 6px 14px; border-radius: 20px;
+    margin-bottom: 16px; text-transform: uppercase;
+  }
+  .badge-blue { background: var(--blue-light); color: var(--blue-dark); }
+  .badge-orange { background: var(--orange-light); color: #b45309; }
+  .badge-green { background: var(--green-light); color: #065f46; }
+  .badge-red { background: var(--red-light); color: #991b1b; }
+  .badge-purple { background: #f3e8ff; color: #6b21a8; }
+
+  .section-title {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800; color: var(--gray-800);
+    letter-spacing: -0.5px; margin-bottom: 8px;
+  }
+  .section-desc { color: var(--gray-600); font-size: 16px; margin-bottom: 40px; max-width: 600px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 24px;
+    border: 1px solid var(--gray-200);
+    transition: box-shadow 0.3s;
+  }
+  .card:hover { box-shadow: var(--shadow-lg); }
+
+  /* ── S1: OBSERVE ── */
+  #observe { background: linear-gradient(180deg, #f0f7ff 0%, var(--gray-50) 100%); }
+
+  .compare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+
+  .compare-card {
+    background: var(--white); border-radius: var(--radius);
+    border: 2px solid var(--gray-200);
+    overflow: hidden; transition: all 0.3s;
+  }
+  .compare-card.revealed { border-color: var(--green); }
+  .compare-visual {
+    padding: 24px; background: var(--gray-50);
+    display: flex; justify-content: space-around; align-items: flex-end;
+    gap: 16px;
+  }
+  .compare-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .compare-name { font-size: 13px; font-weight: 600; color: var(--gray-600); }
+
+  .compare-question {
+    padding: 16px 20px;
+    border-top: 1px solid var(--gray-200);
+  }
+  .compare-q-text { font-weight: 700; font-size: 15px; margin-bottom: 12px; }
+
+  .compare-options { display: flex; gap: 8px; flex-wrap: wrap; }
+  .compare-opt {
+    padding: 8px 16px; border-radius: 8px;
+    border: 2px solid var(--gray-200);
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    background: var(--white); transition: all 0.2s;
+  }
+  .compare-opt:hover { border-color: var(--blue); color: var(--blue); }
+  .compare-opt.correct { border-color: var(--green); background: var(--green-light); color: #065f46; }
+  .compare-opt.wrong { border-color: var(--red); background: var(--red-light); color: #991b1b; }
+
+  .compare-answer {
+    padding: 12px 20px; font-size: 14px;
+    background: var(--green-light); color: #065f46;
+    font-weight: 600; display: none; align-items: center; gap: 8px;
+    border-top: 1px solid #a7f3d0;
+  }
+  .compare-answer.show { display: flex; }
+
+  /* ── S2: DISCOVER ── */
+  #discover { background: var(--white); }
+
+  .compare-vs-super {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;
+  }
+  @media(max-width:600px){ .compare-vs-super { grid-template-columns: 1fr; } }
+
+  .cvs-card {
+    border-radius: var(--radius); padding: 28px;
+    border: 2px solid;
+  }
+  .cvs-card.comp { border-color: var(--blue); background: var(--blue-light); }
+  .cvs-card.super { border-color: var(--purple); background: #f3e8ff; }
+  .cvs-title { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+  .cvs-card.comp .cvs-title { color: var(--blue-dark); }
+  .cvs-card.super .cvs-title { color: #6b21a8; }
+  .cvs-rule { font-size: 13px; color: var(--gray-600); margin-bottom: 16px; }
+  .cvs-example { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .cvs-card.comp .cvs-example { color: var(--blue); }
+  .cvs-card.super .cvs-example { color: var(--purple); }
+
+  .diagram-row {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--gray-50); border-radius: 12px; padding: 16px 20px;
+    margin-bottom: 12px; flex-wrap: wrap;
+  }
+  .diagram-item {
+    background: var(--white); border-radius: 8px; padding: 10px 14px;
+    font-weight: 700; font-size: 14px; border: 2px solid var(--gray-200);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .diagram-arrow { font-size: 20px; color: var(--gray-400); }
+  .diagram-result {
+    background: var(--blue); color: #fff;
+    border-radius: 8px; padding: 10px 16px;
+    font-weight: 700; font-size: 15px;
+  }
+  .diagram-result.super-result { background: var(--purple); }
+
+  /* ── S3: BUILD RULES ── */
+  #build-rules { background: linear-gradient(180deg, var(--orange-light) 0%, #fff 100%); }
+
+  .rule-discovery { display: flex; flex-direction: column; gap: 20px; }
+
+  .rule-discover-card {
+    background: var(--white); border-radius: var(--radius);
+    border: 2px solid var(--orange);
+    padding: 24px; position: relative; overflow: hidden;
+  }
+  .rule-discover-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--orange);
+  }
+  .rd-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .rd-step {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--orange); color: #fff;
+    font-weight: 800; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .rd-title { font-weight: 800; font-size: 16px; }
+
+  .word-examples {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;
+  }
+  .word-pill {
+    padding: 6px 16px; border-radius: 20px;
+    font-size: 14px; font-weight: 700;
+    background: var(--blue-light); color: var(--blue-dark);
+    border: 2px solid var(--blue);
+  }
+  .word-pill.long-word { background: var(--orange-light); color: #92400e; border-color: var(--orange); }
+
+  .rule-table {
+    width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden;
+    margin: 12px 0;
+  }
+  .rule-table th {
+    background: var(--gray-100); color: var(--gray-600);
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    padding: 10px 14px; text-align: left;
+  }
+  .rule-table td { padding: 10px 14px; font-size: 14px; border-top: 1px solid var(--gray-200); }
+  .rule-table tr:last-child td { border-bottom: none; }
+
+  .highlight-rule {
+    background: var(--orange-light); border: 2px solid var(--orange);
+    border-radius: 12px; padding: 16px 20px;
+    font-size: 15px; font-weight: 700; color: #92400e;
+    margin-top: 12px; display: flex; align-items: center; gap: 10px;
+  }
+
+  /* ── SYLLABLE GUIDE ── */
+  .syllable-guide {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;
+  }
+  @media(max-width:500px){ .syllable-guide { grid-template-columns: 1fr; } }
+
+  .syl-card {
+    border-radius: 12px; padding: 16px;
+    border: 2px solid;
+  }
+  .syl-card.short { border-color: var(--blue); background: var(--blue-light); }
+  .syl-card.long { border-color: var(--orange); background: var(--orange-light); }
+  .syl-title { font-weight: 800; font-size: 14px; margin-bottom: 8px; }
+  .syl-card.short .syl-title { color: var(--blue-dark); }
+  .syl-card.long .syl-title { color: #92400e; }
+  .syl-examples { display: flex; flex-direction: column; gap: 4px; }
+  .syl-ex { font-size: 13px; color: var(--gray-600); }
+  .syl-ex strong { color: var(--gray-800); }
+
+  /* ── S4: COMMON ERRORS ── */
+  #common-errors { background: linear-gradient(180deg, #fff5f5 0%, #fff 100%); }
+
+  .error-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+
+  .error-card {
+    border-radius: var(--radius); overflow: hidden;
+    border: 2px solid var(--red); background: var(--white);
+  }
+  .error-header {
+    background: var(--red); color: #fff; padding: 12px 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .error-wrong { font-size: 18px; font-weight: 800; text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.6); }
+  .error-body { padding: 16px; }
+  .error-why { font-size: 13px; color: var(--gray-600); margin-bottom: 12px; }
+  .error-correct {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--green-light); color: #065f46;
+    border: 2px solid var(--green); border-radius: 8px;
+    padding: 8px 14px; font-weight: 700; font-size: 15px;
+  }
+
+  /* ── S5: PRACTICE ── */
+  #practice { background: var(--white); }
+
+  .practice-tabs {
+    display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 10px 20px; border-radius: 50px;
+    font-size: 14px; font-weight: 700; border: 2px solid var(--gray-200);
+    background: var(--white); cursor: pointer; transition: all 0.2s;
+    color: var(--gray-600);
+  }
+  .tab-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .tab-btn:hover:not(.active) { border-color: var(--blue); color: var(--blue); }
+
+  .practice-panel { display: none; }
+  .practice-panel.active { display: block; }
+
+  /* MCQ */
+  .mcq-question {
+    background: var(--gray-50); border-radius: var(--radius);
+    padding: 24px; margin-bottom: 16px; border: 2px solid var(--gray-200);
+  }
+  .mcq-q-text { font-weight: 700; font-size: 16px; margin-bottom: 16px; }
+  .mcq-q-text .blank {
+    display: inline-block;
+    min-width: 80px; border-bottom: 3px solid var(--blue);
+    text-align: center; color: var(--blue);
+  }
+  .mcq-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  @media(max-width:480px){ .mcq-options { grid-template-columns: 1fr; } }
+  .mcq-opt {
+    padding: 12px 16px; border-radius: 10px;
+    border: 2px solid var(--gray-200); background: var(--white);
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    text-align: left;
+  }
+  .mcq-opt:hover:not(.locked) { border-color: var(--blue); background: var(--blue-light); color: var(--blue-dark); }
+  .mcq-opt.correct { border-color: var(--green); background: var(--green-light); color: #065f46; }
+  .mcq-opt.wrong { border-color: var(--red); background: var(--red-light); color: #991b1b; }
+  .mcq-feedback {
+    margin-top: 12px; padding: 10px 14px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; display: none;
+  }
+  .mcq-feedback.show { display: block; }
+  .mcq-feedback.ok { background: var(--green-light); color: #065f46; border: 1px solid var(--green); }
+  .mcq-feedback.err { background: var(--red-light); color: #991b1b; border: 1px solid var(--red); }
+
+  /* FILL BLANKS */
+  .fill-item {
+    background: var(--gray-50); border-radius: 12px; padding: 20px;
+    margin-bottom: 12px; border: 2px solid var(--gray-200);
+  }
+  .fill-sentence { font-size: 16px; font-weight: 600; margin-bottom: 12px; line-height: 1.8; }
+  .fill-input {
+    border: 2px solid var(--blue); border-radius: 8px;
+    padding: 8px 14px; font-size: 15px; font-weight: 700;
+    font-family: inherit; outline: none; width: 160px;
+    transition: all 0.2s;
+  }
+  .fill-input:focus { box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }
+  .fill-input.correct-input { border-color: var(--green); background: var(--green-light); color: #065f46; }
+  .fill-input.wrong-input { border-color: var(--red); background: var(--red-light); color: #991b1b; }
+  .fill-check-btn {
+    padding: 8px 18px; border-radius: 8px;
+    background: var(--blue); color: #fff;
+    border: none; font-weight: 700; cursor: pointer;
+    font-size: 14px; transition: all 0.2s; margin-left: 8px;
+  }
+  .fill-check-btn:hover { background: var(--blue-dark); }
+  .fill-hint { font-size: 13px; color: var(--gray-400); margin-top: 8px; font-style: italic; }
+  .fill-feedback { font-size: 13px; font-weight: 600; margin-top: 8px; display: none; }
+  .fill-feedback.show { display: block; }
+
+  /* DRAG DROP */
+  .drag-container { margin-bottom: 24px; }
+  .drag-bank {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 20px; padding: 16px;
+    background: var(--gray-50); border-radius: 12px;
+    border: 2px dashed var(--gray-200); min-height: 60px;
+  }
+  .drag-item {
+    padding: 8px 16px; border-radius: 8px;
+    background: var(--blue); color: #fff;
+    font-weight: 700; font-size: 14px; cursor: grab;
+    user-select: none; transition: all 0.2s;
+    border: 2px solid var(--blue-dark);
+  }
+  .drag-item:active { cursor: grabbing; opacity: 0.7; }
+  .drag-item.used { opacity: 0.3; pointer-events: none; }
+  .drag-sentence { font-size: 16px; line-height: 2.4; margin-bottom: 8px; }
+  .drop-zone {
+    display: inline-block; min-width: 100px;
+    border-bottom: 3px solid var(--orange); margin: 0 4px;
+    padding: 2px 8px; vertical-align: middle;
+    border-radius: 4px; cursor: pointer;
+    font-weight: 700; color: var(--orange);
+    transition: all 0.2s; text-align: center;
+  }
+  .drop-zone.drag-over { background: var(--orange-light); border-color: var(--orange); }
+  .drop-zone.filled { color: var(--blue-dark); border-color: var(--blue); background: var(--blue-light); }
+  .drop-zone.correct-drop { color: #065f46; border-color: var(--green); background: var(--green-light); }
+  .drop-zone.wrong-drop { color: #991b1b; border-color: var(--red); background: var(--red-light); }
+  .drag-check-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 22px; border-radius: 50px;
+    background: var(--orange); color: #fff;
+    border: none; font-weight: 700; cursor: pointer;
+    font-size: 15px; margin-top: 16px; transition: all 0.2s;
+  }
+  .drag-check-btn:hover { background: #d97706; }
+
+  /* ── S4 (new): AS...AS ── */
+  #as-as { background: linear-gradient(180deg, #ecfeff 0%, var(--white) 100%); }
+  .badge-teal { background: #ecfeff; color: #0e7490; }
+
+  .as-formula-box {
+    background: #ecfeff; border: 2px solid #06b6d4;
+    border-radius: 16px; padding: 24px 28px; margin: 20px 0;
+    text-align: center;
+  }
+  .as-formula-text {
+    font-size: 26px; font-weight: 900; color: #0e7490; letter-spacing: -0.5px;
+  }
+  .as-formula-text span { color: #06b6d4; }
+  .as-formula-sub { font-size: 14px; color: #0891b2; margin-top: 8px; font-weight: 600; }
+
+  .as-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+  @media(max-width:600px){ .as-columns { grid-template-columns: 1fr; } }
+
+  .as-col-card {
+    border-radius: 14px; padding: 22px; border: 2px solid;
+  }
+  .as-col-card.short { border-color: var(--blue); background: var(--blue-light); }
+  .as-col-card.long  { border-color: var(--orange); background: var(--orange-light); }
+  .as-col-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; }
+  .as-col-card.short .as-col-title { color: var(--blue-dark); }
+  .as-col-card.long  .as-col-title { color: #92400e; }
+  .as-col-row {
+    display: flex; align-items: baseline; gap: 8px;
+    font-size: 14px; margin-bottom: 10px;
+  }
+  .as-adj { font-weight: 700; color: var(--gray-800); min-width: 90px; }
+  .as-sentence-text { color: var(--gray-600); }
+  .as-sentence-text strong { color: #0891b2; font-weight: 800; }
+
+  .neg-as-box {
+    background: #fefce8; border: 2px solid #eab308;
+    border-radius: 14px; padding: 22px; margin-top: 20px;
+  }
+  .neg-as-title { font-size: 16px; font-weight: 800; color: #854d0e; margin-bottom: 12px; }
+  .neg-as-formula {
+    background: #fef9c3; border-radius: 10px; padding: 14px 18px;
+    text-align: center; font-size: 20px; font-weight: 900; color: #854d0e;
+    margin-bottom: 14px;
+  }
+  .neg-as-examples { font-size: 14px; color: var(--gray-600); }
+  .neg-as-examples p { margin-bottom: 6px; }
+  .neg-as-examples strong { color: #854d0e; font-weight: 800; }
+
+  .as-quiz-opt {
+    padding: 11px 18px; border-radius: 10px;
+    border: 2px solid var(--gray-200); background: var(--white);
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; text-align: left; width: 100%; margin-bottom: 8px;
+  }
+  .as-quiz-opt:hover:not(.locked) { border-color: #06b6d4; background: #ecfeff; color: #0e7490; }
+  .as-quiz-opt.correct { border-color: var(--green); background: var(--green-light); color: #065f46; }
+  .as-quiz-opt.wrong   { border-color: var(--red);   background: var(--red-light);   color: #991b1b; }
+  .as-quiz-fb {
+    margin-top: 10px; padding: 10px 14px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; display: none;
+  }
+  .as-quiz-fb.show { display: block; }
+  .as-quiz-fb.ok  { background: var(--green-light); color: #065f46; border: 1px solid var(--green); }
+  .as-quiz-fb.err { background: var(--red-light);   color: #991b1b; border: 1px solid var(--red); }
+
+  /* ── S7 (was 6): MIND MAP ── */
+  #mind-map { background: linear-gradient(135deg, var(--indigo), #1a3a6e); }
+  #mind-map .section-title, #mind-map .section-desc { color: #fff; }
+  #mind-map .section-badge { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); }
+
+  .mind-map-visual {
+    background: rgba(255,255,255,0.05); border-radius: 24px;
+    padding: 32px; border: 1px solid rgba(255,255,255,0.1);
+  }
+  .mm-center {
+    text-align: center; margin-bottom: 32px;
+    background: rgba(255,255,255,0.1); border-radius: 16px; padding: 20px;
+    border: 2px solid rgba(255,255,255,0.2);
+  }
+  .mm-center-q { font-size: 20px; font-weight: 800; color: #fff; }
+  .mm-center-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+  .mm-branches { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width:600px){ .mm-branches { grid-template-columns: 1fr; } }
+
+  .mm-branch {
+    border-radius: 16px; padding: 20px;
+    border: 2px solid;
+  }
+  .mm-branch.comp { border-color: var(--blue); background: rgba(59,130,246,0.15); }
+  .mm-branch.super { border-color: var(--purple); background: rgba(124,58,237,0.15); }
+  .mm-branch-title { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 16px; }
+
+  .mm-node {
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .mm-node.short-node { background: rgba(59,130,246,0.3); }
+  .mm-node.long-node { background: rgba(245,158,11,0.3); }
+  .mm-node.short-node-s { background: rgba(124,58,237,0.3); }
+  .mm-node.long-node-s { background: rgba(16,185,129,0.3); }
+  .mm-node-title { font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 700; margin-bottom: 4px; }
+  .mm-node-rule { font-size: 20px; font-weight: 900; color: #fff; }
+  .mm-node-ex { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+  .mm-irregular {
+    margin-top: 16px; background: rgba(255,255,255,0.08);
+    border-radius: 12px; padding: 16px; grid-column: 1 / -1;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .mm-irr-title { font-size: 14px; font-weight: 800; color: rgba(255,255,255,0.8); margin-bottom: 12px; }
+  .mm-irr-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .mm-irr-item {
+    background: rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px;
+    font-size: 13px; color: #fff; font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  /* ── S7: FINAL CHALLENGE ── */
+  #final-challenge { background: var(--gray-50); }
+
+  .challenge-intro {
+    background: var(--white); border-radius: var(--radius);
+    padding: 32px; text-align: center;
+    border: 2px solid var(--gray-200); margin-bottom: 28px;
+  }
+  .challenge-stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-top: 20px; }
+  .cstat { text-align: center; }
+  .cstat-num { font-size: 28px; font-weight: 900; color: var(--blue); }
+  .cstat-label { font-size: 13px; color: var(--gray-600); }
+
+  .btn-start-challenge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: #fff; font-weight: 800; font-size: 18px;
+    padding: 16px 40px; border-radius: 50px; border: none;
+    cursor: pointer; transition: all 0.3s;
+    box-shadow: 0 8px 32px rgba(124,58,237,0.4);
+    margin-top: 24px;
+  }
+  .btn-start-challenge:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124,58,237,0.5); }
+
+  .challenge-area { display: none; }
+  .challenge-area.active { display: block; }
+
+  .challenge-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+  }
+  .challenge-counter { font-weight: 800; font-size: 18px; color: var(--gray-800); }
+  .challenge-score-display {
+    background: var(--green-light); border: 2px solid var(--green);
+    border-radius: 50px; padding: 8px 20px;
+    font-weight: 800; font-size: 16px; color: #065f46;
+  }
+
+  .challenge-q {
+    background: var(--white); border-radius: var(--radius);
+    border: 2px solid var(--gray-200); padding: 28px; margin-bottom: 20px;
+  }
+  .challenge-q-text { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+  .challenge-options { display: grid; gap: 10px; }
+  .challenge-opt {
+    padding: 14px 20px; border-radius: 12px;
+    border: 2px solid var(--gray-200); background: var(--white);
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; text-align: left;
+  }
+  .challenge-opt:hover:not(.locked) { border-color: var(--blue); background: var(--blue-light); color: var(--blue-dark); }
+  .challenge-opt.correct { border-color: var(--green); background: var(--green-light); color: #065f46; }
+  .challenge-opt.wrong { border-color: var(--red); background: var(--red-light); color: #991b1b; }
+  .challenge-feedback {
+    padding: 14px 18px; border-radius: 10px; margin-top: 16px;
+    font-size: 14px; font-weight: 600; display: none;
+  }
+  .challenge-feedback.show { display: block; }
+  .challenge-feedback.ok { background: var(--green-light); color: #065f46; border: 1px solid var(--green); }
+  .challenge-feedback.err { background: var(--red-light); color: #991b1b; border: 1px solid var(--red); }
+
+  .challenge-next-btn {
+    padding: 12px 28px; border-radius: 50px;
+    background: var(--blue); color: #fff;
+    border: none; font-weight: 700; font-size: 16px;
+    cursor: pointer; transition: all 0.2s; margin-top: 16px; display: none;
+  }
+  .challenge-next-btn.show { display: inline-flex; align-items: center; gap: 8px; }
+  .challenge-next-btn:hover { background: var(--blue-dark); }
+
+  /* RESULTS */
+  .results-panel {
+    background: var(--white); border-radius: var(--radius);
+    border: 2px solid var(--gray-200); padding: 40px; text-align: center;
+    display: none;
+  }
+  .results-panel.show { display: block; }
+  .result-score {
+    font-size: 72px; font-weight: 900; line-height: 1;
+    background: linear-gradient(135deg, var(--blue), var(--green));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .result-label { font-size: 18px; color: var(--gray-600); margin-bottom: 32px; }
+  .result-breakdown {
+    display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .rb-item { text-align: center; }
+  .rb-num { font-size: 32px; font-weight: 900; }
+  .rb-num.correct-num { color: var(--green); }
+  .rb-num.wrong-num { color: var(--red); }
+  .rb-label { font-size: 13px; color: var(--gray-600); }
+  .result-message { font-size: 18px; font-weight: 700; color: var(--gray-800); margin-bottom: 24px; }
+  .btn-retry {
+    padding: 14px 32px; border-radius: 50px;
+    background: var(--orange); color: #fff;
+    border: none; font-weight: 700; font-size: 16px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-retry:hover { background: #d97706; }
+
+  .result-errors {
+    text-align: left; margin-top: 24px;
+    background: var(--red-light); border-radius: 12px; padding: 20px;
+    border: 1px solid #fecaca; display: none;
+  }
+  .result-errors.show { display: block; }
+  .result-errors-title { font-weight: 800; color: #991b1b; margin-bottom: 12px; }
+  .result-error-item { font-size: 14px; color: #991b1b; padding: 6px 0; border-bottom: 1px solid #fecaca; }
+  .result-error-item:last-child { border-bottom: none; }
+
+  /* ── UTILITIES ── */
+  .flex-center { display: flex; align-items: center; justify-content: center; }
+  .gap-8 { gap: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+  .text-center { text-align: center; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes bounce-in {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(59,130,246,0); }
+    100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
+  }
+  .animate-in { animation: slide-up 0.5s ease forwards; }
+  .pulse { animation: pulse-ring 2s infinite; }
+
+  @media(max-width:768px){
+    section { padding: 70px 16px 48px; }
+    #nav-dots { display: none; }
+    .hero-animal-card { padding: 12px 8px; }
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar">
+  <span class="logo">📚 Comparatives & Superlatives</span>
+  <div id="progress-track"><div id="progress-fill"></div></div>
+  <span id="progress-label">0%</span>
+</div>
+
+<!-- NAV DOTS -->
+<div id="nav-dots">
+  <div class="nav-dot active" data-section="hero" title="Start"></div>
+  <div class="nav-dot" data-section="observe" title="Observe"></div>
+  <div class="nav-dot" data-section="discover" title="Discover"></div>
+  <div class="nav-dot" data-section="build-rules" title="Build Rules"></div>
+  <div class="nav-dot" data-section="as-as" title="As...As"></div>
+  <div class="nav-dot" data-section="common-errors" title="Common Errors"></div>
+  <div class="nav-dot" data-section="practice" title="Practice"></div>
+  <div class="nav-dot" data-section="mind-map" title="Mind Map"></div>
+  <div class="nav-dot" data-section="final-challenge" title="Final Challenge"></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     HERO
+     ════════════════════════════════════════ -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-tag">✦ Interactive English Grammar</div>
+    <h1 class="hero-title">
+      Comparatives &<br><span>Superlatives</span>
+    </h1>
+    <p class="hero-sub">Stop making the same mistakes. Build real intuition through discovery, not memorization.</p>
+
+    <div class="hero-svg-row">
+      <!-- Cat SVG -->
+      <div class="hero-animal-card">
+        <svg width="64" height="64" viewBox="0 0 80 80">
+          <ellipse cx="40" cy="52" rx="22" ry="18" fill="#f59e0b"/>
+          <ellipse cx="40" cy="32" rx="16" ry="14" fill="#f59e0b"/>
+          <polygon points="24,24 18,10 30,20" fill="#f59e0b"/>
+          <polygon points="56,24 62,10 50,20" fill="#f59e0b"/>
+          <circle cx="34" cy="30" r="3" fill="#1e293b"/>
+          <circle cx="46" cy="30" r="3" fill="#1e293b"/>
+          <circle cx="35" cy="29" r="1" fill="white"/>
+          <circle cx="47" cy="29" r="1" fill="white"/>
+          <ellipse cx="40" cy="36" rx="4" ry="3" fill="#fca5a5"/>
+          <line x1="30" y1="36" x2="14" y2="34" stroke="#1e293b" stroke-width="1.5"/>
+          <line x1="30" y1="38" x2="14" y2="38" stroke="#1e293b" stroke-width="1.5"/>
+          <line x1="30" y1="40" x2="14" y2="42" stroke="#1e293b" stroke-width="1.5"/>
+          <line x1="50" y1="36" x2="66" y2="34" stroke="#1e293b" stroke-width="1.5"/>
+          <line x1="50" y1="38" x2="66" y2="38" stroke="#1e293b" stroke-width="1.5"/>
+          <line x1="50" y1="40" x2="66" y2="42" stroke="#1e293b" stroke-width="1.5"/>
+          <path d="M 20 50 Q 15 70 22 72" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+          <path d="M 60 50 Q 65 70 58 72" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+          <path d="M 55 62 Q 60 80 45 75" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        <span class="label">Cat</span>
+        <span class="sublabel">small</span>
+      </div>
+
+      <!-- Dog SVG -->
+      <div class="hero-animal-card">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <ellipse cx="40" cy="55" rx="26" ry="18" fill="#a78bfa"/>
+          <ellipse cx="40" cy="30" rx="18" ry="15" fill="#a78bfa"/>
+          <ellipse cx="22" cy="22" rx="6" ry="10" fill="#7c3aed" transform="rotate(-15 22 22)"/>
+          <ellipse cx="58" cy="22" rx="6" ry="10" fill="#a78bfa" transform="rotate(15 58 22)"/>
+          <circle cx="35" cy="28" r="3" fill="#1e293b"/>
+          <circle cx="45" cy="28" r="3" fill="#1e293b"/>
+          <circle cx="36" cy="27" r="1" fill="white"/>
+          <circle cx="46" cy="27" r="1" fill="white"/>
+          <ellipse cx="40" cy="36" rx="6" ry="4" fill="#c4b5fd"/>
+          <ellipse cx="40" cy="38" rx="3" ry="2" fill="#e879f9"/>
+          <path d="M 16 55 Q 8 65 12 70" fill="none" stroke="#7c3aed" stroke-width="5" stroke-linecap="round"/>
+          <path d="M 64 55 Q 72 65 68 70" fill="none" stroke="#7c3aed" stroke-width="5" stroke-linecap="round"/>
+          <path d="M 55 68 Q 62 78 50 77" fill="none" stroke="#7c3aed" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        <span class="label">Dog</span>
+        <span class="sublabel">bigger</span>
+      </div>
+
+      <!-- Bear SVG -->
+      <div class="hero-animal-card">
+        <svg width="100" height="100" viewBox="0 0 80 80">
+          <ellipse cx="40" cy="58" rx="30" ry="20" fill="#10b981"/>
+          <ellipse cx="40" cy="30" rx="22" ry="20" fill="#10b981"/>
+          <circle cx="22" cy="16" r="9" fill="#10b981"/>
+          <circle cx="58" cy="16" r="9" fill="#10b981"/>
+          <circle cx="22" cy="14" r="5" fill="#065f46"/>
+          <circle cx="58" cy="14" r="5" fill="#065f46"/>
+          <circle cx="33" cy="27" r="4" fill="#1e293b"/>
+          <circle cx="47" cy="27" r="4" fill="#1e293b"/>
+          <circle cx="34" cy="26" r="1.5" fill="white"/>
+          <circle cx="48" cy="26" r="1.5" fill="white"/>
+          <ellipse cx="40" cy="36" rx="8" ry="6" fill="#6ee7b7"/>
+          <ellipse cx="40" cy="38" rx="4" ry="3" fill="#34d399"/>
+          <path d="M 14 60 Q 6 72 12 76" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
+          <path d="M 66 60 Q 74 72 68 76" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+        <span class="label">Bear</span>
+        <span class="sublabel">the biggest!</span>
+      </div>
+    </div>
+
+    <button class="btn-start" onclick="document.getElementById('observe').scrollIntoView({behavior:'smooth'})">
+      🚀 Start Learning
+    </button>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     SECTION 1: OBSERVE & DISCOVER
+     ════════════════════════════════════════ -->
+<section id="observe">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-badge badge-blue">🔍 Section 1</div>
+      <h2 class="section-title">Observe & Discover</h2>
+      <p class="section-desc">Before any rules — just look and think. Answer each question with what feels natural to you.</p>
+    </div>
+
+    <div class="compare-grid reveal">
+
+      <!-- Card 1: Height -->
+      <div class="compare-card" id="cc1">
+        <div class="compare-visual">
+          <div class="compare-item">
+            <svg width="40" height="90" viewBox="0 0 40 90">
+              <rect x="15" y="40" width="10" height="50" rx="5" fill="#60a5fa"/>
+              <circle cx="20" cy="30" r="16" fill="#60a5fa"/>
+              <circle cx="14" cy="26" r="3" fill="#1e293b"/>
+              <circle cx="26" cy="26" r="3" fill="#1e293b"/>
+              <ellipse cx="20" cy="34" rx="5" ry="3" fill="#93c5fd"/>
+            </svg>
+            <span class="compare-name">Alex · 1.60m</span>
+          </div>
+          <!-- Arrow -->
+          <svg width="30" height="30" viewBox="0 0 30 30">
+            <text x="5" y="22" font-size="20" fill="#94a3b8">vs</text>
+          </svg>
+          <div class="compare-item">
+            <svg width="40" height="110" viewBox="0 0 40 110">
+              <rect x="15" y="50" width="10" height="60" rx="5" fill="#f59e0b"/>
+              <circle cx="20" cy="38" r="18" fill="#f59e0b"/>
+              <circle cx="14" cy="34" r="3" fill="#1e293b"/>
+              <circle cx="26" cy="34" r="3" fill="#1e293b"/>
+              <ellipse cx="20" cy="44" rx="5" ry="3" fill="#fcd34d"/>
+            </svg>
+            <span class="compare-name">Sam · 1.85m</span>
+          </div>
+        </div>
+        <div class="compare-question">
+          <div class="compare-q-text">🤔 Who is taller?</div>
+          <div class="compare-options">
+            <button class="compare-opt" onclick="answerCompare(this,'cc1','Alex','Sam is taller than Alex. We compare 2 people → use comparative: tall → taller')">Alex</button>
+            <button class="compare-opt" onclick="answerCompare(this,'cc1','Sam','Sam is taller than Alex. We compare 2 people → use comparative: tall → taller')">Sam</button>
+          </div>
+          <div class="compare-answer" id="cc1-ans"></div>
+        </div>
+      </div>
+
+      <!-- Card 2: Speed -->
+      <div class="compare-card" id="cc2">
+        <div class="compare-visual">
+          <div class="compare-item">
+            <!-- Snail SVG -->
+            <svg width="70" height="50" viewBox="0 0 70 50">
+              <ellipse cx="45" cy="32" rx="22" ry="14" fill="#a78bfa"/>
+              <circle cx="45" cy="24" r="12" fill="#7c3aed"/>
+              <circle cx="41" cy="20" r="3" fill="#1e293b"/>
+              <circle cx="49" cy="20" r="3" fill="#1e293b"/>
+              <line x1="39" y1="16" x2="36" y2="10" stroke="#7c3aed" stroke-width="2"/>
+              <line x1="47" y1="16" x2="50" y2="10" stroke="#7c3aed" stroke-width="2"/>
+              <circle cx="36" cy="9" r="2" fill="#7c3aed"/>
+              <circle cx="50" cy="9" r="2" fill="#7c3aed"/>
+              <path d="M 20 38 Q 10 46 5 42" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+              <text x="8" y="30" font-size="10" fill="#94a3b8">slow</text>
+            </svg>
+            <span class="compare-name">Snail</span>
+          </div>
+          <svg width="30" height="30" viewBox="0 0 30 30">
+            <text x="5" y="22" font-size="20" fill="#94a3b8">vs</text>
+          </svg>
+          <div class="compare-item">
+            <!-- Cheetah SVG -->
+            <svg width="80" height="50" viewBox="0 0 80 50">
+              <ellipse cx="45" cy="28" rx="30" ry="12" fill="#f59e0b"/>
+              <ellipse cx="20" cy="22" rx="12" ry="10" fill="#f59e0b"/>
+              <circle cx="15" cy="20" r="3" fill="#1e293b"/>
+              <circle cx="22" cy="18" r="3" fill="#1e293b"/>
+              <ellipse cx="14" cy="24" rx="4" ry="2" fill="#fcd34d"/>
+              <circle cx="12" cy="19" r="1.5" fill="#92400e"/>
+              <circle cx="19" cy="17" r="1.5" fill="#92400e"/>
+              <path d="M 68 25 Q 78 18 80 10" fill="none" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="20" y1="37" x2="12" y2="48" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="30" y1="38" x2="26" y2="48" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="55" y1="37" x2="50" y2="47" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="65" y1="35" x2="62" y2="45" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <span class="compare-name">Cheetah</span>
+          </div>
+        </div>
+        <div class="compare-question">
+          <div class="compare-q-text">⚡ Which is faster?</div>
+          <div class="compare-options">
+            <button class="compare-opt" onclick="answerCompare(this,'cc2','Snail','The cheetah is faster than the snail. fast → faster (short adjective + -er)')">Snail</button>
+            <button class="compare-opt" onclick="answerCompare(this,'cc2','Cheetah','The cheetah is faster than the snail. fast → faster (short adjective + -er)')">Cheetah</button>
+          </div>
+          <div class="compare-answer" id="cc2-ans"></div>
+        </div>
+      </div>
+
+      <!-- Card 3: Size (3 things → superlative) -->
+      <div class="compare-card" id="cc3">
+        <div class="compare-visual" style="align-items:center;">
+          <div class="compare-item">
+            <svg width="30" height="30" viewBox="0 0 30 30">
+              <circle cx="15" cy="15" r="12" fill="#10b981"/>
+              <text x="9" y="20" font-size="12" fill="white" font-weight="bold">🏠</text>
+            </svg>
+            <span class="compare-name">House</span>
+          </div>
+          <div class="compare-item">
+            <svg width="50" height="50" viewBox="0 0 50 50">
+              <rect x="5" y="10" width="40" height="35" rx="3" fill="#3b82f6"/>
+              <rect x="8" y="5" width="8" height="8" rx="1" fill="#60a5fa"/>
+              <rect x="22" y="5" width="8" height="8" rx="1" fill="#60a5fa"/>
+              <rect x="36" y="5" width="8" height="8" rx="1" fill="#60a5fa"/>
+              <rect x="15" y="28" width="8" height="17" rx="1" fill="#93c5fd"/>
+              <rect x="28" y="28" width="8" height="17" rx="1" fill="#93c5fd"/>
+            </svg>
+            <span class="compare-name">Building</span>
+          </div>
+          <div class="compare-item">
+            <svg width="70" height="70" viewBox="0 0 70 70">
+              <rect x="10" y="5" width="50" height="65" rx="3" fill="#7c3aed"/>
+              <rect x="14" y="2" width="6" height="6" rx="1" fill="#a78bfa"/>
+              <rect x="24" y="2" width="6" height="6" rx="1" fill="#a78bfa"/>
+              <rect x="34" y="2" width="6" height="6" rx="1" fill="#a78bfa"/>
+              <rect x="44" y="2" width="6" height="6" rx="1" fill="#a78bfa"/>
+              <rect x="20" y="50" width="12" height="20" rx="1" fill="#c4b5fd"/>
+              <rect x="38" y="50" width="12" height="20" rx="1" fill="#c4b5fd"/>
+              <rect x="14" y="15" width="8" height="8" rx="1" fill="rgba(255,255,255,0.3)"/>
+              <rect x="28" y="15" width="8" height="8" rx="1" fill="rgba(255,255,255,0.3)"/>
+              <rect x="42" y="15" width="8" height="8" rx="1" fill="rgba(255,255,255,0.3)"/>
+              <rect x="14" y="28" width="8" height="8" rx="1" fill="rgba(255,255,255,0.3)"/>
+              <rect x="28" y="28" width="8" height="8" rx="1" fill="rgba(255,255,255,0.3)"/>
+              <rect x="42" y="28" width="8" height="8" rx="1" fill="rgba(255,255,255,0.3)"/>
+            </svg>
+            <span class="compare-name">Skyscraper</span>
+          </div>
+        </div>
+        <div class="compare-question">
+          <div class="compare-q-text">🏙️ Which is the biggest of the three?</div>
+          <div class="compare-options" style="grid-template-columns:1fr 1fr 1fr;">
+            <button class="compare-opt" onclick="answerCompare(this,'cc3','Skyscraper','The skyscraper is the biggest! With 3+ things we use the SUPERLATIVE: big → the biggest')">House</button>
+            <button class="compare-opt" onclick="answerCompare(this,'cc3','Skyscraper','The skyscraper is the biggest! With 3+ things we use the SUPERLATIVE: big → the biggest')">Building</button>
+            <button class="compare-opt" onclick="answerCompare(this,'cc3','Skyscraper','The skyscraper is the biggest! With 3+ things we use the SUPERLATIVE: big → the biggest')">Skyscraper</button>
+          </div>
+          <div class="compare-answer" id="cc3-ans"></div>
+        </div>
+      </div>
+
+      <!-- Card 4: Interest -->
+      <div class="compare-card" id="cc4">
+        <div class="compare-visual" style="gap:24px;">
+          <div class="compare-item" style="text-align:center;">
+            <svg width="60" height="60" viewBox="0 0 60 60">
+              <rect x="8" y="8" width="44" height="44" rx="8" fill="#e2e8f0"/>
+              <line x1="16" y1="20" x2="44" y2="20" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+              <line x1="16" y1="28" x2="44" y2="28" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+              <line x1="16" y1="36" x2="36" y2="36" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <span class="compare-name">Grammar Book</span>
+            <span class="sublabel" style="font-size:11px;color:#94a3b8;">😴 boring</span>
+          </div>
+          <svg width="30" height="30" viewBox="0 0 30 30">
+            <text x="5" y="22" font-size="20" fill="#94a3b8">vs</text>
+          </svg>
+          <div class="compare-item" style="text-align:center;">
+            <svg width="60" height="60" viewBox="0 0 60 60">
+              <rect x="5" y="5" width="50" height="50" rx="10" fill="#f59e0b"/>
+              <text x="12" y="40" font-size="32">🎮</text>
+            </svg>
+            <span class="compare-name">Video Game</span>
+            <span class="sublabel" style="font-size:11px;color:#94a3b8;">🎯 interesting</span>
+          </div>
+        </div>
+        <div class="compare-question">
+          <div class="compare-q-text">🤔 Which is <em>more interesting</em>?</div>
+          <div class="compare-options">
+            <button class="compare-opt" onclick="answerCompare(this,'cc4','Video Game','Video games are more interesting than grammar books! \"interesting\" is a long word → we use MORE, not -er. We never say \"interestinger\"!')">Grammar Book</button>
+            <button class="compare-opt" onclick="answerCompare(this,'cc4','Video Game','Video games are more interesting than grammar books! \"interesting\" is a long word → we use MORE, not -er. We never say \"interestinger\"!')">Video Game</button>
+          </div>
+          <div class="compare-answer" id="cc4-ans"></div>
+        </div>
+      </div>
+
+    </div><!-- /compare-grid -->
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     SECTION 2: DISCOVER THE DIFFERENCE
+     ════════════════════════════════════════ -->
+<section id="discover">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-badge badge-blue">💡 Section 2</div>
+      <h2 class="section-title">Comparative vs. Superlative</h2>
+      <p class="section-desc">How many things are you comparing? That's the key question.</p>
+    </div>
+
+    <div class="compare-vs-super reveal">
+      <div class="cvs-card comp">
+        <div style="font-size:48px;margin-bottom:12px;">⚖️</div>
+        <div class="cvs-title">Comparative</div>
+        <div class="cvs-rule">Comparing <strong>2 things</strong> or people</div>
+        <div class="cvs-example">A is ___ than B</div>
+        <div style="font-size:14px;color:#1d4ed8;">
+          Sam is <strong>taller</strong> than Alex.<br>
+          Coffee is <strong>more expensive</strong> than tea.
+        </div>
+      </div>
+      <div class="cvs-card super">
+        <div style="font-size:48px;margin-bottom:12px;">🏆</div>
+        <div class="cvs-title">Superlative</div>
+        <div class="cvs-rule">Comparing <strong>3+ things</strong> — finding the extreme</div>
+        <div class="cvs-example">A is the ___ of all</div>
+        <div style="font-size:14px;color:#6b21a8;">
+          Sam is <strong>the tallest</strong> in the class.<br>
+          Coffee is <strong>the most expensive</strong> drink.
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual Diagrams -->
+    <div class="reveal">
+      <h3 style="font-weight:800;font-size:18px;margin-bottom:16px;">📊 Visual Guide</h3>
+
+      <div class="diagram-row">
+        <div class="diagram-item" style="background:#eff6ff;border-color:#3b82f6;">
+          <svg width="20" height="20" viewBox="0 0 20 20"><circle cx="6" cy="10" r="5" fill="#60a5fa"/></svg> Person A
+        </div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-item" style="background:#eff6ff;border-color:#3b82f6;">
+          <svg width="20" height="20" viewBox="0 0 20 20"><circle cx="6" cy="10" r="5" fill="#3b82f6"/></svg> Person B
+        </div>
+        <div class="diagram-arrow">=</div>
+        <div class="diagram-result">Comparative (-er / more)</div>
+        <div style="font-size:14px;color:#1d4ed8;font-style:italic;">A is taller than B</div>
+      </div>
+
+      <div class="diagram-row">
+        <div class="diagram-item">
+          <svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="#a78bfa"/></svg> A
+        </div>
+        <div class="diagram-item">
+          <svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="#7c3aed"/></svg> B
+        </div>
+        <div class="diagram-item">
+          <svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="#4c1d95"/></svg> C
+        </div>
+        <div class="diagram-arrow">=</div>
+        <div class="diagram-result super-result">Superlative (the -est / the most)</div>
+        <div style="font-size:14px;color:#6b21a8;font-style:italic;">C is the tallest</div>
+      </div>
+    </div>
+
+    <!-- Quick quiz -->
+    <div class="reveal mt-24">
+      <h3 style="font-weight:800;font-size:18px;margin-bottom:16px;">⚡ Quick Check — Comparative or Superlative?</h3>
+      <div id="cvs-quiz"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     SECTION 3: BUILD THE RULES
+     ════════════════════════════════════════ -->
+<section id="build-rules">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-badge badge-orange">🔧 Section 3</div>
+      <h2 class="section-title">Discover the Rules Yourself</h2>
+      <p class="section-desc">Look at the patterns below. Can you figure out the rule before it's revealed?</p>
+    </div>
+
+    <div class="rule-discovery">
+
+      <!-- Rule 1 -->
+      <div class="rule-discover-card reveal">
+        <div class="rd-header">
+          <div class="rd-step">1</div>
+          <div class="rd-title">Look at these adjectives and their forms…</div>
+        </div>
+        <div class="word-examples">
+          <span class="word-pill">tall</span>
+          <span class="word-pill">fast</span>
+          <span class="word-pill">big</span>
+          <span class="word-pill">old</span>
+          <span class="word-pill">cold</span>
+          <span class="word-pill">hot</span>
+        </div>
+        <table class="rule-table">
+          <thead>
+            <tr><th>Adjective</th><th>Comparative</th><th>Superlative</th><th>Syllables</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>tall</td><td><strong style="color:var(--blue)">tall<u>er</u></strong></td><td><strong style="color:var(--purple)">the tall<u>est</u></strong></td><td>1</td></tr>
+            <tr><td>fast</td><td><strong style="color:var(--blue)">fast<u>er</u></strong></td><td><strong style="color:var(--purple)">the fast<u>est</u></strong></td><td>1</td></tr>
+            <tr><td>big</td><td><strong style="color:var(--blue)">bigg<u>er</u></strong></td><td><strong style="color:var(--purple)">the bigg<u>est</u></strong></td><td>1</td></tr>
+            <tr><td>old</td><td><strong style="color:var(--blue)">old<u>er</u></strong></td><td><strong style="color:var(--purple)">the old<u>est</u></strong></td><td>1</td></tr>
+          </tbody>
+        </table>
+        <div class="highlight-rule" id="rule1-reveal">
+          💡 Short adjectives (1–2 syllables): add <strong>-er</strong> for comparative and <strong>-est</strong> for superlative!
+        </div>
+      </div>
+
+      <!-- Rule 2 -->
+      <div class="rule-discover-card reveal">
+        <div class="rd-header">
+          <div class="rd-step">2</div>
+          <div class="rd-title">Now look at these longer adjectives…</div>
+        </div>
+        <div class="word-examples">
+          <span class="word-pill long-word">interesting</span>
+          <span class="word-pill long-word">beautiful</span>
+          <span class="word-pill long-word">expensive</span>
+          <span class="word-pill long-word">comfortable</span>
+        </div>
+        <table class="rule-table">
+          <thead>
+            <tr><th>Adjective</th><th>Comparative</th><th>Superlative</th><th>Syllables</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>interesting</td><td><strong style="color:var(--blue)"><u>more</u> interesting</strong></td><td><strong style="color:var(--purple)">the <u>most</u> interesting</strong></td><td>4</td></tr>
+            <tr><td>beautiful</td><td><strong style="color:var(--blue)"><u>more</u> beautiful</strong></td><td><strong style="color:var(--purple)">the <u>most</u> beautiful</strong></td><td>3</td></tr>
+            <tr><td>expensive</td><td><strong style="color:var(--blue)"><u>more</u> expensive</strong></td><td><strong style="color:var(--purple)">the <u>most</u> expensive</strong></td><td>3</td></tr>
+          </tbody>
+        </table>
+        <div class="highlight-rule">
+          💡 Long adjectives (3+ syllables): use <strong>more</strong> for comparative and <strong>the most</strong> for superlative. Never add -er/-est!
+        </div>
+      </div>
+
+      <!-- Syllable Guide -->
+      <div class="card reveal">
+        <h3 style="font-weight:800;margin-bottom:8px;">📖 Syllable Quick Guide</h3>
+        <p style="color:var(--gray-600);font-size:14px;margin-bottom:16px;">Count the syllables to know which rule to use:</p>
+        <div class="syllable-guide">
+          <div class="syl-card short">
+            <div class="syl-title">🔵 Short (1–2 syllables) → -er / -est</div>
+            <div class="syl-examples">
+              <div class="syl-ex"><strong>tall</strong> (1) → taller / tallest</div>
+              <div class="syl-ex"><strong>hap·py</strong> (2) → happier / happiest</div>
+              <div class="syl-ex"><strong>clev·er</strong> (2) → cleverer / cleverest</div>
+              <div class="syl-ex"><strong>sim·ple</strong> (2) → simpler / simplest</div>
+            </div>
+          </div>
+          <div class="syl-card long">
+            <div class="syl-title">🟠 Long (3+ syllables) → more / most</div>
+            <div class="syl-examples">
+              <div class="syl-ex"><strong>ex·pen·sive</strong> (3) → more expensive</div>
+              <div class="syl-ex"><strong>beau·ti·ful</strong> (3) → more beautiful</div>
+              <div class="syl-ex"><strong>in·ter·est·ing</strong> (4) → more interesting</div>
+              <div class="syl-ex"><strong>com·for·ta·ble</strong> (4) → more comfortable</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Irregular -->
+      <div class="card reveal" style="border:2px solid var(--purple);">
+        <h3 style="font-weight:800;margin-bottom:8px;color:var(--purple);">⚠️ Irregular Forms — Memorize These!</h3>
+        <p style="color:var(--gray-600);font-size:14px;margin-bottom:16px;">These don't follow any rule — you just have to learn them:</p>
+        <table class="rule-table">
+          <thead>
+            <tr><th>Adjective</th><th>Comparative</th><th>Superlative</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>good</strong></td>
+              <td><strong style="color:var(--blue)">better</strong></td>
+              <td><strong style="color:var(--purple)">the best</strong></td>
+            </tr>
+            <tr>
+              <td><strong>bad</strong></td>
+              <td><strong style="color:var(--blue)">worse</strong></td>
+              <td><strong style="color:var(--purple)">the worst</strong></td>
+            </tr>
+            <tr>
+              <td><strong>far</strong></td>
+              <td><strong style="color:var(--blue)">farther / further</strong></td>
+              <td><strong style="color:var(--purple)">the farthest / furthest</strong></td>
+            </tr>
+            <tr>
+              <td><strong>little</strong></td>
+              <td><strong style="color:var(--blue)">less</strong></td>
+              <td><strong style="color:var(--purple)">the least</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div><!-- /rule-discovery -->
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     SECTION 4 (NEW): AS...AS
+     ════════════════════════════════════════ -->
+<section id="as-as">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-badge badge-teal">🔵 Section 4</div>
+      <h2 class="section-title">As … As — Equal Comparisons</h2>
+      <p class="section-desc">Comparative and superlative aren't the only way to compare. When two things are <strong>equal</strong>, we use <em>as…as</em> — and it works the same for short AND long adjectives!</p>
+    </div>
+
+    <!-- FORMULA BOX -->
+    <div class="as-formula-box reveal">
+      <div class="as-formula-text">Subject + verb + <span>as</span> + adjective + <span>as</span> + noun/pronoun</div>
+      <div class="as-formula-sub">✅ Works with ALL adjectives — short (1–2 syl.) and long (3+ syl.) — no change needed!</div>
+    </div>
+
+    <!-- SHORT vs LONG COLUMNS -->
+    <div class="as-columns reveal">
+
+      <!-- SHORT adjectives -->
+      <div class="as-col-card short">
+        <div class="as-col-title">🔵 Short Adjectives (1–2 syllables)</div>
+        <div class="as-col-row">
+          <span class="as-adj">tall</span>
+          <span class="as-sentence-text">My brother is <strong>as tall as</strong> my dad.</span>
+        </div>
+        <div class="as-col-row">
+          <span class="as-adj">fast</span>
+          <span class="as-sentence-text">This car is <strong>as fast as</strong> that one.</span>
+        </div>
+        <div class="as-col-row">
+          <span class="as-adj">big</span>
+          <span class="as-sentence-text">My room is <strong>as big as</strong> yours.</span>
+        </div>
+        <div class="as-col-row">
+          <span class="as-adj">cold</span>
+          <span class="as-sentence-text">Today is <strong>as cold as</strong> yesterday.</span>
+        </div>
+        <div class="as-col-row">
+          <span class="as-adj">old</span>
+          <span class="as-sentence-text">She is <strong>as old as</strong> my sister.</span>
+        </div>
+        <div class="as-col-row">
+          <span class="as-adj">happy</span>
+          <span class="as-sentence-text">He looks <strong>as happy as</strong> a kid.</span>
+        </div>
+        <div style="margin-top:12px;background:rgba(59,130,246,0.1);border-radius:8px;padding:10px 12px;">
+          <div style="font-size:12px;font-weight:700;color:var(--blue-dark);margin-bottom:4px;">💡 KEY RULE</div>
+          <div style="font-size:13px;color:#1d4ed8;">Short adjectives → <strong>NO -er</strong>. Just: as + adj + as</div>
+        </div>
+      </div>
+
+      <!-- LONG adjectives -->
+      <div class="as-col-card long">
+        <div class="as-col-title">🟠 Long Adjectives (3+ syllables)</div>
+        <div class="as-col-row">
+          <span class="as-adj">beautiful</span>
+          <span class="as-sentence-text">This city is <strong>as beautiful as</strong> Rome.</span>
+        </div>
+        <div class="as-col-row">
+          <span class="as-adj">interesting</span>
+          <span class="as-sentence-text">That book is <strong>as interesting as</strong> this one.</span>
+        </div>
+        <div class="as-col-row">
+          <span class="as-adj">expensive</span>
+          <span class="as-sentence-text">The hotel is <strong>as expensive as</strong> the flight.</span>
+        </div>
+        <div class="as-col-row">
+          <span class="as-adj">comfortable</span>
+          <span class="as-sentence-text">This seat is <strong>as comfortable as</strong> that one.</span>
+        </div>
+        <div class="as-col-row">
+          <span class="as-adj">important</span>
+          <span class="as-sentence-text">Sleep is <strong>as important as</strong> exercise.</span>
+        </div>
+        <div class="as-col-row">
+          <span class="as-adj">difficult</span>
+          <span class="as-sentence-text">Math is <strong>as difficult as</strong> physics.</span>
+        </div>
+        <div style="margin-top:12px;background:rgba(245,158,11,0.1);border-radius:8px;padding:10px 12px;">
+          <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:4px;">💡 KEY RULE</div>
+          <div style="font-size:13px;color:#92400e;">Long adjectives → <strong>NO "more"</strong>. Just: as + adj + as</div>
+        </div>
+      </div>
+
+    </div><!-- /as-columns -->
+
+    <!-- NEGATIVE: NOT AS...AS -->
+    <div class="neg-as-box reveal">
+      <div class="neg-as-title">🔄 Negative Form — Not as … as</div>
+      <div class="neg-as-formula">Subject + verb + <u>not</u> + as + adjective + as + noun/pronoun</div>
+      <div class="neg-as-examples">
+        <p>🔵 Short: My cat is <strong>not as big as</strong> your dog. <em style="color:var(--gray-400);font-size:12px;">(= your dog is bigger)</em></p>
+        <p>🔵 Short: He doesn't run <strong>as fast as</strong> her. <em style="color:var(--gray-400);font-size:12px;">(= she is faster)</em></p>
+        <p>🟠 Long: This movie is <strong>not as interesting as</strong> that one. <em style="color:var(--gray-400);font-size:12px;">(= that one is more interesting)</em></p>
+        <p>🟠 Long: The exam was <strong>not as difficult as</strong> I expected. <em style="color:var(--gray-400);font-size:12px;">(= I expected it to be harder)</em></p>
+      </div>
+    </div>
+
+    <!-- QUICK COMPARISON TABLE -->
+    <div class="card reveal" style="margin-top:24px;">
+      <h3 style="font-weight:800;margin-bottom:16px;font-size:18px;">📊 Compare the Three Forms</h3>
+      <table class="rule-table">
+        <thead>
+          <tr><th>Meaning</th><th>Short adj. (tall)</th><th>Long adj. (expensive)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span style="color:var(--green);font-weight:700;">A = B (equal)</span></td>
+            <td><strong style="color:#0891b2">as tall as</strong></td>
+            <td><strong style="color:#0891b2">as expensive as</strong></td>
+          </tr>
+          <tr>
+            <td><span style="color:var(--blue);font-weight:700;">A &gt; B (comparative)</span></td>
+            <td><strong style="color:var(--blue)">tall<u>er</u> than</strong></td>
+            <td><strong style="color:var(--blue)">more expensive than</strong></td>
+          </tr>
+          <tr>
+            <td><span style="color:var(--purple);font-weight:700;">A = extreme (superlative)</span></td>
+            <td><strong style="color:var(--purple)">the tall<u>est</u></strong></td>
+            <td><strong style="color:var(--purple)">the most expensive</strong></td>
+          </tr>
+          <tr>
+            <td><span style="color:#854d0e;font-weight:700;">A &lt; B (negative)</span></td>
+            <td><strong style="color:#854d0e">not as tall as</strong></td>
+            <td><strong style="color:#854d0e">not as expensive as</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- AS...AS MINI QUIZ -->
+    <div class="reveal" style="margin-top:32px;">
+      <h3 style="font-weight:800;font-size:18px;margin-bottom:16px;">⚡ Quick Check — As…As</h3>
+      <p style="color:var(--gray-600);font-size:14px;margin-bottom:20px;">Choose the correct option for each sentence.</p>
+      <div id="asas-quiz"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     SECTION 5: COMMON ERRORS (was S4)
+     ════════════════════════════════════════ -->
+<section id="common-errors">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-badge badge-red">🚨 Section 5</div>
+      <h2 class="section-title">Common Mistakes — Spotted!</h2>
+      <p class="section-desc">These are the exact errors most students make. Let's fix them once and for all.</p>
+    </div>
+
+    <div class="error-grid reveal">
+
+      <div class="error-card">
+        <div class="error-header">
+          <svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 2a8 8 0 110 16A8 8 0 0110 2zm0 5v5m0 3v1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          <span class="error-wrong">more tall</span>
+        </div>
+        <div class="error-body">
+          <div class="error-why">❌ <strong>"tall"</strong> has only 1 syllable → it's a SHORT adjective. Short adjectives use <strong>-er</strong>, not "more".</div>
+          <div class="error-correct">✅ taller</div>
+          <div style="margin-top:10px;font-size:13px;color:var(--gray-600);">
+            <em>"Sam is <strong>taller</strong> than Alex."</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="error-card">
+        <div class="error-header">
+          <svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 2a8 8 0 110 16A8 8 0 0110 2zm0 5v5m0 3v1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          <span class="error-wrong">more big</span>
+        </div>
+        <div class="error-body">
+          <div class="error-why">❌ <strong>"big"</strong> = 1 syllable → SHORT. Also remember: double the final consonant → <strong>bigg+er</strong>.</div>
+          <div class="error-correct">✅ bigger</div>
+          <div style="margin-top:10px;font-size:13px;color:var(--gray-600);">
+            <em>"The bear is <strong>bigger</strong> than the dog."</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="error-card">
+        <div class="error-header">
+          <svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 2a8 8 0 110 16A8 8 0 0110 2zm0 5v5m0 3v1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          <span class="error-wrong">interestinger</span>
+        </div>
+        <div class="error-body">
+          <div class="error-why">❌ <strong>"interesting"</strong> has 4 syllables → it's a LONG adjective. Long adjectives use <strong>more</strong> before them. Never add -er!</div>
+          <div class="error-correct">✅ more interesting</div>
+          <div style="margin-top:10px;font-size:13px;color:var(--gray-600);">
+            <em>"This is <strong>more interesting</strong> than that."</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="error-card">
+        <div class="error-header">
+          <svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 2a8 8 0 110 16A8 8 0 0110 2zm0 5v5m0 3v1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          <span class="error-wrong">most tallest</span>
+        </div>
+        <div class="error-body">
+          <div class="error-why">❌ DOUBLE superlative! You're using BOTH "most" AND "-est". Choose ONE: either <strong>the tallest</strong> OR <strong>the most tall</strong> (but the first is correct!).</div>
+          <div class="error-correct">✅ the tallest</div>
+          <div style="margin-top:10px;font-size:13px;color:var(--gray-600);">
+            <em>"She is <strong>the tallest</strong> in the class."</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="error-card">
+        <div class="error-header">
+          <svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 2a8 8 0 110 16A8 8 0 0110 2zm0 5v5m0 3v1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          <span class="error-wrong">more faster</span>
+        </div>
+        <div class="error-body">
+          <div class="error-why">❌ DOUBLE comparative! <strong>"faster"</strong> is already comparative. Adding "more" makes it a double error.</div>
+          <div class="error-correct">✅ faster</div>
+          <div style="margin-top:10px;font-size:13px;color:var(--gray-600);">
+            <em>"The cheetah is <strong>faster</strong> than the horse."</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="error-card">
+        <div class="error-header">
+          <svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 2a8 8 0 110 16A8 8 0 0110 2zm0 5v5m0 3v1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          <span class="error-wrong">gooder / goodest</span>
+        </div>
+        <div class="error-body">
+          <div class="error-why">❌ <strong>"good"</strong> is irregular! It doesn't follow any rule — you must memorize its special forms.</div>
+          <div class="error-correct">✅ better / the best</div>
+          <div style="margin-top:10px;font-size:13px;color:var(--gray-600);">
+            <em>"This is <strong>better</strong>. That is <strong>the best</strong>!"</em>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /error-grid -->
+
+    <!-- Error spotter quiz -->
+    <div class="reveal mt-24">
+      <h3 style="font-weight:800;font-size:18px;margin-bottom:16px;">🕵️ Spot the Error!</h3>
+      <p style="color:var(--gray-600);font-size:14px;margin-bottom:16px;">Which sentence is correct?</p>
+      <div id="error-spotter-quiz"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     SECTION 5: PRACTICE
+     ════════════════════════════════════════ -->
+<section id="practice">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-badge badge-green">✏️ Section 6</div>
+      <h2 class="section-title">Practice Time!</h2>
+      <p class="section-desc">Three different activities to strengthen your understanding.</p>
+    </div>
+
+    <div class="practice-tabs reveal">
+      <button class="tab-btn active" onclick="switchTab('mcq')">📝 Multiple Choice</button>
+      <button class="tab-btn" onclick="switchTab('fill')">✍️ Fill in the Blank</button>
+      <button class="tab-btn" onclick="switchTab('drag')">🧩 Drag & Drop</button>
+    </div>
+
+    <!-- MCQ Panel -->
+    <div class="practice-panel active" id="panel-mcq">
+      <div id="mcq-container"></div>
+    </div>
+
+    <!-- Fill Panel -->
+    <div class="practice-panel" id="panel-fill">
+      <div id="fill-container"></div>
+    </div>
+
+    <!-- Drag Panel -->
+    <div class="practice-panel" id="panel-drag">
+      <div id="drag-container"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     SECTION 6: MIND MAP
+     ════════════════════════════════════════ -->
+<section id="mind-map">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-badge" style="background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.9);">🗺️ Section 7</div>
+      <h2 class="section-title">Your Grammar Map</h2>
+      <p class="section-desc">Everything in one place. Bookmark this in your brain!</p>
+    </div>
+
+    <div class="mind-map-visual reveal">
+      <div class="mm-center">
+        <div class="mm-center-q">🤔 What am I comparing?</div>
+        <div class="mm-center-sub">Start here — this is the only question that matters</div>
+      </div>
+
+      <div class="mm-branches">
+        <!-- Comparative -->
+        <div class="mm-branch comp">
+          <div class="mm-branch-title">⚖️ 2 Things → COMPARATIVE</div>
+
+          <div class="mm-node short-node">
+            <div class="mm-node-title">SHORT adj. (1–2 syllables)</div>
+            <div class="mm-node-rule">adj + -ER</div>
+            <div class="mm-node-ex">tall → taller · fast → faster · big → bigger</div>
+          </div>
+
+          <div class="mm-node long-node">
+            <div class="mm-node-title">LONG adj. (3+ syllables)</div>
+            <div class="mm-node-rule">MORE + adj.</div>
+            <div class="mm-node-ex">more interesting · more beautiful · more expensive</div>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;margin-top:8px;">
+            <div style="font-size:12px;color:rgba(255,255,255,0.6);font-weight:700;margin-bottom:4px;">STRUCTURE</div>
+            <div style="color:#fff;font-size:14px;font-weight:600;">A is <span style="color:#60a5fa;">_____</span> than B</div>
+          </div>
+        </div>
+
+        <!-- Superlative -->
+        <div class="mm-branch super">
+          <div class="mm-branch-title">🏆 3+ Things → SUPERLATIVE</div>
+
+          <div class="mm-node short-node-s">
+            <div class="mm-node-title">SHORT adj. (1–2 syllables)</div>
+            <div class="mm-node-rule">the + adj + -EST</div>
+            <div class="mm-node-ex">the tallest · the fastest · the biggest</div>
+          </div>
+
+          <div class="mm-node long-node-s">
+            <div class="mm-node-title">LONG adj. (3+ syllables)</div>
+            <div class="mm-node-rule">the MOST + adj.</div>
+            <div class="mm-node-ex">the most interesting · the most beautiful</div>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;margin-top:8px;">
+            <div style="font-size:12px;color:rgba(255,255,255,0.6);font-weight:700;margin-bottom:4px;">STRUCTURE</div>
+            <div style="color:#fff;font-size:14px;font-weight:600;">A is <span style="color:#a78bfa;">the _____</span> of / in all</div>
+          </div>
+        </div>
+      </div><!-- /mm-branches -->
+
+      <!-- Irregular + Spelling -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+        <div class="mm-irregular">
+          <div class="mm-irr-title">⚡ Irregular Forms</div>
+          <div class="mm-irr-row">
+            <div class="mm-irr-item">good → better → best</div>
+            <div class="mm-irr-item">bad → worse → worst</div>
+            <div class="mm-irr-item">far → farther → farthest</div>
+            <div class="mm-irr-item">little → less → least</div>
+          </div>
+        </div>
+        <div class="mm-irregular">
+          <div class="mm-irr-title">✏️ Spelling Rules</div>
+          <div class="mm-irr-row">
+            <div class="mm-irr-item">big → bigg<u>er</u> (double consonant)</div>
+            <div class="mm-irr-item">happy → happ<u>ier</u> (y → i)</div>
+            <div class="mm-irr-item">nice → nic<u>er</u> (drop silent e)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- As...As summary in Mind Map -->
+      <div style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.4);border-radius:12px;padding:16px;margin-top:16px;">
+        <div style="font-weight:800;color:#67e8f9;margin-bottom:10px;">🔵 As…As (Equal Comparisons)</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <div style="background:rgba(6,182,212,0.25);border-radius:6px;padding:8px 14px;font-size:13px;color:#ecfeff;font-weight:600;">as + <u>adj (base form)</u> + as</div>
+          <div style="background:rgba(6,182,212,0.25);border-radius:6px;padding:8px 14px;font-size:13px;color:#ecfeff;font-weight:600;">✅ as tall as · as beautiful as</div>
+          <div style="background:rgba(239,68,68,0.3);border-radius:6px;padding:6px 12px;font-size:12px;color:#fca5a5;text-decoration:line-through;">as taller as</div>
+          <div style="background:rgba(239,68,68,0.3);border-radius:6px;padding:6px 12px;font-size:12px;color:#fca5a5;text-decoration:line-through;">as more beautiful as</div>
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:8px;">Negative: <span style="color:#67e8f9;font-weight:700;">not as + adj + as</span> → "not as fast as you"</div>
+      </div>
+
+      <!-- Never do -->
+      <div style="background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4);border-radius:12px;padding:16px;margin-top:16px;">
+        <div style="font-weight:800;color:#fca5a5;margin-bottom:8px;">🚫 Never do this:</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <div style="background:rgba(239,68,68,0.3);border-radius:6px;padding:6px 12px;font-size:13px;color:#fca5a5;text-decoration:line-through;">more taller</div>
+          <div style="background:rgba(239,68,68,0.3);border-radius:6px;padding:6px 12px;font-size:13px;color:#fca5a5;text-decoration:line-through;">most tallest</div>
+          <div style="background:rgba(239,68,68,0.3);border-radius:6px;padding:6px 12px;font-size:13px;color:#fca5a5;text-decoration:line-through;">interestinger</div>
+          <div style="background:rgba(239,68,68,0.3);border-radius:6px;padding:6px 12px;font-size:13px;color:#fca5a5;text-decoration:line-through;">more faster</div>
+          <div style="background:rgba(239,68,68,0.3);border-radius:6px;padding:6px 12px;font-size:13px;color:#fca5a5;text-decoration:line-through;">gooder</div>
+        </div>
+      </div>
+
+    </div><!-- /mind-map-visual -->
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     SECTION 7: FINAL CHALLENGE
+     ════════════════════════════════════════ -->
+<section id="final-challenge">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-badge badge-purple">🏆 Section 8</div>
+      <h2 class="section-title">Final Challenge</h2>
+      <p class="section-desc">15 questions. Prove you've mastered comparatives and superlatives!</p>
+    </div>
+
+    <div class="challenge-intro reveal" id="challenge-intro">
+      <div style="font-size:64px;margin-bottom:16px;">🎯</div>
+      <h3 style="font-size:22px;font-weight:800;margin-bottom:8px;">Are you ready?</h3>
+      <p style="color:var(--gray-600);font-size:15px;">18 questions covering everything you've learned — including As…As! Each correct answer earns you 1 point.</p>
+      <div class="challenge-stats">
+        <div class="cstat"><div class="cstat-num">18</div><div class="cstat-label">Questions</div></div>
+        <div class="cstat"><div class="cstat-num">⭐</div><div class="cstat-label">Instant Feedback</div></div>
+        <div class="cstat"><div class="cstat-num">🏆</div><div class="cstat-label">Score & Analysis</div></div>
+      </div>
+      <button class="btn-start-challenge" onclick="startChallenge()">
+        🚀 Start the Challenge!
+      </button>
+    </div>
+
+    <div class="challenge-area" id="challenge-area">
+      <div class="challenge-header">
+        <div class="challenge-counter" id="challenge-counter">Question 1 of 15</div>
+        <div class="challenge-score-display">Score: <span id="score-live">0</span></div>
+      </div>
+      <div id="challenge-question-area"></div>
+      <button class="challenge-next-btn" id="next-btn" onclick="nextChallengeQuestion()">
+        Next Question →
+      </button>
+    </div>
+
+    <div class="results-panel reveal" id="results-panel">
+      <div class="result-score" id="result-score-num"></div>
+      <div class="result-label">out of 18</div>
+      <div class="result-message" id="result-msg"></div>
+      <div class="result-breakdown">
+        <div class="rb-item">
+          <div class="rb-num correct-num" id="rb-correct">0</div>
+          <div class="rb-label">✅ Correct</div>
+        </div>
+        <div class="rb-item">
+          <div class="rb-num wrong-num" id="rb-wrong">0</div>
+          <div class="rb-label">❌ Incorrect</div>
+        </div>
+        <div class="rb-item">
+          <div class="rb-num" id="rb-pct" style="color:var(--blue);">0%</div>
+          <div class="rb-label">Accuracy</div>
+        </div>
+      </div>
+      <div id="result-errors-list" class="result-errors">
+        <div class="result-errors-title">📝 Review these:</div>
+        <div id="result-errors-inner"></div>
+      </div>
+      <button class="btn-retry" onclick="retryChallenge()" style="margin-top:20px;">🔄 Try Again</button>
+    </div>
+
+  </div>
+</section>
+
+<script>
+// ═══════════════════════════════════════════════════
+// PROGRESS & SCROLL
+// ═══════════════════════════════════════════════════
+const sections = ['hero','observe','discover','build-rules','as-as','common-errors','practice','mind-map','final-challenge'];
+
+function updateProgress() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = Math.min(100, Math.round((scrollTop / docHeight) * 100));
+  document.getElementById('progress-fill').style.width = progress + '%';
+  document.getElementById('progress-label').textContent = progress + '%';
+
+  // Nav dots
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const dot = document.querySelectorAll('.nav-dot')[i];
+    if (dot) {
+      if (rect.top <= window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    }
+  });
+
+  // Reveal on scroll
+  document.querySelectorAll('.reveal').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 60) el.classList.add('visible');
+  });
+}
+
+document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+  dot.addEventListener('click', () => {
+    const el = document.getElementById(sections[i]);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+window.addEventListener('scroll', updateProgress);
+window.addEventListener('resize', updateProgress);
+setTimeout(updateProgress, 100);
+
+// ═══════════════════════════════════════════════════
+// SECTION 1: COMPARE CARDS
+// ═══════════════════════════════════════════════════
+function answerCompare(btn, cardId, correct, explanation) {
+  const card = document.getElementById(cardId);
+  const opts = card.querySelectorAll('.compare-opt');
+  const ansDiv = document.getElementById(cardId + '-ans');
+  
+  opts.forEach(o => {
+    o.disabled = true;
+    o.classList.add('locked');
+  });
+
+  const isCorrect = btn.textContent.trim() === correct;
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  
+  if (!isCorrect) {
+    opts.forEach(o => {
+      if (o.textContent.trim() === correct) o.classList.add('correct');
+    });
+  }
+
+  ansDiv.innerHTML = `<span style="font-size:18px;">${isCorrect ? '✅' : '💡'}</span> ${explanation}`;
+  ansDiv.classList.add('show');
+  card.classList.add('revealed');
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 2: CVS QUICK QUIZ
+// ═══════════════════════════════════════════════════
+const cvsQuestions = [
+  { q: "I'm comparing my car with my friend's car.", answer: "Comparative", hint: "2 things → Comparative" },
+  { q: "I want to find the best restaurant in the whole city.", answer: "Superlative", hint: "One extreme from a group → Superlative" },
+  { q: "John is comparing his score with Mary's score.", answer: "Comparative", hint: "2 things → Comparative" },
+  { q: "We need the fastest internet plan available.", answer: "Superlative", hint: "The extreme from all options → Superlative" },
+];
+
+function buildCVSQuiz() {
+  const container = document.getElementById('cvs-quiz');
+  if (!container) return;
+  cvsQuestions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'mcq-question';
+    div.innerHTML = `
+      <div class="mcq-q-text">${q.q}</div>
+      <div class="mcq-options" style="grid-template-columns:1fr 1fr;">
+        <button class="mcq-opt" onclick="answerCVS(this, ${i}, 'Comparative')">⚖️ Comparative</button>
+        <button class="mcq-opt" onclick="answerCVS(this, ${i}, 'Superlative')">🏆 Superlative</button>
+      </div>
+      <div class="mcq-feedback" id="cvs-fb-${i}"></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function answerCVS(btn, idx, choice) {
+  const q = cvsQuestions[idx];
+  const parent = btn.closest('.mcq-question');
+  const opts = parent.querySelectorAll('.mcq-opt');
+  const fb = document.getElementById('cvs-fb-' + idx);
+  opts.forEach(o => { o.disabled = true; o.classList.add('locked'); });
+  const correct = choice === q.answer;
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) opts.forEach(o => { if (o.textContent.includes(q.answer)) o.classList.add('correct'); });
+  fb.textContent = (correct ? '✅ Correct! ' : '💡 ') + q.hint;
+  fb.className = 'mcq-feedback show ' + (correct ? 'ok' : 'err');
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 4 (NEW): AS...AS MINI QUIZ
+// ═══════════════════════════════════════════════════
+const asAsQuestions = [
+  {
+    q: "My coffee is ___ hot ___ yours.",
+    opts: ["more … than", "as … as", "the most … in", "as … than"],
+    correct: 1,
+    hint: "Equal comparison (same temperature) → as + hot + as"
+  },
+  {
+    q: "This hotel is ___ expensive ___ the other one.",
+    opts: ["as … as", "more … than", "the most … in", "as … then"],
+    correct: 0,
+    hint: "Equal price → as + expensive + as. Long adjective, no 'more' needed!"
+  },
+  {
+    q: "She is ___ as her sister. (tall)",
+    opts: ["as tall", "more tall", "the tallest", "taller"],
+    correct: 0,
+    hint: "as tall as → 'as tall' is the correct first half!"
+  },
+  {
+    q: "This phone is ___ that one. (not / expensive / equal or less)",
+    opts: ["not as expensive as", "not more expensive as", "not as expensive than", "not most expensive as"],
+    correct: 0,
+    hint: "Negative as...as: NOT as + adjective + as"
+  },
+  {
+    q: "Which sentence uses As...As CORRECTLY?",
+    opts: [
+      "He is as taller as his brother.",
+      "She runs as fast as the wind.",
+      "That is as more beautiful as a painting.",
+      "They are as the smartest as us."
+    ],
+    correct: 1,
+    hint: "as + fast (base form, no -er) + as → perfect! No -er, no 'more', just the base adjective."
+  },
+  {
+    q: "Spanish is ___ difficult ___ English for me.",
+    opts: ["more … than", "the most … of", "as … as", "as … than"],
+    correct: 2,
+    hint: "If Spanish and English feel equally hard → as + difficult + as"
+  },
+];
+
+function buildAsAsQuiz() {
+  const container = document.getElementById('asas-quiz');
+  if (!container) return;
+  asAsQuestions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'mcq-question';
+    div.innerHTML = `
+      <div class="mcq-q-text">${q.q.replace('___','<span class="blank">___</span>').replace('___','<span class="blank">___</span>')}</div>
+      <div style="display:flex;flex-direction:column;gap:0;">
+        ${q.opts.map((opt, oi) => `<button class="as-quiz-opt" onclick="answerAsAs(this, ${i}, ${oi})">${String.fromCharCode(65+oi)}) ${opt}</button>`).join('')}
+      </div>
+      <div class="as-quiz-fb" id="asas-fb-${i}"></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function answerAsAs(btn, idx, choice) {
+  const q = asAsQuestions[idx];
+  const parent = btn.closest('.mcq-question');
+  const opts = parent.querySelectorAll('.as-quiz-opt');
+  const fb = document.getElementById('asas-fb-' + idx);
+  opts.forEach(o => { o.disabled = true; o.classList.add('locked'); });
+  const correct = choice === q.correct;
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) opts.forEach((o, oi) => { if (oi === q.correct) o.classList.add('correct'); });
+  fb.textContent = (correct ? '✅ Correct! ' : '❌ Not quite — ') + q.hint;
+  fb.className = 'as-quiz-fb show ' + (correct ? 'ok' : 'err');
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 5: ERROR SPOTTER (was S4)
+// ═══════════════════════════════════════════════════
+const errorSpotterQs = [
+  { opts: ["She is the most beautiful girl in the room.", "She is the beautifulest girl in the room."], correct: 0, why: '"beautiful" has 3 syllables → use "the most beautiful"' },
+  { opts: ["This book is more interesting than that one.", "This book is interestinger than that one."], correct: 0, why: '"interesting" is long → use "more interesting"' },
+  { opts: ["He runs more faster than me.", "He runs faster than me."], correct: 1, why: '"faster" is already comparative. Never add "more" to a comparative form!' },
+  { opts: ["My dog is the biggest in the neighborhood.", "My dog is the most biggest in the neighborhood."], correct: 0, why: '"biggest" is already superlative. Never add "the most" to it!' },
+];
+
+function buildErrorSpotter() {
+  const container = document.getElementById('error-spotter-quiz');
+  if (!container) return;
+  errorSpotterQs.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'mcq-question';
+    div.innerHTML = `
+      <div class="mcq-q-text">Which sentence is correct?</div>
+      <div class="mcq-options" style="grid-template-columns:1fr;">
+        ${q.opts.map((opt, oi) => `<button class="mcq-opt" onclick="answerErrorSpotter(this, ${i}, ${oi})">
+          ${String.fromCharCode(65+oi)}) ${opt}
+        </button>`).join('')}
+      </div>
+      <div class="mcq-feedback" id="es-fb-${i}"></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function answerErrorSpotter(btn, qi, choice) {
+  const q = errorSpotterQs[qi];
+  const parent = btn.closest('.mcq-question');
+  const opts = parent.querySelectorAll('.mcq-opt');
+  const fb = document.getElementById('es-fb-' + qi);
+  opts.forEach(o => { o.disabled = true; o.classList.add('locked'); });
+  const correct = choice === q.correct;
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) opts.forEach((o, oi) => { if (oi === q.correct) o.classList.add('correct'); });
+  fb.textContent = (correct ? '✅ ' : '❌ ') + q.why;
+  fb.className = 'mcq-feedback show ' + (correct ? 'ok' : 'err');
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 5: PRACTICE — MCQ
+// ═══════════════════════════════════════════════════
+const mcqData = [
+  { q: "My sister is ___ than me. (tall)", opts: ["more tall","taller","tallest","most tall"], correct: 1, ex: "tall = 1 syllable → short adjective → add -er" },
+  { q: "This is ___ movie I've ever seen! (exciting)", opts: ["most exciting","excitingest","more exciting","the most exciting"], correct: 3, ex: "exciting = 3 syllables → long → the most exciting (superlative)" },
+  { q: "London is ___ than my town. (expensive)", opts: ["expensiver","more expensive","most expensive","the expensivest"], correct: 1, ex: "expensive = 3 syllables → long → more expensive (comparative)" },
+  { q: "He is ___ student in the class. (smart)", opts: ["more smart","smarter","the smartest","most smart"], correct: 2, ex: "smart = 1 syllable → short → the smartest (superlative)" },
+  { q: "Today is ___ day of the year. (hot)", opts: ["more hot","hotter","the hottest","most hot"], correct: 2, ex: "hot = 1 syllable, ends CVC → double consonant → the hottest" },
+  { q: "She dances ___ than her sister. (gracefully)", opts: ["more gracefully","gracefullier","gracefuller","most gracefully"], correct: 0, ex: "gracefully = 4 syllables → long → more gracefully" },
+];
+
+function buildMCQ() {
+  const container = document.getElementById('mcq-container');
+  mcqData.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'mcq-question';
+    div.innerHTML = `
+      <div class="mcq-q-text">${q.q.replace('___', '<span class="blank">___</span>')}</div>
+      <div class="mcq-options">
+        ${q.opts.map((opt, oi) => `<button class="mcq-opt" onclick="answerMCQ(this, ${i}, ${oi})">${opt}</button>`).join('')}
+      </div>
+      <div class="mcq-feedback" id="mcq-fb-${i}"></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function answerMCQ(btn, qi, choice) {
+  const q = mcqData[qi];
+  const parent = btn.closest('.mcq-question');
+  const opts = parent.querySelectorAll('.mcq-opt');
+  const fb = document.getElementById('mcq-fb-' + qi);
+  opts.forEach(o => { o.disabled = true; o.classList.add('locked'); });
+  const correct = choice === q.correct;
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) opts.forEach((o, oi) => { if (oi === q.correct) o.classList.add('correct'); });
+  fb.innerHTML = (correct ? '✅ ' : '❌ ') + q.ex;
+  fb.className = 'mcq-feedback show ' + (correct ? 'ok' : 'err');
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 5: PRACTICE — FILL IN THE BLANK
+// ═══════════════════════════════════════════════════
+const fillData = [
+  { before:"This coffee is", after:"than tea. (strong)", answer:"stronger", hint:"strong = 1 syllable → -er" },
+  { before:"She is", after:"student in the school. (intelligent)", answer:"the most intelligent", hint:"intelligent = 4 syllables → the most ___" },
+  { before:"My cat is", after:"than yours. (lazy)", answer:"lazier", hint:"lazy = 2 syllables, ends in y → change y→i, add -er" },
+  { before:"This is", after:"hotel in the city. (expensive)", answer:"the most expensive", hint:"expensive = 3 syllables → the most ___" },
+  { before:"He is", after:"than his brother. (good)", answer:"better", hint:"good is irregular → good/better/best" },
+  { before:"Today is", after:"day of the year. (bad)", answer:"the worst", hint:"bad is irregular → bad/worse/the worst" },
+];
+
+function buildFill() {
+  const container = document.getElementById('fill-container');
+  fillData.forEach((f, i) => {
+    const div = document.createElement('div');
+    div.className = 'fill-item';
+    div.innerHTML = `
+      <div class="fill-sentence">
+        ${f.before} <input type="text" class="fill-input" id="fill-${i}" placeholder="type here…"> ${f.after}
+      </div>
+      <div>
+        <button class="fill-check-btn" onclick="checkFill(${i})">Check ✓</button>
+        <span class="fill-hint">Hint: ${f.hint}</span>
+      </div>
+      <div class="fill-feedback" id="fill-fb-${i}"></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function checkFill(i) {
+  const input = document.getElementById('fill-' + i);
+  const fb = document.getElementById('fill-fb-' + i);
+  const val = input.value.trim().toLowerCase();
+  const correct = fillData[i].answer.toLowerCase();
+  const isOk = val === correct;
+  input.classList.toggle('correct-input', isOk);
+  input.classList.toggle('wrong-input', !isOk);
+  fb.textContent = isOk ? '✅ Perfect!' : `❌ The correct answer is: "${fillData[i].answer}"`;
+  fb.className = 'fill-feedback show';
+  fb.style.color = isOk ? '#065f46' : '#991b1b';
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 5: PRACTICE — DRAG & DROP
+// ═══════════════════════════════════════════════════
+const dragData = [
+  { sentence: "The Amazon is ____ river in the world. (long)", dropAnswer: "the longest" },
+  { sentence: "My phone is ____ than yours. (new)", dropAnswer: "newer" },
+  { sentence: "English is ____ than I thought. (difficult)", dropAnswer: "more difficult" },
+  { sentence: "She has ____ voice in the choir. (beautiful)", dropAnswer: "the most beautiful" },
+];
+
+const wordBank = ["the longest", "newer", "more difficult", "the most beautiful", "the longest ever", "newest", "most difficult", "beautiful"];
+
+let draggedWord = null;
+let dropAnswers = {};
+
+function buildDrag() {
+  const container = document.getElementById('drag-container');
+  
+  // Word bank
+  const bankDiv = document.createElement('div');
+  bankDiv.innerHTML = '<p style="font-weight:700;font-size:14px;color:var(--gray-600);margin-bottom:8px;">📦 Word Bank — drag to the blanks:</p>';
+  const bank = document.createElement('div');
+  bank.className = 'drag-bank';
+  bank.id = 'word-bank';
+  
+  const allWords = [...wordBank];
+  allWords.sort(() => Math.random() - 0.5);
+  
+  allWords.forEach(w => {
+    const item = document.createElement('div');
+    item.className = 'drag-item';
+    item.textContent = w;
+    item.draggable = true;
+    item.dataset.word = w;
+    item.addEventListener('dragstart', e => {
+      draggedWord = w;
+      e.dataTransfer.setData('text/plain', w);
+      item.style.opacity = '0.5';
+    });
+    item.addEventListener('dragend', e => { item.style.opacity = '1'; });
+    bank.appendChild(item);
+  });
+  bankDiv.appendChild(bank);
+  container.appendChild(bankDiv);
+
+  // Sentences
+  const sentDiv = document.createElement('div');
+  dragData.forEach((d, i) => {
+    const p = document.createElement('p');
+    p.className = 'drag-sentence';
+    const parts = d.sentence.split('____');
+    p.innerHTML = parts[0] + `<span class="drop-zone" id="drop-${i}" 
+      ondragover="e => e.preventDefault()" 
+      ondrop="handleDrop(event, ${i})"
+      onclick="clickDrop(${i})"
+    >drop here</span>` + parts[1];
+    
+    // Fix the inline event
+    const zone = p.querySelector('.drop-zone');
+    zone.addEventListener('dragover', e => e.preventDefault());
+    zone.addEventListener('drop', e => handleDrop(e, i));
+    zone.addEventListener('dragenter', () => zone.classList.add('drag-over'));
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    
+    sentDiv.appendChild(p);
+  });
+  container.appendChild(sentDiv);
+
+  const btn = document.createElement('button');
+  btn.className = 'drag-check-btn';
+  btn.innerHTML = '✓ Check Answers';
+  btn.onclick = checkDrag;
+  container.appendChild(btn);
+}
+
+function handleDrop(e, i) {
+  e.preventDefault();
+  const word = e.dataTransfer.getData('text/plain') || draggedWord;
+  if (!word) return;
+  
+  const zone = document.getElementById('drop-' + i);
+  zone.textContent = word;
+  zone.classList.remove('drag-over');
+  zone.classList.add('filled');
+  dropAnswers[i] = word;
+  draggedWord = null;
+}
+
+function clickDrop(i) {
+  if (draggedWord) {
+    const zone = document.getElementById('drop-' + i);
+    zone.textContent = draggedWord;
+    zone.classList.add('filled');
+    dropAnswers[i] = draggedWord;
+    draggedWord = null;
+  }
+}
+
+function checkDrag() {
+  dragData.forEach((d, i) => {
+    const zone = document.getElementById('drop-' + i);
+    const given = (dropAnswers[i] || '').toLowerCase().trim();
+    const correct = d.dropAnswer.toLowerCase().trim();
+    zone.classList.remove('filled','drag-over','correct-drop','wrong-drop');
+    if (given === correct) {
+      zone.classList.add('correct-drop');
+    } else {
+      zone.classList.add('wrong-drop');
+      zone.textContent += ` → ${d.dropAnswer}`;
+    }
+  });
+}
+
+// Tab switching
+function switchTab(tab) {
+  document.querySelectorAll('.practice-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION 7: FINAL CHALLENGE
+// ═══════════════════════════════════════════════════
+const challengeQuestions = [
+  { q: "My sister is ___ than me.", opts: ["more tall","taller","tallest","the tallest"], correct: 1, exp: "tall = 1 syllable → short adj → comparative = taller" },
+  { q: "This is ___ pizza I've ever eaten!", opts: ["the most delicious","most delicious","more delicious","deliciouser"], correct: 0, exp: "delicious = 3 syllables → the most delicious (superlative)" },
+  { q: "He is ___ student in the class.", opts: ["smarter","more smart","the smartest","most smart"], correct: 2, exp: "smart = 1 syllable → short → the smartest (superlative)" },
+  { q: "Today is ___ than yesterday.", opts: ["cold","coldest","colder","most cold"], correct: 2, exp: "cold = 1 syllable → short → comparative = colder" },
+  { q: "She speaks English ___ than her brother.", opts: ["more fluently","fluentlier","the most fluently","fluenter"], correct: 0, exp: "fluently = 3 syllables → long → more fluently" },
+  { q: "Which is ___? (bad → I failed 2 tests)", opts: ["worst","the worst","worse","more bad"], correct: 2, exp: "Comparing 2 results → comparative: bad → worse (irregular!)" },
+  { q: "This is ___ day of my life! (amazing)", opts: ["amazinger","more amazing","the most amazing","most amazing"], correct: 2, exp: "amazing = 3 syllables → the most amazing (superlative)" },
+  { q: "My cat is ___ than your cat. (fat)", opts: ["more fat","fattest","fatter","most fat"], correct: 2, exp: "fat = 1 syllable, ends CVC → double consonant: fatter" },
+  { q: "He is ___ than his dad. (good at cooking)", opts: ["gooder","more good","better","best"], correct: 2, exp: "good is irregular → comparative = better" },
+  { q: "The Nile is ___ river in the world. (long)", opts: ["longer","most long","more long","the longest"], correct: 3, exp: "long = 1 syllable → the longest (superlative with 'the')" },
+  { q: "Which sentence is CORRECT?", opts: ["She is more taller than me.","She is the most tallest.","She is taller than me.","She is more tall than me."], correct: 2, exp: 'Only "taller than me" is correct. The others use double forms!' },
+  { q: "His house is ___ than mine. (beautiful)", opts: ["beautifuler","most beautiful","more beautiful","the most beautiful"], correct: 2, exp: "beautiful = 3 syllables → comparative = more beautiful" },
+  { q: "Jane is ___ of the three sisters. (young)", opts: ["younger","more young","the youngest","most young"], correct: 2, exp: "young = 1 syllable → superlative (3 people) = the youngest" },
+  { q: "This road is ___ than that one. (dangerous)", opts: ["dangerousr","more dangerous","the most dangerous","dangerouser"], correct: 1, exp: "dangerous = 4 syllables → comparative = more dangerous" },
+  { q: "Which is ___? (good → comparing ALL movies I've seen)", opts: ["better","the best","gooder","more good"], correct: 1, exp: "Comparing all → superlative. good → the best (irregular)" },
+  { q: "My coffee is ___ hot ___ yours. (equal!)", opts: ["more … than","as … as","the most … in","as … than"], correct: 1, exp: "Equal comparison → as + hot + as. No -er, no 'more' needed!" },
+  { q: "She is ___ as her brother. (tall, equal height)", opts: ["as tall","more tall","the tallest","taller"], correct: 0, exp: "as…as uses the BASE form of the adjective: as tall as" },
+  { q: "Which sentence uses As…As CORRECTLY?", opts: ["He is as taller as me.","This is as more beautiful as Rome.","This book is as interesting as that one.","She runs as fastest as the wind."], correct: 2, exp: 'as + interesting (base form, no -er or \'more\') + as = correct!' },
+];
+
+let challengeScore = 0;
+let challengeIndex = 0;
+let challengeWrong = [];
+
+function startChallenge() {
+  challengeScore = 0;
+  challengeIndex = 0;
+  challengeWrong = [];
+  document.getElementById('challenge-intro').style.display = 'none';
+  document.getElementById('challenge-area').classList.add('active');
+  document.getElementById('results-panel').classList.remove('show');
+  document.getElementById('score-live').textContent = '0';
+  showChallengeQuestion();
+}
+
+function showChallengeQuestion() {
+  const q = challengeQuestions[challengeIndex];
+  document.getElementById('challenge-counter').textContent = `Question ${challengeIndex + 1} of ${challengeQuestions.length}`;
+  const area = document.getElementById('challenge-question-area');
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.classList.remove('show');
+
+  area.innerHTML = `
+    <div class="challenge-q">
+      <div class="challenge-q-text">${q.q.replace('___','<span style="color:var(--blue);border-bottom:2px solid var(--blue);padding:0 8px;">___</span>')}</div>
+      <div class="challenge-options">
+        ${q.opts.map((opt, oi) => `<button class="challenge-opt" onclick="answerChallenge(this, ${oi})">${opt}</button>`).join('')}
+      </div>
+      <div class="challenge-feedback" id="ch-fb"></div>
+    </div>
+  `;
+}
+
+function answerChallenge(btn, choice) {
+  const q = challengeQuestions[challengeIndex];
+  const opts = btn.closest('.challenge-options').querySelectorAll('.challenge-opt');
+  const fb = document.getElementById('ch-fb');
+  opts.forEach(o => { o.disabled = true; o.classList.add('locked'); });
+  
+  const correct = choice === q.correct;
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) {
+    opts.forEach((o, oi) => { if (oi === q.correct) o.classList.add('correct'); });
+    challengeWrong.push({ q: q.q, correct: q.opts[q.correct], given: q.opts[choice] });
+  } else {
+    challengeScore++;
+    document.getElementById('score-live').textContent = challengeScore;
+  }
+
+  fb.textContent = (correct ? '✅ ' : '❌ ') + q.exp;
+  fb.className = 'challenge-feedback show ' + (correct ? 'ok' : 'err');
+
+  const nextBtn = document.getElementById('next-btn');
+  if (challengeIndex < challengeQuestions.length - 1) {
+    nextBtn.innerHTML = 'Next Question →';
+  } else {
+    nextBtn.innerHTML = '🏆 See Results!';
+  }
+  nextBtn.classList.add('show');
+}
+
+function nextChallengeQuestion() {
+  challengeIndex++;
+  if (challengeIndex < challengeQuestions.length) {
+    showChallengeQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('challenge-area').classList.remove('active');
+  const panel = document.getElementById('results-panel');
+  panel.classList.add('show');
+  
+  const pct = Math.round((challengeScore / challengeQuestions.length) * 100);
+  document.getElementById('result-score-num').textContent = challengeScore;
+  document.getElementById('rb-correct').textContent = challengeScore;
+  document.getElementById('rb-wrong').textContent = challengeQuestions.length - challengeScore;
+  document.getElementById('rb-pct').textContent = pct + '%';
+
+  let msg = '';
+  if (pct >= 93) msg = '🎉 Outstanding! You are a Comparatives & Superlatives master!';
+  else if (pct >= 80) msg = '🌟 Excellent work! You really know your stuff!';
+  else if (pct >= 67) msg = '👍 Good job! A bit more practice and you\'ll be unstoppable!';
+  else if (pct >= 50) msg = '💪 Keep going! Review the Mind Map and try again!';
+  else msg = '📚 Don\'t give up! Review the rules and have another go!';
+  
+  document.getElementById('result-msg').textContent = msg;
+
+  if (challengeWrong.length > 0) {
+    const errList = document.getElementById('result-errors-list');
+    const errInner = document.getElementById('result-errors-inner');
+    errList.classList.add('show');
+    errInner.innerHTML = challengeWrong.map(e => `
+      <div class="result-error-item">
+        <strong>Q: ${e.q.replace('<span style="color:var(--blue);border-bottom:2px solid var(--blue);padding:0 8px;">___</span>','___')}</strong><br>
+        You answered: "${e.given}" — Correct: "${e.correct}"
+      </div>
+    `).join('');
+  }
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function retryChallenge() {
+  document.getElementById('results-panel').classList.remove('show');
+  document.getElementById('result-errors-list').classList.remove('show');
+  document.getElementById('challenge-intro').style.display = '';
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  buildCVSQuiz();
+  buildAsAsQuiz();
+  buildErrorSpotter();
+  buildMCQ();
+  buildFill();
+  buildDrag();
+  
+  // Initial reveal
+  setTimeout(updateProgress, 200);
+});
+</script>
+</body>
+</html>

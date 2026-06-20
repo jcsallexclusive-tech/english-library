@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparatives & Superlatives — Deep Learning</title>
+<style>
+  :root {
+    --blue: #2563EB;
+    --blue-light: #EFF6FF;
+    --blue-mid: #BFDBFE;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --green-mid: #BBF7D0;
+    --orange: #EA580C;
+    --orange-light: #FFF7ED;
+    --orange-mid: #FED7AA;
+    --red: #DC2626;
+    --red-light: #FEF2F2;
+    --red-mid: #FECACA;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --purple: #7C3AED;
+    --purple-light: #F5F3FF;
+    --radius: 16px;
+    --radius-sm: 8px;
+    --shadow: 0 4px 24px rgba(0,0,0,.08);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #F0F4FF;
+    color: var(--gray-900);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar-wrap {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #fff;
+    box-shadow: 0 1px 8px rgba(0,0,0,.08);
+    padding: 10px 20px;
+  }
+  #progress-info {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; color: var(--gray-500); margin-bottom: 6px;
+  }
+  #progress-info strong { color: var(--gray-900); font-size: 15px; }
+  #progress-track {
+    height: 6px; background: var(--gray-200); border-radius: 99px; overflow: hidden;
+  }
+  #progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--blue), var(--purple));
+    border-radius: 99px; transition: width .5s ease;
+  }
+
+  /* ── SCREEN ── */
+  .screen {
+    display: none; min-height: 100vh; padding: 80px 16px 40px;
+    max-width: 680px; margin: 0 auto;
+    animation: fadeIn .4s ease;
+  }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── HERO / WELCOME ── */
+  #screen-0 {
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding-top: 100px;
+  }
+  #screen-0.active { display: flex; }
+
+  .hero-badge {
+    background: var(--blue); color: #fff; font-size: 11px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase; padding: 4px 12px;
+    border-radius: 99px; margin-bottom: 20px;
+  }
+  .hero-title {
+    font-size: clamp(28px, 7vw, 48px); font-weight: 800;
+    line-height: 1.1; margin-bottom: 14px;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero-sub {
+    font-size: 17px; color: var(--gray-500); max-width: 420px; line-height: 1.6; margin-bottom: 32px;
+  }
+
+  /* SVG characters */
+  .hero-svg { margin-bottom: 28px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 24px; margin-bottom: 20px;
+  }
+  .card-blue { background: var(--blue-light); border: 1.5px solid var(--blue-mid); }
+  .card-green { background: var(--green-light); border: 1.5px solid var(--green-mid); }
+  .card-orange { background: var(--orange-light); border: 1.5px solid var(--orange-mid); }
+  .card-red { background: var(--red-light); border: 1.5px solid var(--red-mid); }
+  .card-purple { background: var(--purple-light); border: 1.5px solid #DDD6FE; }
+
+  .section-tag {
+    font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .tag-blue { color: var(--blue); }
+  .tag-orange { color: var(--orange); }
+  .tag-green { color: var(--green); }
+  .tag-red { color: var(--red); }
+
+  h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; line-height: 1.25; }
+  h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  p { font-size: 15px; line-height: 1.65; color: var(--gray-700); margin-bottom: 12px; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── MODULE HEADER ── */
+  .mod-header {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 22px;
+  }
+  .mod-num {
+    width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center;
+    justify-content: center; font-size: 18px; font-weight: 900; flex-shrink: 0;
+  }
+  .mod-num-blue { background: var(--blue); color: #fff; }
+  .mod-num-orange { background: var(--orange); color: #fff; }
+  .mod-num-green { background: var(--green); color: #fff; }
+  .mod-num-purple { background: var(--purple); color: #fff; }
+  .mod-num-red { background: var(--red); color: #fff; }
+  .mod-title { font-size: 20px; font-weight: 800; line-height: 1.2; }
+  .mod-subtitle { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+    font-size: 15px; font-weight: 700; padding: 13px 26px; border-radius: 12px;
+    border: none; transition: all .2s ease; text-decoration: none;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--blue), var(--purple)); color: #fff;
+    box-shadow: 0 4px 16px rgba(37,99,235,.35);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,.4); }
+  .btn-ghost { background: var(--gray-100); color: var(--gray-700); }
+  .btn-ghost:hover { background: var(--gray-200); }
+  .btn-green { background: var(--green); color: #fff; }
+  .btn-orange { background: var(--orange); color: #fff; }
+  .btn-full { width: 100%; justify-content: center; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
+
+  /* ── DISCOVERY QUESTION ── */
+  .discovery-opts { display: grid; gap: 10px; margin: 16px 0; }
+  .disc-opt {
+    background: #fff; border: 2px solid var(--gray-200); border-radius: 12px;
+    padding: 14px 18px; cursor: pointer; font-size: 15px; font-weight: 600;
+    text-align: left; transition: all .2s; display: flex; align-items: center; gap: 10px;
+  }
+  .disc-opt:hover { border-color: var(--blue); background: var(--blue-light); }
+  .disc-opt.correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .disc-opt.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .disc-opt.disabled { pointer-events: none; opacity: .6; }
+
+  /* ── FEEDBACK BOX ── */
+  .feedback {
+    border-radius: 12px; padding: 14px 18px; margin-top: 12px; font-size: 14px;
+    line-height: 1.55; display: none;
+  }
+  .feedback.show { display: block; animation: fadeIn .3s ease; }
+  .feedback-correct { background: var(--green-light); border: 1.5px solid var(--green-mid); color: #15803D; }
+  .feedback-wrong { background: var(--red-light); border: 1.5px solid var(--red-mid); color: #991B1B; }
+  .feedback-info { background: var(--blue-light); border: 1.5px solid var(--blue-mid); color: #1D4ED8; }
+
+  /* ── COMPARISON SVG SCENE ── */
+  .svg-scene { width: 100%; border-radius: 12px; overflow: hidden; }
+
+  /* ── RULE PILL ── */
+  .rule-pill {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px;
+    border-radius: 99px; font-size: 13px; font-weight: 700; margin: 4px;
+  }
+  .pill-blue { background: var(--blue); color: #fff; }
+  .pill-green { background: var(--green); color: #fff; }
+  .pill-orange { background: var(--orange); color: #fff; }
+  .pill-red { background: var(--red); color: #fff; }
+  .pill-gray { background: var(--gray-200); color: var(--gray-700); }
+
+  /* ── EXAMPLE ROW ── */
+  .ex-row {
+    display: flex; align-items: flex-start; gap: 14px; padding: 12px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .ex-row:last-child { border-bottom: none; }
+  .ex-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; }
+  .ex-icon-green { background: var(--green-mid); }
+  .ex-icon-red { background: var(--red-mid); }
+  .ex-text { font-size: 14px; line-height: 1.55; }
+  .ex-correct { color: var(--green); font-weight: 700; }
+  .ex-wrong { color: var(--red); font-weight: 700; text-decoration: line-through; }
+  .ex-label { font-size: 12px; color: var(--gray-500); }
+
+  /* ── FILL BLANK ── */
+  .fill-input {
+    border: 2px solid var(--gray-300); border-radius: 10px; padding: 10px 14px;
+    font-size: 16px; font-family: inherit; outline: none; width: 100%;
+    transition: border-color .2s;
+  }
+  .fill-input:focus { border-color: var(--blue); }
+  .fill-input.correct { border-color: var(--green); background: var(--green-light); }
+  .fill-input.wrong { border-color: var(--red); background: var(--red-light); }
+
+  /* ── QUIZ ── */
+  .quiz-q {
+    background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 22px; margin-bottom: 16px;
+  }
+  .q-num { font-size: 12px; font-weight: 700; color: var(--gray-500); margin-bottom: 6px; }
+  .q-text { font-size: 16px; font-weight: 600; margin-bottom: 14px; line-height: 1.45; }
+  .q-opts { display: grid; gap: 8px; }
+  .q-opt {
+    background: var(--gray-50); border: 2px solid var(--gray-200); border-radius: 10px;
+    padding: 11px 16px; cursor: pointer; font-size: 14px; font-weight: 600;
+    text-align: left; transition: all .2s;
+  }
+  .q-opt:hover:not(.locked) { border-color: var(--blue); background: var(--blue-light); }
+  .q-opt.correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .q-opt.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .q-opt.locked { pointer-events: none; }
+
+  /* ── SCORE CARD ── */
+  .score-ring {
+    width: 120px; height: 120px; margin: 0 auto 20px;
+    position: relative; display: flex; align-items: center; justify-content: center;
+  }
+  .score-ring svg { position: absolute; top: 0; left: 0; }
+  .score-num { font-size: 32px; font-weight: 900; color: var(--gray-900); z-index: 1; }
+  .score-label { font-size: 12px; color: var(--gray-500); }
+
+  /* ── MIND MAP ── */
+  .mindmap-wrap {
+    width: 100%; overflow-x: auto; padding: 10px 0;
+  }
+
+  /* ── ADJECTIVE TABLE ── */
+  .adj-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .adj-table th {
+    background: var(--blue); color: #fff; padding: 10px 14px; text-align: left; font-size: 12px;
+    font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  }
+  .adj-table th:first-child { border-radius: 10px 0 0 0; }
+  .adj-table th:last-child { border-radius: 0 10px 0 0; }
+  .adj-table td { padding: 10px 14px; border-bottom: 1px solid var(--gray-100); }
+  .adj-table tr:last-child td { border-bottom: none; }
+  .adj-table tr:nth-child(even) td { background: var(--gray-50); }
+  .adj-table .comp { color: var(--orange); font-weight: 700; }
+  .adj-table .sup { color: var(--blue); font-weight: 700; }
+
+  /* ── DRAG CHECK ── */
+  .sortable-area { display: flex; flex-wrap: wrap; gap: 8px; min-height: 48px; padding: 10px; border: 2px dashed var(--gray-300); border-radius: 12px; }
+  .drag-chip {
+    background: var(--blue); color: #fff; border-radius: 8px; padding: 7px 14px;
+    font-size: 14px; font-weight: 700; cursor: grab; user-select: none;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .drag-chip:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(37,99,235,.4); }
+  .drag-chip.dragging { opacity: .5; }
+
+  /* ── ERROR CORRECTION ── */
+  .error-sentence {
+    font-size: 18px; font-weight: 600; line-height: 1.6; margin-bottom: 16px;
+    padding: 16px; background: var(--red-light); border-radius: 12px;
+    border: 2px solid var(--red-mid);
+  }
+  .error-sentence .err { color: var(--red); text-decoration: underline wavy var(--red); }
+
+  /* ── HELPERS ── */
+  .spacer { height: 16px; }
+  .text-center { text-align: center; }
+  .flex-center { display: flex; justify-content: center; }
+  .flex-between { display: flex; justify-content: space-between; align-items: center; }
+  .nav-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 28px; flex-wrap: wrap; }
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 12px;
+    font-weight: 700;
+  }
+  .badge-blue { background: var(--blue-mid); color: #1D4ED8; }
+  .badge-orange { background: var(--orange-mid); color: #9A3412; }
+  .badge-green { background: var(--green-mid); color: #166534; }
+
+  /* ── MODULE LIST (welcome) ── */
+  .mod-list { text-align: left; width: 100%; max-width: 480px; margin-bottom: 32px; }
+  .mod-list-item {
+    display: flex; align-items: center; gap: 12px; padding: 11px 0;
+    border-bottom: 1px solid var(--gray-200); font-size: 14px;
+  }
+  .mod-list-item:last-child { border-bottom: none; }
+  .mod-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── SYLLABLE COUNTER ── */
+  .syllable-demo {
+    display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0;
+  }
+  .syl-box {
+    border: 2px solid var(--blue-mid); border-radius: 8px; padding: 8px 14px;
+    text-align: center; font-weight: 700; font-size: 16px;
+  }
+  .syl-box span { display: block; font-size: 10px; color: var(--gray-500); font-weight: 500; margin-top: 2px; }
+
+  /* ── STEP INDICATOR ── */
+  .step-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; }
+  .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gray-300); transition: background .3s; }
+  .step-dot.done { background: var(--blue); }
+  .step-dot.active { background: var(--purple); width: 22px; border-radius: 4px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 480px) {
+    .screen { padding: 72px 12px 32px; }
+    .card { padding: 18px; }
+    h2 { font-size: 19px; }
+    .hero-title { font-size: 28px; }
+  }
+
+  /* hidden utility */
+  .hidden { display: none !important; }
+
+  /* ── COMPARISON VISUAL ── */
+  .compare-visual {
+    display: flex; gap: 16px; align-items: flex-end; justify-content: center;
+    padding: 20px; background: var(--gray-50); border-radius: 12px; margin: 16px 0;
+  }
+  .compare-bar-wrap { text-align: center; }
+  .compare-bar {
+    border-radius: 8px 8px 0 0; width: 60px; margin: 0 auto;
+    transition: height .6s ease;
+  }
+  .compare-label { font-size: 13px; font-weight: 700; margin-top: 6px; }
+  .compare-val { font-size: 12px; color: var(--gray-500); }
+
+  /* rule highlight */
+  .rule-box {
+    background: var(--gray-900); color: #fff; border-radius: 12px; padding: 16px 20px;
+    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 15px; margin: 14px 0;
+    line-height: 1.7;
+  }
+  .hl-orange { color: #FB923C; }
+  .hl-green { color: #4ADE80; }
+  .hl-blue { color: #60A5FA; }
+  .hl-purple { color: #C084FC; }
+
+  /* ── MEDAL ── */
+  .medal { font-size: 64px; display: block; text-align: center; margin: 10px 0; }
+</style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar-wrap">
+  <div id="progress-info">
+    <strong id="progress-title">Ready to start?</strong>
+    <span id="progress-counter">0 / 8</span>
+  </div>
+  <div id="progress-track"><div id="progress-fill" style="width:0%"></div></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN 0 — WELCOME
+═══════════════════════════════════════════════ -->
+<div class="screen active" id="screen-0">
+
+  <!-- Hero SVG -->
+  <svg class="hero-svg" width="260" height="130" viewBox="0 0 260 130" fill="none">
+    <!-- Mountain A (short) -->
+    <polygon points="50,110 90,50 130,110" fill="#BFDBFE"/>
+    <!-- Mountain B (tall) -->
+    <polygon points="130,110 180,20 230,110" fill="#2563EB"/>
+    <!-- Snow cap -->
+    <polygon points="180,20 165,55 195,55" fill="white"/>
+    <!-- Sun -->
+    <circle cx="220" cy="30" r="18" fill="#FCD34D"/>
+    <!-- Labels -->
+    <text x="90" y="125" text-anchor="middle" font-size="12" font-weight="700" fill="#6B7280">short</text>
+    <text x="180" y="125" text-anchor="middle" font-size="12" font-weight="700" fill="#2563EB">tall → taller → tallest</text>
+  </svg>
+
+  <div class="hero-badge">English Grammar · Interactive Course</div>
+  <h1 class="hero-title">Comparatives &amp;<br>Superlatives</h1>
+  <p class="hero-sub">Stop second-guessing yourself. Build real understanding, not just memorized rules.</p>
+
+  <div class="mod-list" id="mod-list">
+    <div class="mod-list-item"><div class="mod-dot" style="background:var(--orange)"></div>Module 1 — What is a comparison?</div>
+    <div class="mod-list-item"><div class="mod-dot" style="background:var(--blue)"></div>Module 2 — Comparative vs Superlative</div>
+    <div class="mod-list-item"><div class="mod-dot" style="background:var(--blue)"></div>Module 3 — Short adjectives (-er, -est)</div>
+    <div class="mod-list-item"><div class="mod-dot" style="background:var(--blue)"></div>Module 4 — Long adjectives (more, most)</div>
+    <div class="mod-list-item"><div class="mod-dot" style="background:var(--red)"></div>Module 5 — Common errors</div>
+    <div class="mod-list-item"><div class="mod-dot" style="background:var(--green)"></div>Module 6 — Interactive practice</div>
+    <div class="mod-list-item"><div class="mod-dot" style="background:var(--purple)"></div>Module 7 — Mind map</div>
+    <div class="mod-list-item"><div class="mod-dot" style="background:var(--gray-700)"></div>Module 8 — Final exam</div>
+  </div>
+
+  <button class="btn btn-primary" onclick="goTo(1)">Start Learning →</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN 1 — MODULE 1: DISCOVERY
+═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-1">
+  <div class="mod-header">
+    <div class="mod-num mod-num-orange">1</div>
+    <div>
+      <div class="mod-title">What Is a Comparison?</div>
+      <div class="mod-subtitle">Discover through observation</div>
+    </div>
+  </div>
+
+  <!-- Scene 1 -->
+  <div class="card card-orange">
+    <div class="section-tag tag-orange">🔍 Discovery</div>
+    <h3>Look at these two mountains</h3>
+    <svg class="svg-scene" width="100%" viewBox="0 0 400 180" fill="none">
+      <rect width="400" height="180" fill="#FFF7ED" rx="12"/>
+      <!-- sky -->
+      <rect width="400" height="100" fill="#FEF3C7" rx="12"/>
+      <!-- clouds -->
+      <ellipse cx="80" cy="35" rx="30" ry="14" fill="white" opacity=".8"/>
+      <ellipse cx="100" cy="28" rx="20" ry="12" fill="white" opacity=".8"/>
+      <ellipse cx="300" cy="45" rx="22" ry="10" fill="white" opacity=".8"/>
+      <!-- sun -->
+      <circle cx="340" cy="35" r="20" fill="#FCD34D"/>
+      <!-- mountain small -->
+      <polygon points="80,140 130,80 180,140" fill="#FCA5A5"/>
+      <!-- mountain big -->
+      <polygon points="220,140 300,30 380,140" fill="#2563EB"/>
+      <polygon points="300,30 283,65 317,65" fill="white"/>
+      <!-- ground -->
+      <rect x="0" y="140" width="400" height="40" fill="#86EFAC" rx="0"/>
+      <!-- labels -->
+      <text x="130" y="165" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">Mountain A</text>
+      <text x="300" y="165" text-anchor="middle" font-size="13" font-weight="700" fill="#1D4ED8">Mountain B</text>
+      <!-- height arrows -->
+      <line x1="195" y1="80" x2="195" y2="140" stroke="#EA580C" stroke-width="2" stroke-dasharray="4,3"/>
+      <line x1="205" y1="30" x2="205" y2="140" stroke="#EA580C" stroke-width="2" stroke-dasharray="4,3"/>
+    </svg>
+    <p style="margin-top:14px">What do you notice about these two mountains?</p>
+  </div>
+
+  <div class="card">
+    <p style="font-weight:700;margin-bottom:14px">Which sentence is correct?</p>
+    <div class="discovery-opts" id="m1q1">
+      <button class="disc-opt" onclick="m1answer(this,false,'m1q1','m1fb1')">A. Mountain B is <strong>more tall</strong> than Mountain A.</button>
+      <button class="disc-opt" onclick="m1answer(this,true,'m1q1','m1fb1')">B. Mountain B is <strong>taller</strong> than Mountain A.</button>
+      <button class="disc-opt" onclick="m1answer(this,false,'m1q1','m1fb1')">C. Mountain B is <strong>most tall</strong> than Mountain A.</button>
+    </div>
+    <div class="feedback" id="m1fb1"></div>
+  </div>
+
+  <div class="card card-blue" id="m1-insight" style="display:none">
+    <div class="section-tag tag-blue">💡 Insight</div>
+    <h3>Why "taller" and not "more tall"?</h3>
+    <p>Your brain detected a pattern: short words like <strong>tall</strong> change shape when comparing. They don't need the word "more" — they carry the comparison inside themselves by adding <strong>-er</strong>.</p>
+    <p>This is the core idea. Let's build on it.</p>
+  </div>
+
+  <!-- scene 2 -->
+  <div class="card" id="m1-scene2" style="display:none">
+    <div class="section-tag tag-orange">🔍 Scene 2</div>
+    <h3>Now look at three dogs</h3>
+    <svg class="svg-scene" width="100%" viewBox="0 0 400 160" fill="none">
+      <rect width="400" height="160" fill="#F0FDF4" rx="12"/>
+      <!-- Dog 1 (small) -->
+      <g transform="translate(40,100)">
+        <ellipse cx="20" cy="10" rx="20" ry="12" fill="#D97706"/>
+        <circle cx="34" cy="0" r="10" fill="#D97706"/>
+        <ellipse cx="38" cy="-2" rx="6" ry="4" fill="#92400E"/>
+        <circle cx="40" cy="1" r="2" fill="#1F2937"/>
+        <line x1="8" y1="18" x2="5" y2="35" stroke="#D97706" stroke-width="4" stroke-linecap="round"/>
+        <line x1="16" y1="20" x2="13" y2="35" stroke="#D97706" stroke-width="4" stroke-linecap="round"/>
+        <line x1="24" y1="20" x2="27" y2="35" stroke="#D97706" stroke-width="4" stroke-linecap="round"/>
+        <line x1="32" y1="18" x2="35" y2="35" stroke="#D97706" stroke-width="4" stroke-linecap="round"/>
+        <text x="22" y="52" text-anchor="middle" font-size="11" fill="#374151" font-weight="700">Rex</text>
+        <text x="22" y="65" text-anchor="middle" font-size="10" fill="#6B7280">small</text>
+      </g>
+      <!-- Dog 2 (medium) -->
+      <g transform="translate(150,85)">
+        <ellipse cx="28" cy="14" rx="28" ry="16" fill="#EA580C"/>
+        <circle cx="46" cy="0" r="14" fill="#EA580C"/>
+        <ellipse cx="51" cy="-3" rx="8" ry="5" fill="#9A3412"/>
+        <circle cx="53" cy="1" r="3" fill="#1F2937"/>
+        <line x1="10" y1="26" x2="6" y2="45" stroke="#EA580C" stroke-width="5" stroke-linecap="round"/>
+        <line x1="22" y1="28" x2="18" y2="45" stroke="#EA580C" stroke-width="5" stroke-linecap="round"/>
+        <line x1="34" y1="28" x2="38" y2="45" stroke="#EA580C" stroke-width="5" stroke-linecap="round"/>
+        <line x1="46" y1="26" x2="50" y2="45" stroke="#EA580C" stroke-width="5" stroke-linecap="round"/>
+        <text x="30" y="63" text-anchor="middle" font-size="11" fill="#374151" font-weight="700">Bruno</text>
+        <text x="30" y="76" text-anchor="middle" font-size="10" fill="#6B7280">medium</text>
+      </g>
+      <!-- Dog 3 (large) -->
+      <g transform="translate(270,65)">
+        <ellipse cx="40" cy="20" rx="40" ry="22" fill="#2563EB"/>
+        <circle cx="65" cy="0" r="20" fill="#2563EB"/>
+        <ellipse cx="72" cy="-4" rx="11" ry="7" fill="#1D4ED8"/>
+        <circle cx="74" cy="1" r="4" fill="#1F2937"/>
+        <line x1="14" y1="36" x2="8" y2="58" stroke="#2563EB" stroke-width="7" stroke-linecap="round"/>
+        <line x1="30" y1="40" x2="24" y2="58" stroke="#2563EB" stroke-width="7" stroke-linecap="round"/>
+        <line x1="50" y1="40" x2="56" y2="58" stroke="#2563EB" stroke-width="7" stroke-linecap="round"/>
+        <line x1="66" y1="36" x2="72" y2="58" stroke="#2563EB" stroke-width="7" stroke-linecap="round"/>
+        <text x="42" y="76" text-anchor="middle" font-size="11" fill="#374151" font-weight="700">Max</text>
+        <text x="42" y="89" text-anchor="middle" font-size="10" fill="#6B7280">biggest</text>
+      </g>
+    </svg>
+    <p style="margin-top:14px">When we compare <strong>three or more</strong> things and pick the extreme one, what word do we use?</p>
+    <div class="discovery-opts" id="m1q2">
+      <button class="disc-opt" onclick="m1answer2(this,false,'m1q2','m1fb2')">A. Max is <strong>bigger</strong> of all.</button>
+      <button class="disc-opt" onclick="m1answer2(this,true,'m1q2','m1fb2')">B. Max is <strong>the biggest</strong> of all.</button>
+      <button class="disc-opt" onclick="m1answer2(this,false,'m1q2','m1fb2')">C. Max is <strong>most big</strong> of all.</button>
+    </div>
+    <div class="feedback" id="m1fb2"></div>
+  </div>
+
+  <div class="card card-green" id="m1-summary" style="display:none">
+    <div class="section-tag tag-green">✅ Discovery Complete</div>
+    <h3>You've discovered the two forms</h3>
+    <div class="ex-row">
+      <div class="ex-icon ex-icon-green">📊</div>
+      <div class="ex-text"><strong>Comparative</strong> — comparing 2 things<br><span style="color:var(--orange)">Bruno is <em>bigger than</em> Rex.</span></div>
+    </div>
+    <div class="ex-row">
+      <div class="ex-icon ex-icon-green">🏆</div>
+      <div class="ex-text"><strong>Superlative</strong> — the most extreme in a group<br><span style="color:var(--blue)">Max is <em>the biggest</em> of all.</span></div>
+    </div>
+  </div>
+
+  <div class="nav-btns" id="m1-nav" style="display:none">
+    <button class="btn btn-primary" onclick="goTo(2)">Next Module →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN 2 — MODULE 2: COMPARATIVE VS SUPERLATIVE
+═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-2">
+  <div class="mod-header">
+    <div class="mod-num mod-num-blue">2</div>
+    <div>
+      <div class="mod-title">Comparative vs Superlative</div>
+      <div class="mod-subtitle">Diagrams that make it click</div>
+    </div>
+  </div>
+
+  <div class="card card-blue">
+    <div class="section-tag tag-blue">📐 The Mental Model</div>
+    <h3>Think of it as a sliding scale</h3>
+    <svg width="100%" viewBox="0 0 360 90" fill="none">
+      <!-- scale bar -->
+      <rect x="20" y="40" width="320" height="8" rx="4" fill="#E5E7EB"/>
+      <rect x="20" y="40" width="320" height="8" rx="4" fill="url(#grad1)"/>
+      <defs>
+        <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#BFDBFE"/>
+          <stop offset="100%" stop-color="#2563EB"/>
+        </linearGradient>
+      </defs>
+      <!-- points -->
+      <circle cx="20" cy="44" r="8" fill="#93C5FD"/>
+      <circle cx="180" cy="44" r="8" fill="#3B82F6"/>
+      <circle cx="340" cy="44" r="12" fill="#1D4ED8" stroke="white" stroke-width="2"/>
+      <!-- labels top -->
+      <text x="20" y="28" text-anchor="middle" font-size="12" fill="#6B7280" font-weight="600">small</text>
+      <text x="180" y="28" text-anchor="middle" font-size="12" fill="#374151" font-weight="600">tall</text>
+      <text x="340" y="28" text-anchor="middle" font-size="12" fill="#1D4ED8" font-weight="700">THE tallest ⭐</text>
+      <!-- labels bottom -->
+      <text x="20" y="68" text-anchor="middle" font-size="10" fill="#9CA3AF">Rex</text>
+      <text x="180" y="68" text-anchor="middle" font-size="10" fill="#9CA3AF">Bruno</text>
+      <text x="340" y="68" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="700">Max</text>
+      <!-- arrow between Rex and Bruno -->
+      <text x="100" y="85" text-anchor="middle" font-size="10" fill="#EA580C" font-weight="600">taller →</text>
+    </svg>
+    <p style="margin-top:8px">The <strong style="color:var(--orange)">comparative</strong> moves you along the scale. The <strong style="color:var(--blue)">superlative</strong> places you at the extreme end.</p>
+  </div>
+
+  <div class="card">
+    <h3>The Golden Rule</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+      <div style="background:var(--orange-light);border-radius:12px;padding:16px;border:2px solid var(--orange-mid)">
+        <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">Comparative</div>
+        <div style="font-size:20px;font-weight:900;color:var(--orange);margin-bottom:8px">A &gt; B</div>
+        <div style="font-size:13px;color:var(--gray-700)">Comparing <strong>2 things</strong></div>
+        <div style="font-size:13px;color:var(--gray-700);margin-top:6px">Uses: <strong>than</strong></div>
+        <div style="font-size:13px;color:var(--orange);margin-top:6px">bigger <em>than</em></div>
+      </div>
+      <div style="background:var(--blue-light);border-radius:12px;padding:16px;border:2px solid var(--blue-mid)">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">Superlative</div>
+        <div style="font-size:20px;font-weight:900;color:var(--blue);margin-bottom:8px">A &gt; ALL</div>
+        <div style="font-size:13px;color:var(--gray-700)">Comparing <strong>3+ things</strong></div>
+        <div style="font-size:13px;color:var(--gray-700);margin-top:6px">Uses: <strong>the</strong></div>
+        <div style="font-size:13px;color:var(--blue);margin-top:6px"><em>the</em> biggest</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Quick Check — Spot the correct one</h3>
+    <div class="discovery-opts" id="m2q1">
+      <button class="disc-opt" onclick="simpleCheck(this,'m2q1','m2fb1',false)">She is <strong>the smarter</strong> than her brother.</button>
+      <button class="disc-opt" onclick="simpleCheck(this,'m2q1','m2fb1',true)">She is <strong>smarter than</strong> her brother.</button>
+      <button class="disc-opt" onclick="simpleCheck(this,'m2q1','m2fb1',false)">She is <strong>most smart</strong> than her brother.</button>
+    </div>
+    <div class="feedback" id="m2fb1"></div>
+  </div>
+
+  <div class="card" id="m2q2card" style="display:none">
+    <h3>One more — 3 people in a room. Who wins?</h3>
+    <div class="discovery-opts" id="m2q2">
+      <button class="disc-opt" onclick="simpleCheck(this,'m2q2','m2fb2',false)">Carlos is <strong>the more funny</strong> in the class.</button>
+      <button class="disc-opt" onclick="simpleCheck(this,'m2q2','m2fb2',false)">Carlos is <strong>funnier than</strong> in the class.</button>
+      <button class="disc-opt" onclick="simpleCheck(this,'m2q2','m2fb2',true)">Carlos is <strong>the funniest</strong> in the class.</button>
+    </div>
+    <div class="feedback" id="m2fb2"></div>
+  </div>
+
+  <div class="nav-btns" id="m2-nav" style="display:none">
+    <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
+    <button class="btn btn-primary" onclick="goTo(3)">Next Module →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN 3 — MODULE 3: SHORT ADJECTIVES
+═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-3">
+  <div class="mod-header">
+    <div class="mod-num mod-num-blue">3</div>
+    <div>
+      <div class="mod-title">Short Adjectives</div>
+      <div class="mod-subtitle">The -er / -est pattern</div>
+    </div>
+  </div>
+
+  <div class="card card-orange">
+    <div class="section-tag tag-orange">🧠 The Syllable Rule</div>
+    <h3>Count the syllables, not the letters</h3>
+    <p>Short adjectives (1 syllable, sometimes 2) change <strong>shape</strong>. They don't need "more" or "most".</p>
+    <div class="syllable-demo">
+      <div class="syl-box">tall<span>1 syllable</span></div>
+      <div style="display:flex;align-items:center;font-size:20px">→</div>
+      <div class="syl-box" style="border-color:var(--orange-mid);background:var(--orange-light)">tall·er<span>comparative</span></div>
+      <div style="display:flex;align-items:center;font-size:20px">→</div>
+      <div class="syl-box" style="border-color:var(--blue-mid);background:var(--blue-light)">tall·est<span>superlative</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Spelling patterns to remember</h3>
+    <table class="adj-table" style="margin-top:8px">
+      <thead>
+        <tr><th>Pattern</th><th>Base</th><th class="comp">Comparative</th><th class="sup">Superlative</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Regular</td><td>tall</td><td class="comp">taller</td><td class="sup">tallest</td></tr>
+        <tr><td>Regular</td><td>fast</td><td class="comp">faster</td><td class="sup">fastest</td></tr>
+        <tr><td>Ends in -e</td><td>large</td><td class="comp">larger</td><td class="sup">largest</td></tr>
+        <tr><td>Ends in -e</td><td>nice</td><td class="comp">nicer</td><td class="sup">nicest</td></tr>
+        <tr><td>CVC double</td><td>big</td><td class="comp">bigger</td><td class="sup">biggest</td></tr>
+        <tr><td>CVC double</td><td>hot</td><td class="comp">hotter</td><td class="sup">hottest</td></tr>
+        <tr><td>Ends in -y</td><td>happy</td><td class="comp">happier</td><td class="sup">happiest</td></tr>
+        <tr><td>Ends in -y</td><td>funny</td><td class="comp">funnier</td><td class="sup">funniest</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card card-blue">
+    <div class="section-tag tag-blue">🔑 CVC Rule (consonant-vowel-consonant)</div>
+    <h3>When to double the final letter</h3>
+    <p>If a 1-syllable adjective ends in <strong>consonant + vowel + consonant</strong> (like <em>big</em>: b-i-g), double the last letter before adding -er / -est.</p>
+    <div class="rule-box">
+      b-<span class="hl-orange">i</span>-g → b<span class="hl-orange">igg</span>er / b<span class="hl-orange">igg</span>est<br>
+      h-<span class="hl-orange">o</span>-t → h<span class="hl-orange">ott</span>er / h<span class="hl-orange">ott</span>est<br>
+      <span style="color:#9CA3AF">NOT: b-i-g → biger ✗</span>
+    </div>
+  </div>
+
+  <!-- Practice -->
+  <div class="card">
+    <h3>Practice — Type the correct form</h3>
+    <div id="m3-exercises">
+      <div class="m3-ex" id="m3ex1" style="margin-bottom:18px">
+        <p style="margin-bottom:8px">1. She is <strong>tall</strong>. Her sister is even ______ . <span class="badge badge-orange">comparative</span></p>
+        <input type="text" class="fill-input" id="m3i1" placeholder="type here…" oninput="m3check(1,'taller','m3i1','m3fb1')">
+        <div class="feedback" id="m3fb1"></div>
+      </div>
+      <div class="m3-ex" id="m3ex2" style="margin-bottom:18px">
+        <p style="margin-bottom:8px">2. It was hot yesterday, but today is the ______ day of the year. <span class="badge badge-blue">superlative</span></p>
+        <input type="text" class="fill-input" id="m3i2" placeholder="type here…" oninput="m3check(2,'hottest','m3i2','m3fb2')">
+        <div class="feedback" id="m3fb2"></div>
+      </div>
+      <div class="m3-ex" id="m3ex3" style="margin-bottom:18px">
+        <p style="margin-bottom:8px">3. That was the ______ joke I've ever heard! <em>(funny)</em> <span class="badge badge-blue">superlative</span></p>
+        <input type="text" class="fill-input" id="m3i3" placeholder="type here…" oninput="m3check(3,'funniest','m3i3','m3fb3')">
+        <div class="feedback" id="m3fb3"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-ghost" onclick="goTo(2)">← Back</button>
+    <button class="btn btn-primary" onclick="goTo(4)">Next Module →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN 4 — MODULE 4: LONG ADJECTIVES
+═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-4">
+  <div class="mod-header">
+    <div class="mod-num mod-num-blue">4</div>
+    <div>
+      <div class="mod-title">Long Adjectives</div>
+      <div class="mod-subtitle">more / most — the helper words</div>
+    </div>
+  </div>
+
+  <div class="card card-blue">
+    <div class="section-tag tag-blue">📏 The Length Test</div>
+    <h3>When a word is too long to change shape</h3>
+    <p>Adjectives with 2+ syllables (except -y endings) use <strong>more</strong> and <strong>most</strong> as helpers. Think of them as carrying the comparison for the adjective.</p>
+    <div class="syllable-demo" style="flex-wrap:wrap">
+      <div class="syl-box" style="min-width:100px">beau·ti·ful<span>3 syllables</span></div>
+      <div style="display:flex;align-items:center;font-size:18px;padding:8px">→</div>
+      <div class="syl-box" style="border-color:var(--orange-mid);background:var(--orange-light);min-width:140px"><span style="font-size:13px">more</span> beautiful<span>comparative</span></div>
+      <div style="display:flex;align-items:center;font-size:18px;padding:8px">→</div>
+      <div class="syl-box" style="border-color:var(--blue-mid);background:var(--blue-light);min-width:140px"><span style="font-size:13px">the most</span> beautiful<span>superlative</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Examples in context</h3>
+    <table class="adj-table" style="margin-top:8px">
+      <thead>
+        <tr><th>Base</th><th class="comp">Comparative</th><th class="sup">Superlative</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>interesting</td><td class="comp">more interesting</td><td class="sup">the most interesting</td></tr>
+        <tr><td>expensive</td><td class="comp">more expensive</td><td class="sup">the most expensive</td></tr>
+        <tr><td>comfortable</td><td class="comp">more comfortable</td><td class="sup">the most comfortable</td></tr>
+        <tr><td>boring</td><td class="comp">more boring</td><td class="sup">the most boring</td></tr>
+        <tr><td>difficult</td><td class="comp">more difficult</td><td class="sup">the most difficult</td></tr>
+        <tr><td>famous</td><td class="comp">more famous</td><td class="sup">the most famous</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card card-orange">
+    <div class="section-tag tag-orange">⚠️ Critical Warning</div>
+    <h3>NEVER combine both methods</h3>
+    <div class="rule-box">
+      <span style="color:#F87171">✗  more taller  /  most tallest</span><br>
+      <span style="color:#4ADE80">✓  taller  /  the tallest</span><br><br>
+      <span style="color:#F87171">✗  more interestinger</span><br>
+      <span style="color:#4ADE80">✓  more interesting</span>
+    </div>
+    <p>You only ever use <em>one</em> method. Short adjectives change their ending. Long adjectives use helper words. Never both at the same time.</p>
+  </div>
+
+  <!-- Irreg -->
+  <div class="card card-purple">
+    <div class="section-tag" style="color:var(--purple)">⭐ Irregular Adjectives</div>
+    <h3>Memorize these — they don't follow rules</h3>
+    <table class="adj-table" style="margin-top:8px">
+      <thead>
+        <tr><th>Base</th><th class="comp">Comparative</th><th class="sup">Superlative</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>good</td><td class="comp">better</td><td class="sup">the best</td></tr>
+        <tr><td>bad</td><td class="comp">worse</td><td class="sup">the worst</td></tr>
+        <tr><td>far</td><td class="comp">farther / further</td><td class="sup">the farthest / furthest</td></tr>
+        <tr><td>little</td><td class="comp">less</td><td class="sup">the least</td></tr>
+        <tr><td>many / much</td><td class="comp">more</td><td class="sup">the most</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Practice — Choose the right form</h3>
+    <div class="discovery-opts" id="m4q1">
+      <button class="disc-opt" onclick="simpleCheck(this,'m4q1','m4fb1',false)">This is the <strong>interestingest</strong> book I've read.</button>
+      <button class="disc-opt" onclick="simpleCheck(this,'m4q1','m4fb1',false)">This is the <strong>more interesting</strong> book I've read.</button>
+      <button class="disc-opt" onclick="simpleCheck(this,'m4q1','m4fb1',true)">This is the <strong>most interesting</strong> book I've read.</button>
+    </div>
+    <div class="feedback" id="m4fb1"></div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-ghost" onclick="goTo(3)">← Back</button>
+    <button class="btn btn-primary" onclick="goTo(5)">Next Module →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN 5 — MODULE 5: COMMON ERRORS
+═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-5">
+  <div class="mod-header">
+    <div class="mod-num mod-num-red">5</div>
+    <div>
+      <div class="mod-title">Common Errors</div>
+      <div class="mod-subtitle">The ones you've been making — and why</div>
+    </div>
+  </div>
+
+  <div class="card card-red">
+    <div class="section-tag tag-red">🐛 Error Pattern 1</div>
+    <h3>"more tall" / "more big"</h3>
+    <div class="error-sentence">She is <span class="err">more tall</span> than him.</div>
+    <p><strong>Why it happens:</strong> You learned "more + adjective" for long adjectives and applied it to short ones.</p>
+    <p><strong>The fix:</strong> <em>Tall</em> has only 1 syllable → use <strong>-er</strong> form.</p>
+    <div class="ex-row">
+      <div class="ex-icon ex-icon-red">✗</div>
+      <div class="ex-text"><span class="ex-wrong">more tall / more big / more fast</span></div>
+    </div>
+    <div class="ex-row">
+      <div class="ex-icon ex-icon-green">✓</div>
+      <div class="ex-text"><span class="ex-correct">taller / bigger / faster</span></div>
+    </div>
+  </div>
+
+  <div class="card card-red">
+    <div class="section-tag tag-red">🐛 Error Pattern 2</div>
+    <h3>"interestinger" / "beautifuler"</h3>
+    <div class="error-sentence">This class is <span class="err">interestinger</span> than math.</div>
+    <p><strong>Why it happens:</strong> You applied the short-adjective rule to long words.</p>
+    <p><strong>The fix:</strong> <em>Interesting</em> has 4 syllables → use <strong>more</strong>.</p>
+    <div class="ex-row">
+      <div class="ex-icon ex-icon-red">✗</div>
+      <div class="ex-text"><span class="ex-wrong">interestinger / beautifuler / expensiver</span></div>
+    </div>
+    <div class="ex-row">
+      <div class="ex-icon ex-icon-green">✓</div>
+      <div class="ex-text"><span class="ex-correct">more interesting / more beautiful / more expensive</span></div>
+    </div>
+  </div>
+
+  <div class="card card-red">
+    <div class="section-tag tag-red">🐛 Error Pattern 3</div>
+    <h3>"most tallest" / "most fastest"</h3>
+    <div class="error-sentence">He is the <span class="err">most tallest</span> player on the team.</div>
+    <p><strong>Why it happens:</strong> You used both methods at once — double marking.</p>
+    <p><strong>The fix:</strong> Pick ONE method only. Never combine them.</p>
+    <div class="ex-row">
+      <div class="ex-icon ex-icon-red">✗</div>
+      <div class="ex-text"><span class="ex-wrong">most tallest / more taller / most fastest</span></div>
+    </div>
+    <div class="ex-row">
+      <div class="ex-icon ex-icon-green">✓</div>
+      <div class="ex-text"><span class="ex-correct">the tallest / taller / the fastest</span></div>
+    </div>
+  </div>
+
+  <div class="card card-red">
+    <div class="section-tag tag-red">🐛 Error Pattern 4</div>
+    <h3>Forgetting "the" in superlatives</h3>
+    <div class="error-sentence">Tokyo is <span class="err">largest</span> city in Japan.</div>
+    <p><strong>Why it happens:</strong> Articles are tricky in other languages.</p>
+    <p><strong>The fix:</strong> Superlatives almost always need <strong>the</strong>.</p>
+    <div class="ex-row">
+      <div class="ex-icon ex-icon-red">✗</div>
+      <div class="ex-text"><span class="ex-wrong">largest city / most beautiful place</span></div>
+    </div>
+    <div class="ex-row">
+      <div class="ex-icon ex-icon-green">✓</div>
+      <div class="ex-text"><span class="ex-correct">THE largest city / THE most beautiful place</span></div>
+    </div>
+  </div>
+
+  <!-- Error correction exercise -->
+  <div class="card">
+    <h3>Fix the Error</h3>
+    <p style="margin-bottom:14px">Rewrite the underlined error correctly.</p>
+
+    <div id="fix1" style="margin-bottom:18px">
+      <div class="error-sentence">My car is <span class="err">more fast</span> than yours.</div>
+      <input type="text" class="fill-input" id="fix1i" placeholder="Write the corrected sentence…" oninput="checkFix(1,'faster','fix1i','fix1fb')">
+      <div class="feedback" id="fix1fb"></div>
+    </div>
+    <div id="fix2" style="margin-bottom:18px">
+      <div class="error-sentence">She is the <span class="err">most smartest</span> student here.</div>
+      <input type="text" class="fill-input" id="fix2i" placeholder="Write the corrected sentence…" oninput="checkFix(2,'smartest','fix2i','fix2fb')">
+      <div class="feedback" id="fix2fb"></div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-ghost" onclick="goTo(4)">← Back</button>
+    <button class="btn btn-primary" onclick="goTo(6)">Next Module →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN 6 — MODULE 6: INTERACTIVE PRACTICE
+═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-6">
+  <div class="mod-header">
+    <div class="mod-num mod-num-green">6</div>
+    <div>
+      <div class="mod-title">Interactive Practice</div>
+      <div class="mod-subtitle">Mixed drills — build fluency</div>
+    </div>
+  </div>
+
+  <!-- Exercise A: Choose the correct form -->
+  <div class="card">
+    <div class="section-tag tag-green">Exercise A — Choose the Correct Form</div>
+    <h3 style="margin-bottom:16px">Tap the right answer</h3>
+
+    <div id="pracA-q1" style="margin-bottom:20px">
+      <p style="font-weight:600;margin-bottom:10px">1. The Amazon is ______ river in South America. <em>(long)</em></p>
+      <div class="discovery-opts" id="pa1">
+        <button class="disc-opt" onclick="simpleCheck(this,'pa1','pafb1',false)">longer</button>
+        <button class="disc-opt" onclick="simpleCheck(this,'pa1','pafb1',true)">the longest</button>
+        <button class="disc-opt" onclick="simpleCheck(this,'pa1','pafb1',false)">most long</button>
+      </div>
+      <div class="feedback" id="pafb1"></div>
+    </div>
+
+    <div id="pracA-q2" style="margin-bottom:20px">
+      <p style="font-weight:600;margin-bottom:10px">2. February is ______ than March. <em>(short)</em></p>
+      <div class="discovery-opts" id="pa2">
+        <button class="disc-opt" onclick="simpleCheck(this,'pa2','pafb2',false)">more short</button>
+        <button class="disc-opt" onclick="simpleCheck(this,'pa2','pafb2',true)">shorter</button>
+        <button class="disc-opt" onclick="simpleCheck(this,'pa2','pafb2',false)">shortest</button>
+      </div>
+      <div class="feedback" id="pafb2"></div>
+    </div>
+
+    <div id="pracA-q3" style="margin-bottom:20px">
+      <p style="font-weight:600;margin-bottom:10px">3. This exam is ______ than the last one. <em>(difficult)</em></p>
+      <div class="discovery-opts" id="pa3">
+        <button class="disc-opt" onclick="simpleCheck(this,'pa3','pafb3',false)">difficulter</button>
+        <button class="disc-opt" onclick="simpleCheck(this,'pa3','pafb3',false)">the most difficult</button>
+        <button class="disc-opt" onclick="simpleCheck(this,'pa3','pafb3',true)">more difficult</button>
+      </div>
+      <div class="feedback" id="pafb3"></div>
+    </div>
+  </div>
+
+  <!-- Exercise B: Build the sentence -->
+  <div class="card">
+    <div class="section-tag tag-green">Exercise B — Complete the Sentences</div>
+    <h3 style="margin-bottom:16px">Type the correct adjective form</h3>
+
+    <div style="margin-bottom:18px">
+      <p style="font-weight:600;margin-bottom:8px">4. My dog is ______ than my cat. <em>(intelligent)</em></p>
+      <input type="text" class="fill-input" id="pb4" placeholder="type here…" oninput="m3check(4,'more intelligent','pb4','pbfb4')">
+      <div class="feedback" id="pbfb4"></div>
+    </div>
+    <div style="margin-bottom:18px">
+      <p style="font-weight:600;margin-bottom:8px">5. That was the ______ movie I've ever seen! <em>(bad)</em></p>
+      <input type="text" class="fill-input" id="pb5" placeholder="type here…" oninput="m3check(5,'worst','pb5','pbfb5')">
+      <div class="feedback" id="pbfb5"></div>
+    </div>
+    <div style="margin-bottom:18px">
+      <p style="font-weight:600;margin-bottom:8px">6. Summer is ______ than winter here. <em>(hot)</em></p>
+      <input type="text" class="fill-input" id="pb6" placeholder="type here…" oninput="m3check(6,'hotter','pb6','pbfb6')">
+      <div class="feedback" id="pbfb6"></div>
+    </div>
+  </div>
+
+  <!-- Exercise C: Error Detective -->
+  <div class="card card-orange">
+    <div class="section-tag tag-orange">Exercise C — Error Detective</div>
+    <h3 style="margin-bottom:16px">Is this sentence correct or wrong?</h3>
+    <div id="ec-item" style="margin-bottom:12px">
+      <p id="ec-sentence" style="font-size:17px;font-weight:600;padding:14px;background:white;border-radius:10px;margin-bottom:12px"></p>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-green" style="flex:1" onclick="detectError('correct')">✓ Correct</button>
+        <button class="btn" style="flex:1;background:var(--red);color:white" onclick="detectError('wrong')">✗ Wrong</button>
+      </div>
+      <div class="feedback" id="ecfb" style="margin-top:10px"></div>
+    </div>
+    <div style="text-align:center;color:var(--gray-500);font-size:13px;margin-top:8px">
+      <span id="ec-count">1</span> / 5
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-ghost" onclick="goTo(5)">← Back</button>
+    <button class="btn btn-primary" onclick="goTo(7)">Next Module →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN 7 — MODULE 7: MIND MAP
+═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-7">
+  <div class="mod-header">
+    <div class="mod-num mod-num-purple">7</div>
+    <div>
+      <div class="mod-title">Visual Mind Map</div>
+      <div class="mod-subtitle">Everything in one picture</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="margin-bottom:14px">This is your complete mental model. Use it as a reference.</p>
+    <div class="mindmap-wrap">
+      <svg width="640" height="500" viewBox="0 0 640 500" style="max-width:100%;height:auto">
+        <!-- background -->
+        <rect width="640" height="500" fill="#F9FAFB" rx="16"/>
+
+        <!-- CENTER -->
+        <ellipse cx="320" cy="250" rx="90" ry="44" fill="#1E40AF"/>
+        <text x="320" y="244" text-anchor="middle" font-size="13" font-weight="800" fill="white">COMPARATIVES</text>
+        <text x="320" y="260" text-anchor="middle" font-size="13" font-weight="800" fill="white">&amp; SUPERLATIVES</text>
+
+        <!-- === LEFT BRANCH: COMPARATIVE === -->
+        <line x1="230" y1="240" x2="140" y2="180" stroke="#EA580C" stroke-width="2.5"/>
+        <ellipse cx="100" cy="170" rx="70" ry="28" fill="#EA580C"/>
+        <text x="100" y="166" text-anchor="middle" font-size="12" font-weight="700" fill="white">COMPARATIVE</text>
+        <text x="100" y="181" text-anchor="middle" font-size="11" fill="white">2 things · than</text>
+
+        <!-- comp sub-branches -->
+        <line x1="50" y1="155" x2="30" y2="100" stroke="#FCA5A5" stroke-width="1.5"/>
+        <rect x="0" y="70" width="90" height="36" rx="8" fill="#FFF7ED" stroke="#FCA5A5" stroke-width="1.5"/>
+        <text x="45" y="85" text-anchor="middle" font-size="11" font-weight="700" fill="#9A3412">Short adj</text>
+        <text x="45" y="99" text-anchor="middle" font-size="10" fill="#9A3412">+ er</text>
+
+        <line x1="100" y1="142" x2="100" y2="90" stroke="#FCA5A5" stroke-width="1.5"/>
+        <rect x="52" y="60" width="96" height="36" rx="8" fill="#FFF7ED" stroke="#FCA5A5" stroke-width="1.5"/>
+        <text x="100" y="75" text-anchor="middle" font-size="11" font-weight="700" fill="#9A3412">Long adj</text>
+        <text x="100" y="89" text-anchor="middle" font-size="10" fill="#9A3412">more + adj</text>
+
+        <line x1="148" y1="154" x2="178" y2="108" stroke="#FCA5A5" stroke-width="1.5"/>
+        <rect x="140" y="78" width="80" height="36" rx="8" fill="#FFF7ED" stroke="#FCA5A5" stroke-width="1.5"/>
+        <text x="180" y="93" text-anchor="middle" font-size="11" font-weight="700" fill="#9A3412">Irregular</text>
+        <text x="180" y="107" text-anchor="middle" font-size="10" fill="#9A3412">good→better</text>
+
+        <!-- === RIGHT BRANCH: SUPERLATIVE === -->
+        <line x1="410" y1="240" x2="500" y2="180" stroke="#2563EB" stroke-width="2.5"/>
+        <ellipse cx="540" cy="170" rx="72" ry="28" fill="#2563EB"/>
+        <text x="540" y="166" text-anchor="middle" font-size="12" font-weight="700" fill="white">SUPERLATIVE</text>
+        <text x="540" y="181" text-anchor="middle" font-size="11" fill="white">3+ things · the</text>
+
+        <!-- sup sub-branches -->
+        <line x1="490" y1="154" x2="462" y2="100" stroke="#BFDBFE" stroke-width="1.5"/>
+        <rect x="420" y="70" width="90" height="36" rx="8" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+        <text x="465" y="85" text-anchor="middle" font-size="11" font-weight="700" fill="#1D4ED8">Short adj</text>
+        <text x="465" y="99" text-anchor="middle" font-size="10" fill="#1D4ED8">the + est</text>
+
+        <line x1="540" y1="142" x2="540" y2="90" stroke="#BFDBFE" stroke-width="1.5"/>
+        <rect x="492" y="60" width="96" height="36" rx="8" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+        <text x="540" y="75" text-anchor="middle" font-size="11" font-weight="700" fill="#1D4ED8">Long adj</text>
+        <text x="540" y="89" text-anchor="middle" font-size="10" fill="#1D4ED8">the most + adj</text>
+
+        <line x1="588" y1="154" x2="608" y2="108" stroke="#BFDBFE" stroke-width="1.5"/>
+        <rect x="568" y="78" width="72" height="36" rx="8" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+        <text x="604" y="93" text-anchor="middle" font-size="11" font-weight="700" fill="#1D4ED8">Irregular</text>
+        <text x="604" y="107" text-anchor="middle" font-size="10" fill="#1D4ED8">good→best</text>
+
+        <!-- === BOTTOM BRANCHES === -->
+        <!-- Spelling rules -->
+        <line x1="280" y1="292" x2="180" y2="370" stroke="#16A34A" stroke-width="2.5"/>
+        <ellipse cx="140" cy="385" rx="80" ry="30" fill="#16A34A"/>
+        <text x="140" y="381" text-anchor="middle" font-size="12" font-weight="700" fill="white">Spelling Rules</text>
+        <text x="140" y="397" text-anchor="middle" font-size="11" fill="white">CVC · -e · -y</text>
+
+        <rect x="20" y="428" width="100" height="32" rx="8" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="1.5"/>
+        <text x="70" y="440" text-anchor="middle" font-size="10" font-weight="700" fill="#166534">CVC: double</text>
+        <text x="70" y="453" text-anchor="middle" font-size="10" fill="#166534">big → bigger</text>
+        <line x1="80" y1="414" x2="70" y2="428" stroke="#BBF7D0" stroke-width="1.5"/>
+
+        <rect x="130" y="428" width="100" height="32" rx="8" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="1.5"/>
+        <text x="180" y="440" text-anchor="middle" font-size="10" font-weight="700" fill="#166534">-y → ier/iest</text>
+        <text x="180" y="453" text-anchor="middle" font-size="10" fill="#166534">happy→happier</text>
+        <line x1="180" y1="415" x2="180" y2="428" stroke="#BBF7D0" stroke-width="1.5"/>
+
+        <!-- Errors -->
+        <line x1="360" y1="292" x2="460" y2="370" stroke="#DC2626" stroke-width="2.5"/>
+        <ellipse cx="500" cy="385" rx="80" ry="30" fill="#DC2626"/>
+        <text x="500" y="381" text-anchor="middle" font-size="12" font-weight="700" fill="white">Avoid Errors</text>
+        <text x="500" y="397" text-anchor="middle" font-size="11" fill="white">Don't mix methods</text>
+
+        <rect x="420" y="428" width="100" height="32" rx="8" fill="#FEF2F2" stroke="#FECACA" stroke-width="1.5"/>
+        <text x="470" y="440" text-anchor="middle" font-size="10" font-weight="700" fill="#991B1B">✗ more tall</text>
+        <text x="470" y="453" text-anchor="middle" font-size="10" fill="#991B1B">✓ taller</text>
+        <line x1="465" y1="415" x2="465" y2="428" stroke="#FECACA" stroke-width="1.5"/>
+
+        <rect x="528" y="428" width="106" height="32" rx="8" fill="#FEF2F2" stroke="#FECACA" stroke-width="1.5"/>
+        <text x="581" y="440" text-anchor="middle" font-size="10" font-weight="700" fill="#991B1B">✗ most tallest</text>
+        <text x="581" y="453" text-anchor="middle" font-size="10" fill="#991B1B">✓ the tallest</text>
+        <line x1="555" y1="415" x2="575" y2="428" stroke="#FECACA" stroke-width="1.5"/>
+
+        <!-- Syllable rule (center bottom) -->
+        <line x1="320" y1="294" x2="320" y2="340" stroke="#7C3AED" stroke-width="2.5"/>
+        <rect x="248" y="340" width="144" height="40" rx="10" fill="#7C3AED"/>
+        <text x="320" y="358" text-anchor="middle" font-size="12" font-weight="700" fill="white">Syllable Count</text>
+        <text x="320" y="373" text-anchor="middle" font-size="11" fill="#DDD6FE">1 syl → -er  |  2+ → more</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Summary table -->
+  <div class="card card-blue" style="margin-top:4px">
+    <div class="section-tag tag-blue">📋 Quick Reference</div>
+    <table class="adj-table" style="margin-top:8px">
+      <thead>
+        <tr><th>Type</th><th>Comparative</th><th>Superlative</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1-syllable</td><td class="comp">+ er</td><td class="sup">the + est</td><td>tall → taller → the tallest</td></tr>
+        <tr><td>CVC</td><td class="comp">double + er</td><td class="sup">double + est</td><td>big → bigger → the biggest</td></tr>
+        <tr><td>ends in -e</td><td class="comp">+ r</td><td class="sup">the + st</td><td>nice → nicer → the nicest</td></tr>
+        <tr><td>ends in -y</td><td class="comp">ier</td><td class="sup">the iest</td><td>happy → happier → the happiest</td></tr>
+        <tr><td>2+ syllables</td><td class="comp">more +</td><td class="sup">the most +</td><td>beautiful → more → the most</td></tr>
+        <tr><td>irregular</td><td class="comp">special form</td><td class="sup">special form</td><td>good → better → the best</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-ghost" onclick="goTo(6)">← Back</button>
+    <button class="btn btn-primary" onclick="goTo(8)">Take Final Exam →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN 8 — MODULE 8: FINAL EXAM
+═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-8">
+  <div class="mod-header">
+    <div class="mod-num mod-num-purple">8</div>
+    <div>
+      <div class="mod-title">Final Exam</div>
+      <div class="mod-subtitle">10 questions · auto-scored</div>
+    </div>
+  </div>
+
+  <div id="exam-container"></div>
+  <div id="exam-submit-wrap" class="flex-center" style="margin-top:10px;display:none!important">
+    <button class="btn btn-primary" id="exam-submit" onclick="submitExam()">Submit Exam →</button>
+  </div>
+
+  <!-- Results -->
+  <div id="exam-results" style="display:none">
+    <div class="card text-center">
+      <div class="score-ring">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#E5E7EB" stroke-width="10"/>
+          <circle id="score-arc" cx="60" cy="60" r="50" fill="none" stroke="#16A34A" stroke-width="10"
+            stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round"
+            transform="rotate(-90 60 60)" style="transition:stroke-dashoffset 1s ease"/>
+        </svg>
+        <div>
+          <div class="score-num" id="score-display">0</div>
+          <div class="score-label">/ 10</div>
+        </div>
+      </div>
+      <span class="medal" id="score-medal">🏅</span>
+      <h2 id="score-title">Result</h2>
+      <p id="score-msg" style="color:var(--gray-500)"></p>
+    </div>
+
+    <div class="card" id="exam-review"></div>
+
+    <div class="nav-btns">
+      <button class="btn btn-ghost" onclick="goTo(7)">← Back to Mind Map</button>
+      <button class="btn btn-primary" onclick="restartExam()">Try Again</button>
+    </div>
+  </div>
+
+  <div class="nav-btns" id="m8back" style="display:none">
+    <button class="btn btn-ghost" onclick="goTo(7)">← Back</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+let currentScreen = 0;
+const totalScreens = 8;
+const moduleNames = [
+  'Welcome',
+  'Module 1 — Discovery',
+  'Module 2 — Comparative vs Superlative',
+  'Module 3 — Short Adjectives',
+  'Module 4 — Long Adjectives',
+  'Module 5 — Common Errors',
+  'Module 6 — Practice',
+  'Module 7 — Mind Map',
+  'Module 8 — Final Exam'
+];
+
+// Module 1 sub-state
+let m1phase = 0; // 0=q1, 1=q2, 2=done
+
+// Error detective state
+const ecItems = [
+  { s: "She is more tall than her sister.", correct: false, explain: "Short adjective (tall, 1 syllable) → use -er: She is taller than her sister." },
+  { s: "This is the most interesting film I've watched.", correct: true, explain: "Correct! Long adjective 'interesting' uses 'the most'." },
+  { s: "He is the fastest runner in school.", correct: true, explain: "Correct! Short adjective 'fast' → the fastest. Well done!" },
+  { s: "That movie was interestinger than this one.", correct: false, explain: "'Interesting' is a long adjective → more interesting, not 'interestinger'." },
+  { s: "Tokyo is most populated city in Japan.", correct: false, explain: "Superlatives need 'the': 'the most populated city'." }
+];
+let ecIndex = 0;
+let ecAnswered = false;
+
+// Module 2 state
+let m2phase = 0;
+
+// Exam
+const examQuestions = [
+  { q: "My sister is ______ than me. (tall)", opts: ["more tall","taller","the tallest","most tall"], ans: 1, explain: "Short adjective 'tall' → add -er: taller." },
+  { q: "This is ______ city in the world. (expensive)", opts: ["more expensive","expensiver","the most expensive","the more expensive"], ans: 2, explain: "Long adjective 'expensive' → the most expensive." },
+  { q: "Which sentence is CORRECT?", opts: ["She is more smarter.","She is the most smartest.","She is smarter than him.","She is more smart than him."], ans: 2, explain: "Short adj 'smart' → smarter. No 'more' or 'most' needed." },
+  { q: "Yesterday was ______ day of the year. (hot)", opts: ["hotter","more hot","the hottest","most hottest"], ans: 2, explain: "Short CVC adj 'hot' → double t + est: the hottest." },
+  { q: "This book is ______ than that one. (interesting)", opts: ["interestinger","more interesting","most interesting","the more interesting"], ans: 1, explain: "Long adj 'interesting' → more interesting." },
+  { q: "My dog is ______ of all. (good)", opts: ["the goodest","the most good","the better","the best"], ans: 3, explain: "Irregular: good → better → the best." },
+  { q: "Which is WRONG?", opts: ["the most beautiful","more comfortable","the most tallest","happier"], ans: 2, explain: "'Most tallest' is wrong — never combine both methods. Use 'the tallest'." },
+  { q: "She runs ______ than her brother. (fast)", opts: ["more fast","fastest","the faster","faster"], ans: 3, explain: "Short adj 'fast' → add -er: faster than." },
+  { q: "It is ______ problem I've ever had. (bad)", opts: ["the worst","the most bad","the baddest","the worstest"], ans: 0, explain: "Irregular: bad → worse → the worst." },
+  { q: "The Amazon is ______ river in South America. (long)", opts: ["longer","more long","the longest","the most long"], ans: 2, explain: "Short adj 'long' + superlative = the longest." }
+];
+let examAnswers = new Array(10).fill(null);
+let examDone = false;
+
+// ════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════
+function goTo(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const scr = document.getElementById('screen-' + n);
+  if (!scr) return;
+  scr.classList.add('active');
+  currentScreen = n;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (n === 6) initErrorDetective();
+  if (n === 8) initExam();
+}
+
+function updateProgress() {
+  const pct = currentScreen === 0 ? 0 : Math.round((currentScreen / totalScreens) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-counter').textContent = currentScreen + ' / ' + totalScreens;
+  document.getElementById('progress-title').textContent = moduleNames[currentScreen] || 'Learning';
+}
+
+// ════════════════════════════════════════════════
+// MODULE 1 LOGIC
+// ════════════════════════════════════════════════
+function m1answer(btn, isCorrect, groupId, fbId) {
+  lockGroup(groupId);
+  markBtn(btn, isCorrect);
+  const fb = document.getElementById(fbId);
+  fb.className = 'feedback show ' + (isCorrect ? 'feedback-correct' : 'feedback-wrong');
+  if (isCorrect) {
+    fb.innerHTML = '✅ <strong>Correct!</strong> "Taller" is the right comparative form. Short adjectives like "tall" add -er, not "more".';
+    setTimeout(() => {
+      document.getElementById('m1-insight').style.display = 'block';
+      document.getElementById('screen-1').querySelector('#m1-scene2').style.display = 'block';
+      m1phase = 1;
+    }, 800);
+  } else {
+    fb.innerHTML = '❌ <strong>Not quite.</strong> Think about the length of "tall" — it\'s a short word. Short words change their ending. Try again!';
+    unlockGroup(groupId);
+  }
+}
+
+function m1answer2(btn, isCorrect, groupId, fbId) {
+  lockGroup(groupId);
+  markBtn(btn, isCorrect);
+  const fb = document.getElementById(fbId);
+  fb.className = 'feedback show ' + (isCorrect ? 'feedback-correct' : 'feedback-wrong');
+  if (isCorrect) {
+    fb.innerHTML = '✅ <strong>Correct!</strong> When picking the most extreme from a group, use <strong>the + -est</strong>. And don\'t forget "the"!';
+    setTimeout(() => {
+      document.getElementById('m1-summary').style.display = 'block';
+      document.getElementById('m1-nav').style.display = 'flex';
+    }, 800);
+  } else {
+    fb.innerHTML = '❌ <strong>Almost.</strong> We have three dogs and we\'re picking the biggest one. That\'s a superlative — use "the biggest".';
+    unlockGroup(groupId);
+  }
+}
+
+// ════════════════════════════════════════════════
+// MODULE 2 LOGIC
+// ════════════════════════════════════════════════
+function simpleCheck(btn, groupId, fbId, isCorrect, extra) {
+  lockGroup(groupId);
+  markBtn(btn, isCorrect);
+  const fb = document.getElementById(fbId);
+  fb.className = 'feedback show ' + (isCorrect ? 'feedback-correct' : 'feedback-wrong');
+  if (groupId === 'm2q1') {
+    if (isCorrect) {
+      fb.innerHTML = '✅ <strong>Correct!</strong> "Smarter than" — short adj (-er) + than. No "the" for comparatives.';
+      setTimeout(() => { document.getElementById('m2q2card').style.display = 'block'; }, 700);
+    } else {
+      fb.innerHTML = '❌ We\'re comparing two people (she vs her brother) → comparative. Short adj "smart" → smarter. Remember: "the" only for superlatives!';
+      unlockGroup(groupId);
+    }
+  } else if (groupId === 'm2q2') {
+    if (isCorrect) {
+      fb.innerHTML = '✅ <strong>Correct!</strong> Three people → superlative. Short adj "funny" (y→i) + est = funniest. With "the".';
+      setTimeout(() => { document.getElementById('m2-nav').style.display = 'flex'; }, 700);
+    } else {
+      fb.innerHTML = '❌ Three people in a class → superlative. Short adj "funny" → the funniest. "In the class" is the group, not a comparison with "than".';
+      unlockGroup(groupId);
+    }
+  } else if (groupId === 'm4q1') {
+    if (isCorrect) {
+      fb.innerHTML = '✅ <strong>Correct!</strong> "Interesting" has 4 syllables → the most interesting.';
+    } else {
+      fb.innerHTML = '❌ "Interesting" is a long adjective (4 syllables) → use most. And it\'s THE most interesting (superlative needs "the").';
+      unlockGroup(groupId);
+    }
+  } else if (groupId.startsWith('pa')) {
+    const explanations = {
+      'pa1': isCorrect ? '✅ Correct! We\'re picking the extreme from a group (South America) → superlative. "Long" is short → the longest.' : '❌ We\'re talking about a group (South America) → superlative: the longest.',
+      'pa2': isCorrect ? '✅ Correct! Comparing 2 months → comparative. "Short" is a short adj → shorter.' : '❌ Comparing 2 months → comparative. "Short" → shorter (not more short!).',
+      'pa3': isCorrect ? '✅ Correct! Comparing 2 exams → comparative. "Difficult" is long → more difficult.' : '❌ Comparing 2 exams → comparative. "Difficult" is long → more difficult (not difficulter!).'
+    };
+    fb.innerHTML = explanations[groupId] || (isCorrect ? '✅ Correct!' : '❌ Try again.');
+    if (!isCorrect) unlockGroup(groupId);
+  }
+  fb.className = 'feedback show ' + (isCorrect ? 'feedback-correct' : 'feedback-wrong');
+}
+
+// ════════════════════════════════════════════════
+// FILL-IN CHECKS
+// ════════════════════════════════════════════════
+function m3check(num, answer, inputId, fbId) {
+  const inp = document.getElementById(inputId);
+  const val = inp.value.trim().toLowerCase();
+  const fb = document.getElementById(fbId);
+  if (val === '') { fb.className = 'feedback'; return; }
+  if (val === answer.toLowerCase()) {
+    inp.className = 'fill-input correct';
+    fb.className = 'feedback show feedback-correct';
+    fb.innerHTML = '✅ <strong>Perfect!</strong> "' + answer + '" is correct.';
+  } else if (answer.toLowerCase().startsWith(val) && val.length < answer.length) {
+    fb.className = 'feedback show feedback-info';
+    fb.innerHTML = '💡 Keep going…';
+    inp.className = 'fill-input';
+  } else {
+    inp.className = 'fill-input wrong';
+    fb.className = 'feedback show feedback-wrong';
+    fb.innerHTML = '❌ Not quite. The correct answer is <strong>' + answer + '</strong>.';
+  }
+}
+
+function checkFix(num, keyword, inputId, fbId) {
+  const inp = document.getElementById(inputId);
+  const val = inp.value.trim().toLowerCase();
+  const fb = document.getElementById(fbId);
+  if (val === '') { fb.className = 'feedback'; return; }
+  if (val.includes(keyword.toLowerCase())) {
+    inp.className = 'fill-input correct';
+    fb.className = 'feedback show feedback-correct';
+    fb.innerHTML = '✅ <strong>Correct!</strong> Great job fixing that error.';
+  } else if (val.length < 3) {
+    fb.className = 'feedback show feedback-info';
+    fb.innerHTML = '💡 Write the full corrected sentence.';
+  } else {
+    inp.className = 'fill-input wrong';
+    fb.className = 'feedback show feedback-wrong';
+    fb.innerHTML = '❌ Not quite. Make sure you include <strong>' + keyword + '</strong> in your answer.';
+  }
+}
+
+// ════════════════════════════════════════════════
+// ERROR DETECTIVE
+// ════════════════════════════════════════════════
+function initErrorDetective() {
+  ecIndex = 0;
+  ecAnswered = false;
+  showEcItem();
+}
+
+function showEcItem() {
+  if (ecIndex >= ecItems.length) return;
+  document.getElementById('ec-sentence').textContent = ecItems[ecIndex].s;
+  document.getElementById('ec-count').textContent = (ecIndex + 1);
+  document.getElementById('ecfb').className = 'feedback';
+  ecAnswered = false;
+}
+
+function detectError(choice) {
+  if (ecAnswered) return;
+  ecAnswered = true;
+  const item = ecItems[ecIndex];
+  const isRight = (choice === 'correct') === item.correct;
+  const fb = document.getElementById('ecfb');
+  fb.className = 'feedback show ' + (isRight ? 'feedback-correct' : 'feedback-wrong');
+  fb.innerHTML = (isRight ? '✅ ' : '❌ ') + item.explain;
+  ecIndex++;
+  if (ecIndex < ecItems.length) {
+    setTimeout(showEcItem, 1600);
+  } else {
+    setTimeout(() => {
+      fb.innerHTML = '🎉 <strong>All done!</strong> Error detective complete. You\'re ready for the final exam!';
+    }, 1600);
+  }
+}
+
+// ════════════════════════════════════════════════
+// EXAM
+// ════════════════════════════════════════════════
+function initExam() {
+  examAnswers = new Array(10).fill(null);
+  examDone = false;
+  document.getElementById('exam-results').style.display = 'none';
+  document.getElementById('m8back').style.display = 'none';
+
+  const container = document.getElementById('exam-container');
+  container.innerHTML = '';
+
+  examQuestions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-q';
+    div.id = 'eq' + i;
+    div.innerHTML = `<div class="q-num">Question ${i + 1} of 10</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-opts" id="eopts${i}">
+        ${q.opts.map((o, j) => `<button class="q-opt" onclick="examAnswer(${i},${j})">${o}</button>`).join('')}
+      </div>
+      <div class="feedback" id="efb${i}"></div>`;
+    container.appendChild(div);
+  });
+
+  const sw = document.getElementById('exam-submit-wrap');
+  sw.style.display = 'none';
+  sw.style.removeProperty('display'); // reset
+  sw.style.display = 'none';
+
+  // show submit button (reuse trick)
+  const sb = document.getElementById('exam-submit');
+  sb.disabled = true;
+}
+
+function examAnswer(qi, ai) {
+  if (examAnswers[qi] !== null) return;
+  examAnswers[qi] = ai;
+  const q = examQuestions[qi];
+  const opts = document.querySelectorAll('#eopts' + qi + ' .q-opt');
+  opts.forEach((o, j) => {
+    o.classList.add('locked');
+    if (j === q.ans) o.classList.add('correct');
+    else if (j === ai && ai !== q.ans) o.classList.add('wrong');
+  });
+  const fb = document.getElementById('efb' + qi);
+  const correct = ai === q.ans;
+  fb.className = 'feedback show ' + (correct ? 'feedback-correct' : 'feedback-wrong');
+  fb.innerHTML = (correct ? '✅ ' : '❌ ') + q.explain;
+
+  // check if all answered
+  if (examAnswers.every(a => a !== null)) {
+    const sw = document.getElementById('exam-submit-wrap');
+    sw.style.display = 'flex';
+    document.getElementById('exam-submit').disabled = false;
+    setTimeout(() => sw.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+  }
+}
+
+function submitExam() {
+  const score = examAnswers.reduce((acc, a, i) => acc + (a === examQuestions[i].ans ? 1 : 0), 0);
+  examDone = true;
+
+  document.getElementById('exam-container').style.display = 'none';
+  document.getElementById('exam-submit-wrap').style.display = 'none';
+  const results = document.getElementById('exam-results');
+  results.style.display = 'block';
+
+  document.getElementById('score-display').textContent = score;
+
+  // arc
+  const arc = document.getElementById('score-arc');
+  const pct = score / 10;
+  const dash = 314 * (1 - pct);
+  arc.style.stroke = score >= 8 ? '#16A34A' : score >= 5 ? '#EA580C' : '#DC2626';
+  setTimeout(() => { arc.style.strokeDashoffset = dash; }, 100);
+
+  let medal, title, msg;
+  if (score === 10) { medal = '🥇'; title = 'Perfect Score!'; msg = 'Outstanding! You have mastered comparatives and superlatives completely.'; }
+  else if (score >= 8) { medal = '🥈'; title = 'Excellent!'; msg = 'Great work! You have a strong command of the topic. Review any missed questions.'; }
+  else if (score >= 6) { medal = '🥉'; title = 'Good Effort!'; msg = 'You\'re on the right track. Review the modules for the questions you missed.'; }
+  else { medal = '📚'; title = 'Keep Practicing!'; msg = 'Go back through the modules and try again. Practice makes perfect!'; }
+
+  document.getElementById('score-medal').textContent = medal;
+  document.getElementById('score-title').textContent = title;
+  document.getElementById('score-msg').textContent = msg;
+
+  // review
+  const rev = document.getElementById('exam-review');
+  rev.innerHTML = '<h3 style="margin-bottom:14px">Review Your Answers</h3>';
+  examQuestions.forEach((q, i) => {
+    const correct = examAnswers[i] === q.ans;
+    const row = document.createElement('div');
+    row.className = 'ex-row';
+    row.innerHTML = `<div class="ex-icon ${correct ? 'ex-icon-green' : 'ex-icon-red'}">${correct ? '✓' : '✗'}</div>
+      <div class="ex-text">
+        <div style="font-size:13px;font-weight:600;margin-bottom:2px">Q${i+1}: ${q.q}</div>
+        <div style="font-size:13px;color:${correct ? 'var(--green)' : 'var(--red)'}">Your answer: ${q.opts[examAnswers[i]]}</div>
+        ${!correct ? `<div style="font-size:13px;color:var(--green)">Correct: ${q.opts[q.ans]}</div>` : ''}
+      </div>`;
+    rev.appendChild(row);
+  });
+
+  results.scrollIntoView({ behavior: 'smooth' });
+}
+
+function restartExam() {
+  document.getElementById('exam-container').style.display = 'block';
+  document.getElementById('exam-results').style.display = 'none';
+  initExam();
+  document.getElementById('screen-8').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════
+function lockGroup(groupId) {
+  document.querySelectorAll('#' + groupId + ' .disc-opt').forEach(b => b.classList.add('disabled'));
+}
+
+function unlockGroup(groupId) {
+  document.querySelectorAll('#' + groupId + ' .disc-opt').forEach(b => b.classList.remove('disabled'));
+}
+
+function markBtn(btn, correct) {
+  btn.classList.add(correct ? 'correct' : 'wrong');
+}
+
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+updateProgress();
+initExam();
+</script>
+</body>
+</html>
