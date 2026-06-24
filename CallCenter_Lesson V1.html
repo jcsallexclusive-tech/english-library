@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Call Center Assistance – English Lesson</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --navy: #0D1B2A;
+    --blue: #1A56DB;
+    --sky: #3B9EFF;
+    --teal: #00C9A7;
+    --amber: #F59E0B;
+    --red: #EF4444;
+    --green: #10B981;
+    --light: #F0F6FF;
+    --white: #FFFFFF;
+    --gray: #64748B;
+    --border: #CBD5E1;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAVIGATION ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(13,27,42,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(59,158,255,0.2);
+    display: flex; align-items: center; gap: 0;
+    padding: 0;
+  }
+
+  .nav-tab {
+    flex: 1; padding: 16px 8px;
+    text-align: center; cursor: pointer;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gray);
+    border-bottom: 3px solid transparent;
+    transition: all 0.25s;
+    position: relative;
+  }
+  .nav-tab .tab-num {
+    display: block; font-size: 10px; color: var(--sky); margin-bottom: 2px;
+    font-family: 'DM Mono', monospace;
+  }
+  .nav-tab:hover { color: var(--white); background: rgba(59,158,255,0.06); }
+  .nav-tab.active { color: var(--sky); border-bottom-color: var(--sky); background: rgba(59,158,255,0.08); }
+
+  /* ── SECTIONS ── */
+  section {
+    display: none; min-height: 100vh; padding: 90px 24px 60px;
+    max-width: 960px; margin: 0 auto;
+    animation: fadeIn 0.4s ease;
+  }
+  section.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── SHARED COMPONENTS ── */
+  .phase-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(59,158,255,0.15); border: 1px solid rgba(59,158,255,0.35);
+    color: var(--sky); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 99px; margin-bottom: 20px;
+  }
+  .phase-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sky); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+
+  h1 { font-size: clamp(28px,5vw,48px); font-weight: 900; line-height: 1.1; margin-bottom: 12px; }
+  h2 { font-size: clamp(20px,3vw,28px); font-weight: 700; margin-bottom: 16px; }
+  h3 { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+  p { color: #CBD5E1; line-height: 1.7; margin-bottom: 12px; }
+
+  .subtitle { font-size: 17px; color: #94A3B8; margin-bottom: 36px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 24px; margin-bottom: 20px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(59,158,255,0.3); }
+
+  .card-accent { border-left: 4px solid var(--teal); }
+  .card-blue   { border-left: 4px solid var(--sky); }
+  .card-amber  { border-left: 4px solid var(--amber); }
+
+  /* ── GRID ── */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 16px; margin-bottom: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 14px; margin-bottom: 24px; }
+
+  /* ── PRINCIPLE CARD ── */
+  .principle {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px; padding: 20px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .principle .icon { font-size: 28px; }
+  .principle h3 { font-size: 15px; color: var(--white); margin: 0; }
+  .principle p  { font-size: 13px; color: #94A3B8; margin: 0; }
+
+  /* ── CALL FLOW ── */
+  .flow-step {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .flow-step:last-child { border-bottom: none; }
+  .step-num {
+    flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+    background: var(--blue); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px;
+  }
+  .step-body h3 { font-size: 15px; margin-bottom: 4px; }
+  .step-body p  { font-size: 13px; color: #94A3B8; margin: 0; }
+  .example-bubble {
+    margin-top: 8px; background: rgba(0,201,167,0.1);
+    border: 1px solid rgba(0,201,167,0.2); border-radius: 10px;
+    padding: 8px 12px; font-size: 13px; color: var(--teal);
+    font-style: italic;
+  }
+
+  /* ── CONTROLLED PRACTICE ── */
+  .scenario-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; margin-bottom: 20px; overflow: hidden;
+  }
+  .scenario-header {
+    padding: 16px 20px; background: rgba(26,86,219,0.15);
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .scenario-header .tag {
+    background: var(--blue); color: var(--white);
+    font-size: 11px; font-weight: 700; padding: 3px 10px;
+    border-radius: 99px; text-transform: uppercase;
+  }
+  .scenario-body { padding: 20px; }
+
+  .dialogue-line { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+  .speaker-label {
+    flex-shrink: 0; font-size: 11px; font-weight: 700; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 6px; letter-spacing: 0.06em; margin-top: 2px;
+  }
+  .speaker-label.agent    { background: rgba(26,86,219,0.3); color: #93C5FD; }
+  .speaker-label.customer { background: rgba(245,158,11,0.2); color: #FCD34D; }
+  .speech { font-size: 14px; color: #E2E8F0; line-height: 1.6; }
+
+  /* ── FILL BLANK ── */
+  .fill-blank {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px; padding: 20px; margin-bottom: 14px;
+  }
+  .fill-blank .question { font-size: 15px; color: #E2E8F0; margin-bottom: 12px; }
+  .fill-blank input {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; color: var(--white); font-size: 14px;
+    padding: 8px 14px; width: 100%; outline: none; font-family: inherit;
+    transition: border-color 0.2s;
+  }
+  .fill-blank input:focus { border-color: var(--sky); }
+  .fill-blank input.correct { border-color: var(--green); background: rgba(16,185,129,0.1); }
+  .fill-blank input.wrong   { border-color: var(--red);   background: rgba(239,68,68,0.1); }
+  .fill-blank .hint { font-size: 12px; color: #64748B; margin-top: 6px; }
+
+  .check-btn {
+    background: var(--blue); color: var(--white); border: none;
+    padding: 10px 24px; border-radius: 99px; font-size: 14px; font-weight: 600;
+    cursor: pointer; margin-top: 8px; transition: background 0.2s;
+  }
+  .check-btn:hover { background: var(--sky); }
+
+  /* ── MATCHING ── */
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .match-item {
+    background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 12px 14px; cursor: pointer;
+    font-size: 13px; transition: all 0.2s; user-select: none;
+  }
+  .match-item:hover        { border-color: var(--sky); background: rgba(59,158,255,0.1); }
+  .match-item.selected     { border-color: var(--sky); background: rgba(59,158,255,0.15); }
+  .match-item.matched      { border-color: var(--teal); background: rgba(0,201,167,0.12); color: var(--teal); }
+  .match-item.wrong-flash  { border-color: var(--red); background: rgba(239,68,68,0.12); }
+
+  /* ── PRODUCTION SECTION ── */
+  .task-box {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 24px; margin-bottom: 20px;
+  }
+  .task-box textarea {
+    width: 100%; min-height: 120px; resize: vertical;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px; color: var(--white); font-size: 14px;
+    padding: 12px 14px; font-family: inherit; line-height: 1.6; outline: none;
+    transition: border-color 0.2s;
+  }
+  .task-box textarea:focus { border-color: var(--sky); }
+  .task-box select {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; color: var(--white); font-size: 14px;
+    padding: 8px 14px; font-family: inherit; outline: none; cursor: pointer;
+    width: 100%; margin-bottom: 12px;
+  }
+  .task-box select option { background: #1E293B; }
+
+  .analyze-btn {
+    background: linear-gradient(135deg, var(--blue), var(--sky));
+    color: var(--white); border: none; padding: 12px 28px;
+    border-radius: 99px; font-size: 14px; font-weight: 700;
+    cursor: pointer; margin-top: 14px; transition: opacity 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .analyze-btn:hover { opacity: 0.88; }
+  .analyze-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .ai-response {
+    margin-top: 16px; padding: 18px; background: rgba(0,201,167,0.07);
+    border: 1px solid rgba(0,201,167,0.2); border-radius: 12px;
+    font-size: 14px; color: #CBD5E1; line-height: 1.7;
+    display: none;
+  }
+  .ai-response.visible { display: block; }
+  .ai-loader { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: var(--white); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── TIPS STRIP ── */
+  .tip-strip {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;
+  }
+  .tip {
+    background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25);
+    color: #FCD34D; font-size: 12px; padding: 6px 12px; border-radius: 8px;
+  }
+
+  /* ── QA SECTION ── */
+  .qa-reason {
+    background: rgba(255,255,255,0.04); border-left: 3px solid var(--amber);
+    border-radius: 0 12px 12px 0; padding: 14px 18px; margin-bottom: 10px;
+  }
+  .qa-reason h4 { font-size: 13px; color: var(--amber); margin-bottom: 4px; }
+  .qa-reason p  { font-size: 13px; color: #94A3B8; margin: 0; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 3px;
+    background: rgba(255,255,255,0.1); z-index: 200;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--blue), var(--teal));
+    transition: width 0.4s ease;
+  }
+
+  /* ── SCROLL HINT ── */
+  .scroll-hint {
+    text-align: center; margin-top: 32px; color: #475569; font-size: 13px;
+  }
+
+  @media (max-width: 600px) {
+    .match-grid { grid-template-columns: 1fr; }
+    .nav-tab .tab-num { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-tab active" onclick="showSection('presentation')">
+    <span class="tab-num">01</span>
+    Presentation
+  </div>
+  <div class="nav-tab" onclick="showSection('controlled')">
+    <span class="tab-num">02</span>
+    Controlled Practice
+  </div>
+  <div class="nav-tab" onclick="showSection('production')">
+    <span class="tab-num">03</span>
+    Production
+  </div>
+</nav>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:33%"></div></div>
+
+<!-- ══════════════════════════════════════
+     SECTION 1 · PRESENTATION
+══════════════════════════════════════ -->
+<section id="presentation" class="active">
+
+  <div class="phase-badge"><span class="dot"></span> Phase 1</div>
+  <h1>Call Center Assistance</h1>
+  <p class="subtitle">Principles, roles, and the language behind great customer service.</p>
+
+  <!-- What is it? -->
+  <div class="card card-blue">
+    <h2>What is Call Center Assistance?</h2>
+    <p>Call center assistance is the support provided to customers through phone calls, emails, chats, or other channels. The main goal is to <strong>meet customer needs</strong> while representing the company professionally.</p>
+    <div class="grid-3" style="margin-top:16px">
+      <div class="principle"><span class="icon">📞</span><h3>Answering inquiries</h3><p>Responding to questions about products and services</p></div>
+      <div class="principle"><span class="icon">🔧</span><h3>Solving problems</h3><p>Handling complaints and technical issues</p></div>
+      <div class="principle"><span class="icon">📋</span><h3>Processing requests</h3><p>Managing orders and follow-ups</p></div>
+    </div>
+  </div>
+
+  <!-- 7 Principles -->
+  <h2 style="margin-top:32px;margin-bottom:16px">The 7 Key Principles</h2>
+  <div class="grid-2">
+    <div class="principle">
+      <span class="icon">🎩</span>
+      <h3>1 · Professionalism</h3>
+      <p>Respectful language, calm tone, and following company policies at all times.</p>
+    </div>
+    <div class="principle">
+      <span class="icon">💬</span>
+      <h3>2 · Effective Communication</h3>
+      <p>Active listening, clear pronunciation, asking the right questions, confirming understanding.</p>
+    </div>
+    <div class="principle">
+      <span class="icon">❤️</span>
+      <h3>3 · Empathy</h3>
+      <p>"I understand how frustrating that must be." — Builds trust and reduces tension.</p>
+    </div>
+    <div class="principle">
+      <span class="icon">⏳</span>
+      <h3>4 · Patience</h3>
+      <p>Never interrupt. Customers may need extra time or repeated explanations.</p>
+    </div>
+    <div class="principle">
+      <span class="icon">🧩</span>
+      <h3>5 · Problem-Solving</h3>
+      <p>Listen → Identify → Confirm → Offer solution → Verify satisfaction.</p>
+    </div>
+    <div class="principle">
+      <span class="icon">📚</span>
+      <h3>6 · Product Knowledge</h3>
+      <p>Agents must know products, policies, and procedures to give accurate information quickly.</p>
+    </div>
+  </div>
+  <div class="principle" style="margin-bottom:24px">
+    <span class="icon">⏱️</span>
+    <h3>7 · Time Management</h3>
+    <p>Stay focused. Avoid delays. Complete documentation accurately. Handle many calls without sacrificing quality.</p>
+  </div>
+
+  <!-- Basic Call Flow -->
+  <div class="card" style="margin-top:8px">
+    <h2 style="margin-bottom:20px">The Basic Call Flow</h2>
+    <div class="flow-step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Greeting</h3>
+        <p>Welcome the customer professionally and introduce yourself.</p>
+        <div class="example-bubble">"Good morning. Thank you for calling ABC Company. My name is Sarah. How may I assist you today?"</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Identifying the Need</h3>
+        <p>Ask open questions to understand the customer's situation.</p>
+        <div class="example-bubble">"Could you please tell me more about the issue you're experiencing?"</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Providing Assistance</h3>
+        <p>Offer information, instructions, or a clear solution.</p>
+        <div class="example-bubble">"I can help you reset your password right now."</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Confirming Resolution</h3>
+        <p>Make sure the customer's issue has actually been solved.</p>
+        <div class="example-bubble">"Has your problem been resolved today?"</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h3>Closing the Call</h3>
+        <p>End the interaction politely and professionally.</p>
+        <div class="example-bubble">"Thank you for contacting us. Have a wonderful day!"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QA Section -->
+  <div class="card card-amber" style="margin-top:8px">
+    <h2 style="margin-bottom:16px">Why Does QA Monitor Calls?</h2>
+    <p>The Quality Assurance department listens to calls to ensure high standards and improve performance.</p>
+    <div style="margin-top:16px">
+      <div class="qa-reason"><h4>✔ Ensure Quality Service</h4><p>Are agents polite, professional, and helpful?</p></div>
+      <div class="qa-reason"><h4>✔ Verify Compliance</h4><p>Are agents following company policies and legal requirements?</p></div>
+      <div class="qa-reason"><h4>✔ Identify Training Needs</h4><p>If multiple agents make the same mistake, training is adjusted.</p></div>
+      <div class="qa-reason"><h4>✔ Recognize Good Performance</h4><p>QA is not only about finding errors — great work is rewarded too.</p></div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">Scroll down or click <strong>Controlled Practice</strong> to continue →</div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 2 · CONTROLLED PRACTICE
+══════════════════════════════════════ -->
+<section id="controlled">
+
+  <div class="phase-badge"><span class="dot"></span> Phase 2</div>
+  <h1>Controlled Practice</h1>
+  <p class="subtitle">Study the model dialogues, then complete the exercises below.</p>
+
+  <!-- Model Dialogue -->
+  <div class="scenario-card">
+    <div class="scenario-header">
+      <span class="tag">Model Dialogue</span>
+      <span style="color:#94A3B8;font-size:13px">Inbound call — account access issue</span>
+    </div>
+    <div class="scenario-body">
+      <div class="dialogue-line">
+        <span class="speaker-label agent">Agent</span>
+        <span class="speech">Good morning! Thank you for calling TechCorp Support. My name is David. How may I assist you today?</span>
+      </div>
+      <div class="dialogue-line">
+        <span class="speaker-label customer">Customer</span>
+        <span class="speech">Hi. I can't log in to my account. It keeps saying my password is wrong.</span>
+      </div>
+      <div class="dialogue-line">
+        <span class="speaker-label agent">Agent</span>
+        <span class="speech">I'm sorry to hear that. I understand how frustrating that situation must be. Let me help you right away. Could you please tell me the email address linked to your account?</span>
+      </div>
+      <div class="dialogue-line">
+        <span class="speaker-label customer">Customer</span>
+        <span class="speech">Sure, it's john.doe@email.com.</span>
+      </div>
+      <div class="dialogue-line">
+        <span class="speaker-label agent">Agent</span>
+        <span class="speech">Thank you, John. Let me make sure I understood correctly — you are having trouble accessing your account and need a password reset. Is that right?</span>
+      </div>
+      <div class="dialogue-line">
+        <span class="speaker-label customer">Customer</span>
+        <span class="speech">Yes, exactly.</span>
+      </div>
+      <div class="dialogue-line">
+        <span class="speaker-label agent">Agent</span>
+        <span class="speech">Perfect. I've sent a reset link to your email. It should arrive within two minutes. Is there anything else I can help you with today?</span>
+      </div>
+      <div class="dialogue-line">
+        <span class="speaker-label customer">Customer</span>
+        <span class="speech">No, that's all. Thank you!</span>
+      </div>
+      <div class="dialogue-line">
+        <span class="speaker-label agent">Agent</span>
+        <span class="speech">You're welcome! Thank you for contacting TechCorp. Have a wonderful day!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXERCISE 1: Fill in the blanks -->
+  <h2 style="margin:28px 0 12px">Exercise 1 · Complete the Phrases</h2>
+  <p style="margin-bottom:20px">Fill in each blank with the correct word or phrase. Click <em>Check</em> to see if you're right.</p>
+
+  <div id="fillBlanks">
+    <div class="fill-blank" data-answer="frustrating">
+      <div class="question">1. "I understand how <strong>_________</strong> that situation must be."</div>
+      <input type="text" placeholder="Type the missing word..." oninput="this.classList.remove('correct','wrong')">
+      <div class="hint">Tip: This word describes a difficult or annoying feeling.</div>
+    </div>
+    <div class="fill-blank" data-answer="assist">
+      <div class="question">2. "How may I <strong>_________</strong> you today?"</div>
+      <input type="text" placeholder="Type the missing word..." oninput="this.classList.remove('correct','wrong')">
+      <div class="hint">Tip: A formal word for "help".</div>
+    </div>
+    <div class="fill-blank" data-answer="correctly">
+      <div class="question">3. "Let me make sure I understood <strong>_________</strong>."</div>
+      <input type="text" placeholder="Type the missing word..." oninput="this.classList.remove('correct','wrong')">
+      <div class="hint">Tip: An adverb meaning "in the right way".</div>
+    </div>
+    <div class="fill-blank" data-answer="inconvenience">
+      <div class="question">4. "I'm sorry for the <strong>_________</strong>."</div>
+      <input type="text" placeholder="Type the missing word..." oninput="this.classList.remove('correct','wrong')">
+      <div class="hint">Tip: This noun means trouble or difficulty caused to someone.</div>
+    </div>
+    <div class="fill-blank" data-answer="resolved">
+      <div class="question">5. "Has your problem been <strong>_________</strong> today?"</div>
+      <input type="text" placeholder="Type the missing word..." oninput="this.classList.remove('correct','wrong')">
+      <div class="hint">Tip: Past participle of "resolve" — meaning the issue was fixed.</div>
+    </div>
+  </div>
+  <button class="check-btn" onclick="checkFillBlanks()">Check Answers</button>
+  <div id="fillScore" style="margin-top:12px;font-size:14px;color:#94A3B8"></div>
+
+  <!-- EXERCISE 2: Matching -->
+  <h2 style="margin:36px 0 12px">Exercise 2 · Match Principle → Example</h2>
+  <p style="margin-bottom:20px">Click a principle on the left, then click its matching example on the right.</p>
+
+  <div class="match-grid" id="matchGrid">
+    <!-- Left: Principles -->
+    <div class="match-item" data-group="A" onclick="selectMatch(this)">Empathy</div>
+    <div class="match-item" data-group="D" onclick="selectMatch(this)">"I understand how frustrated you must feel."</div>
+
+    <div class="match-item" data-group="B" onclick="selectMatch(this)">Greeting</div>
+    <div class="match-item" data-group="C" onclick="selectMatch(this)">"Listen → Identify → Confirm → Solve → Verify"</div>
+
+    <div class="match-item" data-group="C" onclick="selectMatch(this)">Problem-Solving Steps</div>
+    <div class="match-item" data-group="B" onclick="selectMatch(this)">"Thank you for calling. My name is Sarah. How may I assist you?"</div>
+
+    <div class="match-item" data-group="D" onclick="selectMatch(this)">Active Listening</div>
+    <div class="match-item" data-group="A" onclick="selectMatch(this)">"Let me make sure I understood correctly. You can't access your account, right?"</div>
+  </div>
+  <div id="matchScore" style="font-size:14px;color:#94A3B8;margin-top:4px"></div>
+
+  <!-- EXERCISE 3: True/False -->
+  <h2 style="margin:36px 0 12px">Exercise 3 · True or False?</h2>
+
+  <div id="tfQuestions">
+    <div class="fill-blank" data-answer="true">
+      <div class="question">1. QA monitoring is used <em>only</em> to find mistakes and punish agents.</div>
+      <div style="display:flex;gap:10px;margin-top:8px">
+        <button class="check-btn" style="background:rgba(16,185,129,0.2);color:var(--green);border:1px solid var(--green)" onclick="checkTF(this,'true','false')">True</button>
+        <button class="check-btn" style="background:rgba(239,68,68,0.2);color:var(--red);border:1px solid var(--red)" onclick="checkTF(this,'false','false')">False</button>
+      </div>
+      <div class="hint tf-result"></div>
+    </div>
+    <div class="fill-blank" data-answer="true">
+      <div class="question">2. An agent should always confirm the customer's understanding before closing a call.</div>
+      <div style="display:flex;gap:10px;margin-top:8px">
+        <button class="check-btn" style="background:rgba(16,185,129,0.2);color:var(--green);border:1px solid var(--green)" onclick="checkTF(this,'true','true')">True</button>
+        <button class="check-btn" style="background:rgba(239,68,68,0.2);color:var(--red);border:1px solid var(--red)" onclick="checkTF(this,'false','true')">False</button>
+      </div>
+      <div class="hint tf-result"></div>
+    </div>
+    <div class="fill-blank" data-answer="false">
+      <div class="question">3. An agent with excellent product knowledge is slower because they need to check everything.</div>
+      <div style="display:flex;gap:10px;margin-top:8px">
+        <button class="check-btn" style="background:rgba(16,185,129,0.2);color:var(--green);border:1px solid var(--green)" onclick="checkTF(this,'true','false')">True</button>
+        <button class="check-btn" style="background:rgba(239,68,68,0.2);color:var(--red);border:1px solid var(--red)" onclick="checkTF(this,'false','false')">False</button>
+      </div>
+      <div class="hint tf-result"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 3 · PRODUCTION (Individual)
+══════════════════════════════════════ -->
+<section id="production">
+
+  <div class="phase-badge"><span class="dot"></span> Phase 3 · Individual Practice</div>
+  <h1>Production</h1>
+  <p class="subtitle">Now it's your turn. Write your own responses and get personalized AI feedback.</p>
+
+  <div class="tip-strip">
+    <div class="tip">💡 Use empathy phrases</div>
+    <div class="tip">💡 Follow the call flow steps</div>
+    <div class="tip">💡 Confirm understanding</div>
+    <div class="tip">💡 Close politely</div>
+  </div>
+
+  <!-- Task A: Write a Greeting -->
+  <div class="task-box">
+    <h3>Task A · Write a Professional Greeting</h3>
+    <p style="margin:8px 0 14px">You work at <em>SkyLine Telecom</em>. Write the opening lines for an inbound customer call. Include: your greeting, company name, your name, and offer to help.</p>
+    <textarea id="taskA" placeholder="Type your greeting here..."></textarea>
+    <button class="analyze-btn" onclick="analyzeTask('taskA','feedbackA','Write a professional call center greeting for SkyLine Telecom. Evaluate if the student included: a greeting (good morning/afternoon), the company name, their own name, and an offer to help. Give specific, encouraging feedback in 2-3 sentences. Point out what is good and suggest one improvement if needed.')">
+      <span class="ai-loader" id="loaderA" style="display:none"></span>
+      Get AI Feedback
+    </button>
+    <div class="ai-response" id="feedbackA"></div>
+  </div>
+
+  <!-- Task B: Respond to a complaint -->
+  <div class="task-box">
+    <h3>Task B · Handle a Customer Complaint</h3>
+    <p style="margin:8px 0 14px">A customer says: <em style="color:var(--amber)">"I've been waiting 3 days for my order and nobody has told me anything! This is unacceptable!"</em><br>Write your response as an agent. Use empathy, acknowledge the problem, and offer a next step.</p>
+    <textarea id="taskB" placeholder="Type your response here..."></textarea>
+    <button class="analyze-btn" onclick="analyzeTask('taskB','feedbackB','A customer is angry about a 3-day delivery delay. Evaluate the student\'s response as a call center agent. Check if they: used an empathy phrase, acknowledged the specific problem, stayed professional and calm, and offered a concrete next step or solution. Give 2-3 sentences of specific feedback. Be encouraging but honest.')">
+      <span class="ai-loader" id="loaderB" style="display:none"></span>
+      Get AI Feedback
+    </button>
+    <div class="ai-response" id="feedbackB"></div>
+  </div>
+
+  <!-- Task C: Close a Call -->
+  <div class="task-box">
+    <h3>Task C · Close the Call</h3>
+    <p style="margin:8px 0 14px">The customer's issue has been resolved. Write the closing lines for the call. Make sure to: confirm the resolution, thank the customer, and end politely.</p>
+    <textarea id="taskC" placeholder="Type your closing here..."></textarea>
+    <button class="analyze-btn" onclick="analyzeTask('taskC','feedbackC','Evaluate this call center closing as written by a student. Check if they: confirmed the resolution, thanked the customer by name or generally, and ended with a polite farewell. Give specific, encouraging feedback in 2-3 sentences.')">
+      <span class="ai-loader" id="loaderC" style="display:none"></span>
+      Get AI Feedback
+    </button>
+    <div class="ai-response" id="feedbackC"></div>
+  </div>
+
+  <!-- Task D: Full Call Scenario -->
+  <div class="task-box">
+    <h3>Task D · Write a Full Call (Challenge)</h3>
+    <p style="margin:8px 0 4px">Choose a scenario and write the <strong>complete dialogue</strong> between agent and customer. Include all 5 call flow steps.</p>
+    <select id="scenarioSelect">
+      <option value="">— Choose a scenario —</option>
+      <option value="billing">Customer received an incorrect bill</option>
+      <option value="tech">Customer cannot connect to the internet</option>
+      <option value="product">Customer wants to return a product bought last week</option>
+      <option value="info">Customer asks about plan upgrade options</option>
+    </select>
+    <textarea id="taskD" placeholder="Write the full dialogue here..." style="min-height:200px"></textarea>
+    <button class="analyze-btn" onclick="analyzeFullCall()">
+      <span class="ai-loader" id="loaderD" style="display:none"></span>
+      Analyze Full Call
+    </button>
+    <div class="ai-response" id="feedbackD"></div>
+  </div>
+
+</section>
+
+<!-- ══════ SCRIPTS ══════ -->
+<script>
+
+// ── Section switching ──
+function showSection(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabs = { presentation: 0, controlled: 1, production: 2 };
+  document.querySelectorAll('.nav-tab')[tabs[id]].classList.add('active');
+  const widths = { presentation: '33', controlled: '66', production: '100' };
+  document.getElementById('progressFill').style.width = widths[id] + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Fill blanks ──
+function checkFillBlanks() {
+  const boxes = document.querySelectorAll('#fillBlanks .fill-blank');
+  let correct = 0;
+  boxes.forEach(box => {
+    const input = box.querySelector('input');
+    const answer = box.dataset.answer.toLowerCase();
+    const val = input.value.trim().toLowerCase();
+    if (val === answer) { input.classList.add('correct'); correct++; }
+    else { input.classList.add('wrong'); }
+  });
+  document.getElementById('fillScore').textContent =
+    `✅ ${correct} / ${boxes.length} correct. ${correct === boxes.length ? '🎉 Perfect!' : 'Review the highlighted ones and try again.'}`;
+}
+
+// ── Matching ──
+let selectedMatch = null;
+
+function selectMatch(el) {
+  if (el.classList.contains('matched')) return;
+  if (selectedMatch === null) {
+    selectedMatch = el;
+    el.classList.add('selected');
+  } else {
+    if (selectedMatch === el) { el.classList.remove('selected'); selectedMatch = null; return; }
+    if (selectedMatch.dataset.group === el.dataset.group) {
+      selectedMatch.classList.remove('selected');
+      selectedMatch.classList.add('matched');
+      el.classList.add('matched');
+      selectedMatch = null;
+      checkAllMatched();
+    } else {
+      selectedMatch.classList.remove('selected');
+      selectedMatch.classList.add('wrong-flash');
+      el.classList.add('wrong-flash');
+      setTimeout(() => {
+        selectedMatch.classList.remove('wrong-flash');
+        el.classList.remove('wrong-flash');
+        selectedMatch = null;
+      }, 700);
+    }
+  }
+}
+
+function checkAllMatched() {
+  const all = document.querySelectorAll('#matchGrid .match-item');
+  const done = [...all].every(i => i.classList.contains('matched'));
+  if (done) document.getElementById('matchScore').textContent = '🎉 All matched correctly!';
+}
+
+// ── True/False ──
+function checkTF(btn, chosen, correct) {
+  const box = btn.closest('.fill-blank');
+  const result = box.querySelector('.tf-result');
+  if (chosen === correct) {
+    result.style.color = 'var(--green)';
+    result.textContent = '✅ Correct!';
+  } else {
+    result.style.color = 'var(--red)';
+    result.textContent = `❌ Not quite. The answer is: ${correct === 'true' ? 'False' : 'True'}.`;
+  }
+  box.querySelectorAll('button').forEach(b => b.disabled = true);
+}
+
+// ── AI Feedback ──
+async function analyzeTask(inputId, feedbackId, systemPrompt) {
+  const text = document.getElementById(inputId).value.trim();
+  if (!text) { alert('Please write something first!'); return; }
+
+  const loaderId = 'loader' + inputId.slice(-1);
+  const btn = document.querySelector(`[onclick*="${inputId}"]`);
+  const feedbackEl = document.getElementById(feedbackId);
+
+  btn.disabled = true;
+  document.getElementById(loaderId).style.display = 'inline-block';
+  feedbackEl.classList.remove('visible');
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: systemPrompt + ' Keep your response concise, practical, and encouraging for an English learner in a call center training context.',
+        messages: [{ role: 'user', content: text }]
+      })
+    });
+    const data = await res.json();
+    feedbackEl.textContent = data.content?.[0]?.text || 'Could not get feedback. Please try again.';
+    feedbackEl.classList.add('visible');
+  } catch (e) {
+    feedbackEl.textContent = 'Connection error. Please try again.';
+    feedbackEl.classList.add('visible');
+  }
+
+  btn.disabled = false;
+  document.getElementById(loaderId).style.display = 'none';
+}
+
+async function analyzeFullCall() {
+  const scenario = document.getElementById('scenarioSelect').value;
+  const text = document.getElementById('taskD').value.trim();
+  if (!scenario) { alert('Please choose a scenario first.'); return; }
+  if (!text) { alert('Please write your dialogue first.'); return; }
+
+  const scenarioNames = {
+    billing: 'an incorrect bill complaint',
+    tech: 'an internet connection issue',
+    product: 'a product return request',
+    info: 'a plan upgrade inquiry'
+  };
+
+  const prompt = `You are evaluating a student's full call center dialogue for the scenario: ${scenarioNames[scenario]}. Check if the student included all 5 call flow steps: (1) Greeting, (2) Identifying the Need, (3) Providing Assistance, (4) Confirming Resolution, (5) Closing the Call. Also check for empathy, professionalism, and correct English. Give structured feedback in 3-4 sentences: what they did well, which steps were missing or weak, and one specific improvement tip.`;
+
+  const loaderEl = document.getElementById('loaderD');
+  const btn = document.querySelector('[onclick="analyzeFullCall()"]');
+  const feedbackEl = document.getElementById('feedbackD');
+
+  btn.disabled = true;
+  loaderEl.style.display = 'inline-block';
+  feedbackEl.classList.remove('visible');
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: prompt,
+        messages: [{ role: 'user', content: text }]
+      })
+    });
+    const data = await res.json();
+    feedbackEl.textContent = data.content?.[0]?.text || 'Could not analyze. Please try again.';
+    feedbackEl.classList.add('visible');
+  } catch (e) {
+    feedbackEl.textContent = 'Connection error. Please try again.';
+    feedbackEl.classList.add('visible');
+  }
+
+  btn.disabled = false;
+  loaderEl.style.display = 'none';
+}
+</script>
+</body>
+</html>
